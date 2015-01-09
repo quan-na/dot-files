@@ -126,6 +126,10 @@
   (package-install 'projectile))
 (unless (package-installed-p 'evil)
   (package-install 'evil))
+(unless (package-installed-p 'powerline)
+  (package-install 'powerline))
+(unless (package-installed-p 'powerline-evil)
+  (package-install 'powerline-evil))
 ;;(unless (package-installed-p 'adoc-mode)
 ;;  (package-install 'adoc-mode))
 ;;(unless (package-installed-p 'zone-matrix)
@@ -301,6 +305,9 @@
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
+;; powerline
+(require 'powerline)
+(powerline-default-theme)
 ;; startup files
 (find-file "~/tryorg.org")
 (find-file "~/emacs-cheat-sheet.org")
