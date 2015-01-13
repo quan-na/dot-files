@@ -126,10 +126,16 @@
   (package-install 'projectile))
 (unless (package-installed-p 'evil)
   (package-install 'evil))
+(unless (package-installed-p 'evil-leader)
+  (package-install 'evil-leader))
+(unless (package-installed-p 'evil-tutor)
+  (package-install 'evil-tutor))
 (unless (package-installed-p 'powerline)
   (package-install 'powerline))
 (unless (package-installed-p 'powerline-evil)
   (package-install 'powerline-evil))
+(unless (package-installed-p 'relative-line-numbers)
+  (package-install 'relative-line-numbers))
 ;;(unless (package-installed-p 'adoc-mode)
 ;;  (package-install 'adoc-mode))
 ;;(unless (package-installed-p 'zone-matrix)
@@ -306,15 +312,49 @@
 (setq recentf-max-menu-items 25)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 ;; powerline
-(require 'powerline)
-(powerline-default-theme)
+(when (display-graphic-p)
+  (require 'powerline)
+  (powerline-default-theme)
+)
+;; evil mode by default
+(require 'evil)
+(setq evil-leader/in-all-states 1)
+(global-evil-leader-mode t)
+(evil-mode 1)
+;; set cursor color
+(setq evil-emacs-state-cursor '("#98AFC7" box)) ; blue gray
+(setq evil-normal-state-cursor '("#6AFB92" box)) ; dragon green
+(setq evil-visual-state-cursor '("#659EC7" box)) ; blue koi
+(setq evil-insert-state-cursor '("#FFE87C" bar)) ; sun yellow
+(setq evil-replace-state-cursor '("#FFE87C" bar))
+(setq evil-operator-state-cursor '("#FFE87C" hollow))
+;; enable relative line number
+(global-relative-line-numbers-mode)
+;; set leader to space
+(evil-leader/set-leader "<SPC>")
+(evil-leader/set-key
+  "f" 'find-file
+  "r" 'recentf-open-files
+  "b" 'switch-to-buffer
+  "k" 'kill-buffer)
+(evil-leader/set-key
+  "wsl" 'split-window-right
+  "wsj" 'split-window-below
+  "wo" 'other-window
+  "w0" 'delete-wind)
+(evil-leader/set-key-for-mode 'emacs-lisp-mode
+  "xe" 'eval-last-sexp)
 ;; startup files
-(find-file "~/tryorg.org")
-(find-file "~/emacs-cheat-sheet.org")
-(find-file "~/vms-maven/.projectile")
+;(find-file "~/tryorg.org")
+;(find-file "~/emacs-cheat-sheet.org")
+;(find-file "~/vms-maven/.projectile")
 (if (display-graphic-p)
   (load-theme 'zenburn t)
   (load-theme 'zenburn t)
+)
+;;transparency
+(when (display-graphic-p)
+    (set-frame-parameter (selected-frame) 'alpha '(85 50))
 )
 ;;; .emacs ends here
 (custom-set-variables
