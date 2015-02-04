@@ -12,13 +12,13 @@
 ;;(let ((path (shell-command-to-string ". ~/.profile; ~/.bash_profile; echo -n $PATH")))
 ;; set $PATH for shells
 (when (display-graphic-p)
-  (let '(path "/Users/sstvn/Dev/Applications/groovy-2.1.9/bin:/Users/sstvn/springsource/spring-roo-1.2.4.RELEASE/bin:/Users/sstvn/Dev/Applications/mongodb-osx-x86_64-2.4.8/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/Users/sstvn/Dev/Applications/vert.x-2.0.2-final/bin:/Users/sstvn/Dev/Applications/apache-maven-3.1.1/bin:/usr/local/mysql/bin:/Users/sstvn/Dev/ShellScript:/Users/sstvn/clojure")
+  (let '(path "/Users/sstvn/Dev/Applications/groovy-2.1.9/bin:/Users/sstvn/springsource/spring-roo-1.2.4.RELEASE/bin:/Users/sstvn/Dev/Applications/mongodb-osx-x86_64-2.4.8/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/Users/sstvn/Dev/Applications/vert.x-2.0.2-final/bin:/Users/sstvn/Dev/Applications/apache-maven-3.1.1/bin:/usr/local/mysql/bin:/Users/sstvn/Dev/ShellScript:/Users/sstvn/clojure:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home:/Users/sstvn/scala-2.11.4/bin")
     (setenv "PATH" path)
     (setq exec-path
           (append
            (split-string-and-unquote path ":")
            exec-path)))
-  (setenv "JAVA_HOME" "/Library/Java/JavaVirtualMachines/jdk1.7.0_45.jdk/Contents/Home")
+  (setenv "JAVA_HOME" "/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home")
 )
 ;; shells with different buffer names
 (defun bash (buffer-name)
@@ -116,6 +116,8 @@
   (package-install 'rainbow-mode))
 (unless (package-installed-p 'rainbow-blocks)
   (package-install 'rainbow-blocks))
+(unless (package-installed-p 'ensime)
+  (package-install 'ensime))
 (unless (package-installed-p 'scala-mode2)
   (package-install 'scala-mode2))
 (unless (package-installed-p 'obsidian-theme)
@@ -306,6 +308,9 @@
 ;; enable projectile
 (projectile-global-mode)
 (setq projectile-enable-caching t)
+;; scala ensime hook
+(require 'ensime)
+(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 ;; recentf
 (require 'recentf)
 (recentf-mode 1)
@@ -332,30 +337,53 @@
 (global-relative-line-numbers-mode)
 ;; set leader to space
 (evil-leader/set-leader "<SPC>")
+;(define-key evil-normal-state-map [escape] 'keyboard-quit)
+;(define-key evil-visual-state-map [escape] 'keyboard-quit)
+;(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+;(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+;(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+;(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+;(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 (evil-leader/set-key
   "f" 'find-file
   "r" 'recentf-open-files
   "b" 'switch-to-buffer
-  "k" 'kill-buffer)
+  "k" 'kill-buffer
+  "s" 'save-buffer
+  "q" 'save-buffers-kill-terminal)
 (evil-leader/set-key
   "wsl" 'split-window-right
   "wsj" 'split-window-below
   "wo" 'other-window
-  "w0" 'delete-wind)
+  "w0" 'delete-window)
 (evil-leader/set-key-for-mode 'emacs-lisp-mode
   "xe" 'eval-last-sexp)
+(evil-leader/set-key-for-mode 'org-mode
+  "tc" 'org-ctrl-c-ctrl-c
+  "tt" 'org-todo)
+(evil-leader/set-key-for-mode 'dired-mode
+  "gf" 'grep-find)
+(defun sys-open-current-buffer()
+  "Open current buffer using system default application"
+  (interactive)
+  (when (buffer-modified-p)
+    (when (y-or-n-p "Buffer is modified, Save?")
+      (save-buffer)))
+  (shell-command (concat "open " (buffer-file-name))))
+(evil-leader/set-key
+  "xx" 'sys-open-current-buffer)
 ;; startup files
 ;(find-file "~/tryorg.org")
 ;(find-file "~/emacs-cheat-sheet.org")
 ;(find-file "~/vms-maven/.projectile")
 (if (display-graphic-p)
-  (load-theme 'zenburn t)
+  (load-theme 'monokai t)
   (load-theme 'zenburn t)
 )
 ;;transparency
-(when (display-graphic-p)
-    (set-frame-parameter (selected-frame) 'alpha '(85 50))
-)
+;(when (display-graphic-p)
+;    (set-frame-parameter (selected-frame) 'alpha '(85 50))
+;)
 ;;; .emacs ends here
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -363,3 +391,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes (quote ("9dae95cdbed1505d45322ef8b5aa90ccb6cb59e0ff26fef0b8f411dfc416c552" "70cf411fbf9512a4da81aa1e87b064d3a3f0a47b19d7a4850578c8d64cac2353" default))))
+
