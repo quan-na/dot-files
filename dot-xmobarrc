@@ -1,0 +1,12 @@
+Config { bgColor = "#FD5E53"
+       , fgColor = "#191970"
+       , sepChar = "%"
+       , alignSep = "}{"
+       , commands = [ Run Cpu ["-L","3","-H","50","--normal","gray","--high","black","--low","white"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Swap [] 10
+                    , Run Date "%a %b %_d %l:%M" "date" 10
+                    , Run StdinReader
+                    ]
+       , template = "%StdinReader% > }{ < %cpu% < %memory% < %swap% < %date%"
+       }

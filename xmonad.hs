@@ -5,8 +5,7 @@ import System.Exit
 
 main = xmonad =<< xmobar defaultConfig {
     focusFollowsMouse = True
-    , borderWidth = 2
-    , modMask = mod3Mask
+    , borderWidth = 1
     , normalBorderColor = "#00BFFF"
     , focusedBorderColor = "#6AFB92"
 }
