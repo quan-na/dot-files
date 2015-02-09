@@ -1,0 +1,21 @@
+==========================================================2015=02=06==========
+*the-begin*
+Today I start my journal to get daily though & experience written out. I do th
+-is part for improving my memory, part for improving my writting skill.
+==========================================================2015=02=07==========
+<over control>
+I found out at Tue Uyen zen monastery 
+<user interface that's alive>
+==========================================================2015=02=08==========
+<colors of zen>
+<the bubble>
+==========================================================2015=02=09==========
+*better-vim*
+I mapped nn and bb in insert mode for quicker jump to begining and end of line
+. Turn out it has some problem with nnoremap, running, etc.
+<start readings for micro-web project>
+>
+ quotes
+<
+heading~
+vim:tw=78:ts=8:ft=help:norl:
