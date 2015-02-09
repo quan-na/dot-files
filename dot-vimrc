@@ -1,0 +1,42 @@
+"================================================
+"==  My Personal customization  =================
+"================================================
+set nocp
+set nocompatible
+execute pathogen#infect()
+
+colorscheme badwolf
+syntax enable
+
+set tabstop=4
+set softtabstop=4
+set expandtab
+
+set number
+set relativenumber
+set laststatus=2
+filetype indent on
+set lazyredraw
+set showmatch
+set incsearch
+set hlsearch
+
+let mapleader="\<space>"
+inoremap jk <esc>
+nnoremap ; :
+
+let g:airline_section_b='%{strftime("%c")}'
+let g:airline_section_y='BN: %{bufnr("%")}'
+let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#tagbar#enabled=1
+set go-=m
+set go-=T
+set go-=r
+set go-=L
+
+nnoremap <leader>ft :tabe ~/
+nnoremap <leader>ff :edit ~/
+nnoremap <leader>tj :tabn<cr>
+nnoremap <leader>tk :tabp<cr>
+nnoremap <leader>s :w<cr>
+nnoremap <leader>q :q<cr>
