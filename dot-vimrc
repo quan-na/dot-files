@@ -1,6 +1,6 @@
-"================================================
-"==  My Personal customization  =================
-"================================================
+"=================================
+"==  My Personal customization  ==
+"=================================
 set nocp
 set nocompatible
 execute pathogen#infect()
@@ -20,9 +20,14 @@ set lazyredraw
 set showmatch
 set incsearch
 set hlsearch
+if has('gui_running')
+        set guifont=Terminus-12
+endif
 
 let mapleader="\<space>"
 inoremap jk <esc>
+inoremap bb <esc>^i
+inoremap nn <esc>$a
 nnoremap ; :
 
 let g:airline_section_b='%{strftime("%c")}'
@@ -36,7 +41,10 @@ set go-=L
 
 nnoremap <leader>ft :tabe ~/
 nnoremap <leader>ff :edit ~/
+nnoremap <leader>fr :bro ol<cr>
 nnoremap <leader>tj :tabn<cr>
 nnoremap <leader>tk :tabp<cr>
+nnoremap <leader>bj :bn<cr>
+nnoremap <leader>bk :bp<cr>
 nnoremap <leader>s :w<cr>
 nnoremap <leader>q :q<cr>
