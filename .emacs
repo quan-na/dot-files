@@ -317,10 +317,8 @@
 (setq recentf-max-menu-items 25)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 ;; powerline
-(when (display-graphic-p)
-  (require 'powerline)
-  (powerline-default-theme)
-)
+(require 'powerline)
+(powerline-default-theme)
 ;; evil mode by default
 (require 'evil)
 (setq evil-leader/in-all-states 1)
