@@ -1,13 +1,28 @@
 ==========================================================2015=02=06==========
 *the-begin*
-Today I start my journal to get daily though & experience written out. I do th
--is part for improving my memory, part for improving my writting skill.
+Today I start my journal to get daily though & experience written out. I do
+this part for improving my memory, part for improving my writting skill.
 ==========================================================2015=02=07==========
-<over control>
-<user interface that's alive>
+*over-control*
+Controlling the breath is basic of zen/qi-gong training. When the breath is
+controlled too much it become stiff and unnatural. Some time it 's good to let
+go and observe the breath instead of controlling it. Train your instict of
+breath so it can do the job while you 're busy with sonthing else.
+*user-interface-that-is-alive*
+Normal user interface are too still. They quickly response to user's input and
+be still and do nothing till next input. This kind of design although being
+popular and effective lack of life. Over times, user will get the feeling of
+stress and lonelyness because they're working with a liveless machine. I want
+the kind of interface that generate useless sound and movement part randomly,
+part unwanted response to user input. This way the computer act like a living
+creature and relieve the user from stress and lonelyness.
 ==========================================================2015=02=08==========
-<colors of zen>
-<the bubble>
+*colors-of-zen*
+Color theme of sand, rock, wood, monk 's cloth, and pagoda wall. The colors
+are chosen by budhism practisioner for their peaceful feeling.
+*the-bubble*
+Nature is like a bubble, leave alone and it will be perfect like a circle, try
+to control and it will burst.
 >
                  `                
             `. ,:,                
@@ -30,10 +45,22 @@ Today I start my journal to get daily though & experience written out. I do th
 ==========================================================2015=02=09==========
 *better-vim*
 I mapped nn and bb in insert mode for quicker jump to begining and end of line
-. Turn out it has some problem with nnoremap, running, etc.
-<start readings for micro-web project>
->
- quotes
-<
-heading~
+. It has some problem with nnoremap, running, etc. but it is still worth since
+I don't have to switch back and forth between normal mode and insert mode.
+*start-readings-for-micro-web-project*
+Micro web is a collection of processes that acts as a web server. 'Micro' as
+in micro kernel. These process communcate wth each other using messages. Messa
+-ges not only call functions but each message will be interprete as functions.
+I want language of these messages is easy to interpreted, like fortran that
+can do heavy calculation, and natively implement functional paterns.
+Books I want to read:
+ - Functional programming pattern
+ - Lisp language
+ - Fortran language
+==========================================================2015=02=10==========
+*function-interface-pattern*
+*xmobar-disk*
+xmobar - a status bar for xmonad - has disku and diskio for harddisk status
+but it is not run smoothly when I try.
+
 vim:tw=78:ts=8:ft=help:norl:
