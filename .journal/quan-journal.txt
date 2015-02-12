@@ -21,8 +21,8 @@ creature and relieve the user from stress and lonelyness.
 Color theme of sand, rock, wood, monk 's cloth, and pagoda wall. The colors
 are chosen by budhism practisioner for their peaceful feeling.
 *the-bubble*
-Nature is like a bubble, leave alone and it will be perfect like a circle, try
-to control and it will burst.
+Nature is like a bubble, leave alone and it will grow into perfect like a
+circle, try to control and it will burst.
 >
                  `                
             `. ,:,                
@@ -59,8 +59,46 @@ Books I want to read:
  - Fortran language
 ==========================================================2015=02=10==========
 *function-interface-pattern*
+A pattern in object oriented programming which minic first class function in
+functional languages. Doing this they can pass verbs instead of nouns in
+method 's parameters.
 *xmobar-disk*
 xmobar - a status bar for xmonad - has disku and diskio for harddisk status
 but it is not run smoothly when I try.
+*first-time-with-haskell*
+It turn out that haskell has several similar feature with my beloved prolog. I
+'m trying to learn haskell in order to create text clock plugin for xmobar.
+>
+    eleven
+     fifty
+    three
+<
+==========================================================2015=02=11==========
+*haskell-non-strict-function*
+*limited-memory-array-language*
+*toward-text-clock*
+mod and div in haskell has different meaning. To divide and modulus we must
+use quot and rem respectively.
+>
+ Prelude> quot 34 2
+ 17
+ Prelude> rem 34 3
+ 1
+<
+*complicated-io*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 vim:tw=78:ts=8:ft=help:norl:
