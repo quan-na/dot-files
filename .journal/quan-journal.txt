@@ -7,7 +7,7 @@ this part for improving my memory, part for improving my writting skill.
 Controlling the breath is basic of zen/qi-gong training. When the breath is
 controlled too much it become stiff and unnatural. Some time it 's good to let
 go and observe the breath instead of controlling it. Train your instict of
-breath so it can do the job while you 're busy with sonthing else.
+breath so it can do the job while you 're busy with something else.
 *user-interface-that-is-alive*
 Normal user interface are too still. They quickly response to user's input and
 be still and do nothing till next input. This kind of design although being
@@ -48,15 +48,21 @@ I mapped nn and bb in insert mode for quicker jump to begining and end of line
 . It has some problem with nnoremap, running, etc. but it is still worth since
 I don't have to switch back and forth between normal mode and insert mode.
 *start-readings-for-micro-web-project*
-Micro web is a collection of processes that acts as a web server. 'Micro' as
-in micro kernel. These process communcate wth each other using messages. Messa
--ges not only call functions but each message will be interprete as functions.
-I want language of these messages is easy to interpreted, like fortran that
-can do heavy calculation, and natively implement functional paterns.
+Micro-web is a collection of inter-dependence processes that communicate with
+each other assnchronously using special crafted messages. I think of Micro-web
+as an alternative for today bulky web servers. Even those server that
+self-proclaimed as module-based are big bulky process which 's slow to start.
+Micro in Micro-web get its meaning from micro kernels. By dividing the server
+to many processes I hope it can be more agile and stable. Messages that are
+sent between processes are not mearly function calls but they 're functions
+themselves. The language in which those messages are written must be easy to
+interpreted. There 'll be no symbols and just numbers as code instead. I want
+a hybrid between Fortran and first-class function languages. The language must
+be ready to do heavy calculations and support functional programming patterns.
 Books I want to read:
- - Functional programming pattern
- - Lisp language
- - Fortran language
+ - Functional programming patterns : for functional patterns
+ - Lisp language : an easy-to-inerpreted language
+ - Fortran language : my first language, can do realy heavy calculations
 ==========================================================2015=02=10==========
 *function-interface-pattern*
 A pattern in object oriented programming which minic first class function in
@@ -75,7 +81,15 @@ It turn out that haskell has several similar feature with my beloved prolog. I
 <
 ==========================================================2015=02=11==========
 *haskell-non-strict-function*
+Haskell has insteresting lazy native that allow normally infinite looped
+functions to operate normally. As long as the error is not evaluated, it is
+not an error.
 *limited-memory-array-language*
+I want micro-web message language to give same experience as the one I 've got
+with Casio Fx3600P pocket calculator. Back then I manage to program it to
+calculate matrix operations. The language will have la limited set of simbols
+with specific range of addresses. This way it 'll be easier to interpret such
+language.
 *toward-text-clock*
 mod and div in haskell has different meaning. To divide and modulus we must
 use quot and rem respectively.
@@ -86,10 +100,50 @@ use quot and rem respectively.
  1
 <
 *complicated-io*
-
-
-
-
+==========================================================2015=02=12==========
+*too-much-resource*
+Haskell package manager - cabal - use too much resource. 64MB RAM with 1GB
+cache results in kernel panic. I'm considering building the packages myself.
+*good-side-of-debian*
+I find out that Debian has a really good support for building the source
+packages. With just 1 command, we can download all the headers neccessary to
+build a source package. I can finish the TextClock plugin without struggle
+with bulky cabal.
+>
+    apt-get source xmonad
+    dpkg-source -x xmobar_0.14-4.dsc
+    apt-get build-dep xmobar
+<
+*reuse-of-functions*
+Micro-web messages language should have some devices for reusing sent
+messages. It will save some of bandwidth.
+*textclock-plugin*
+I finally finished the TextClock plugin for xmobar. It 's easier than I
+thought at first. Next I want to add some color eye candy to the clock.
+==========================================================2015=02=13==========
+*the-code-passed-arround*
+I 'm still persistent with the idea of passing the machine code between
+processes. I have forgotten who I get that idea from, probably some one from
+high school computer class. Because all processes in one computer share same
+cpu architect, I don't know the reason why it 's impossible. Previous tries
+have failed but I have successed in getting the function 's last instruction
+pointer & copy the function code into writable memory space. In order to
+proceed, I must find out why the JITs can generate code at runtime. There 're
+3 Free project I have found:
+ - OpenJDK : from java byte codes to machine code.
+ - GNU Lightning : generate directly using assembly like syntax, probably most
+   suitable one to read
+ - IonMonkey : from javascript to machine code.
+*asm.js*
+While looking for IonMonkey, I found out about asm.js. It is a high
+performance subset of javascript with the speed lack behind native compiler
+only of factor of 2. It seem really interesting and I want apply it to
+Micro-web frontend.
+==========================================================2015=02=14==========
+*nerd-tree*
+I found out nerdtree in searching for some plugins to help viewing code in
+vim. Too busy in Seagame-VMS so I will try install it later.
+==========================================================2015=02=15==========
 
 
 

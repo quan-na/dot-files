@@ -12,8 +12,8 @@ Config { font = "Terminus:size=12:bold:antialias=false"
                                      , "--normal", "gray"
                                      , "--high", "black"] 20
                     , Run Swap [] 50
-                    , Run Date "%A %R" "date" 10
+                    , Run TextClock "textclock" 10
                     , Run StdinReader
                     ]
-       , template = "%StdinReader% > }{ < %cpu% < %memory% < %swap% < %eth0% < %date%"
+       , template = "%StdinReader% > }{ < %cpu% < %memory% < %swap% < %eth0% < %textclock%"
        }
