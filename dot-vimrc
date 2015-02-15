@@ -48,3 +48,4 @@ nnoremap <leader>bj :bn<cr>
 nnoremap <leader>bk :bp<cr>
 nnoremap <leader>s :w<cr>
 nnoremap <leader>q :q<cr>
+nnoremap <leader>nt :NERDTree<cr>
