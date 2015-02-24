@@ -4,16 +4,16 @@ Config { font = "Terminus:size=12:bold:antialias=false"
        , sepChar = "%"
        , alignSep = "}{"
        , commands = [ Run Cpu ["-L","3","-H","50","--normal","gray","--high","black","--low","white"] 10
-                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 50
                     , Run Network "eth0" [ "--template", "<dev>: <tx>kB/s|<rx>kB/s"
                                      , "--L", "10"
                                      , "--H", "100"
                                      , "--low", "white"
                                      , "--normal", "gray"
-                                     , "--high", "black"] 10
-                    , Run Swap [] 10
-                    , Run Date "%a %b %_d %l:%M" "date" 10
+                                     , "--high", "black"] 20
+                    , Run Swap [] 50
+                    , Run TextClock "textclock" 10
                     , Run StdinReader
                     ]
-       , template = "%StdinReader% > }{ < %cpu% < %memory% < %swap% < %eth0% < %date%"
+       , template = "%StdinReader% > }{ < %cpu% < %memory% < %swap% < %eth0% < %textclock%"
        }
