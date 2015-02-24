@@ -1,0 +1,41 @@
+# Environment variables
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_71.jdk/Contents/Home
+export GROOVY_HOME=/Users/sstvn/Dev/Applications/groovy-2.1.9
+export PATH=$PATH:/Users/sstvn/Dev/Applications/groovy-2.1.9/bin:/Users/sstvn/springsource/spring-roo-1.2.4.RELEASE/bin:/Users/sstvn/Dev/Applications/mongodb-osx-x86_64-2.4.8/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/Users/sstvn/Dev/Applications/vert.x-2.0.2-final/bin:/Users/sstvn/Dev/Applications/apache-maven-3.1.1/bin:/usr/local/mysql/bin:/Users/sstvn/Dev/ShellScript:/Users/sstvn/clojure:/Users/sstvn/scala-2.11.4/bin
+
+# Quick launch of programs
+alias em="emacs -nw"
+function e () {
+    emacs $1 &
+}
+function ffc () {
+    /Applications/Firefox.app/Contents/MacOS/firefox-bin -p default --no-remote $1 &
+}
+function ffn () {
+    /Applications/FirefoxNightly.app/Contents/MacOS/firefox-bin -p nightly --no-remote $1 &
+}
+function ffx () {
+    /Applications/FirefoxNightly.app/Contents/MacOS/firefox-bin -p extra.nightly --no-remote $1 &
+}
+function ffp () {
+    /Applications/Firefox.app/Contents/MacOS/firefox-bin --profilemanager &
+}
+alias vim='/usr/local/Cellar/vim/7.4.488/bin/vim'
+alias vi='/usr/local/Cellar/vim/7.4.488/bin/vim' 
+alias mysqlc="mysql -u root -proot -h 127.0.0.1 "
+alias mysqls="sudo /usr/local/mysql/support-files/mysql.server "
+alias kbfast="defaults write -g InitialKeyRepeat -int 10; and defaults write -g KeyRepeat -int 1 "
+alias noatime="sudo mount -vuwo noatime / "
+alias foreui="/Applications/ForeUI.app/Contents/Resources/Java/launch.sh &"
+function workenv () {
+ open /Applications/Utilities/Activity\ Monitor.app
+ open /Applications/iTerm.app
+ open /Applications/Emacs.app
+ mysqls start
+ noatime
+ kbfast
+ #open /Applications/IntelliJ\ IDEA\ 14\ CE.app
+ open /Applications/Thunderbird.app
+ foreui
+ open /Applications/Skype.app
+}
