@@ -39,11 +39,11 @@
 ;; monospace font for better drawing
 (when (display-graphic-p)
   (add-to-list 'default-frame-alist
-               '(font . "terminus-16"))
+               '(font . "Terminus-14"))
   (set-face-attribute 'default nil
-                      :family "terminus" :height 160)
-  (set-face-attribute 'fixed-pitch nil :font "terminus-16")
-  (set-face-attribute 'variable-pitch nil :font "terminus-16")
+                      :family "Terminus" :height 140)
+  (set-face-attribute 'fixed-pitch nil :font "Terminus-14")
+  (set-face-attribute 'variable-pitch nil :font "Terminus-14")
 )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

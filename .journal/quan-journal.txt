@@ -149,8 +149,17 @@ vim. Too busy in Seagame-VMS so I will try install it later.
 *join-the-making-of-banh-tet*
 ==========================================================2015=02=17==========
 *camera-zoom-and-angle*
+By standing up or couching down, I can change the angle in which the camera
+capturing the subject. With that, sometime we can hide un-wanted object or
+show more details on the subject. I tried this at Tran Bien Spring Garden and
+be impressed how it worked.
 ==========================================================2015=02=18==========
 *padded-side-stand*
+The side stands always leave bikes in slant angle to give them better balance.
+This is useful outdoor but indoor it 's waste of space. A slant bike usually
+take 15-20 cm more than center stand but the center stand requires more force
+to work. By padding the side stand so that the bike is in standing position we
+can save spaces with less force.
 *resume-qigong-study*
 ==========================================================2015=02=19==========
 *mac-harddrive-dead*
@@ -172,11 +181,22 @@ vim. Too busy in Seagame-VMS so I will try install it later.
 *spring-webflow*
 *read-abt-minix-processes*
 ==========================================================2015=02=26==========
-
-
-
-
-
+*quick-concept-map*
+*vnc-for-productivity*
+==========================================================2015=02=27==========
+*spring-webflow*
+==========================================================2015=02=28==========
+*language-with-only-integer*
+============================================2015=02=29=to=2015=03=10==========
+*do-nothing-to-improve-myself*
+==========================================================2015=03=11==========
+*magica-voxel*
+*minix-message-sending-mechanism*
+============================================2015=03=12=to=2015=03=14==========
+*in-restarting*
+==========================================================2015=03=15==========
+*minix-virtual-dev-env*
+*work-out-while-watching-video*
 
 
 

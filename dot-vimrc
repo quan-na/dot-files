@@ -28,6 +28,8 @@ let mapleader="\<space>"
 inoremap jk <esc>
 inoremap bb <esc>^i
 inoremap nn <esc>$a
+inoremap ww <esc>gela<cr><esc>$a
+inoremap .. <C-N>
 nnoremap ; :
 
 let g:airline_section_b='%{strftime("%c")}'
