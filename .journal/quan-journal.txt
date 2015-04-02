@@ -145,8 +145,17 @@ I found out nerdtree in searching for some plugins to help viewing code in
 vim. Too busy in Seagame-VMS so I will try install it later.
 ==========================================================2015=02=15==========
 *busy-cleaning-up-the-flat*
+There 're a lot to do before leaving the flat for the Tet vacation. We must
+leave it for 1 week period so all the electrical devices must be unpluged,
+furnitures must be cover, and dust must be wept so there won't be a mess when
+we come back after the vacation.
 ==========================================================2015=02=16==========
 *join-the-making-of-banh-tet*
+My family hadn't got tradition of making banh tet in Tet holiday until my
+parents started it. The results are not always good and they 're not always
+consumed all but the process of getting the family members joined in labour of
+making something is always good. It strengthens the bound between us. And this
+is the reason it became a tradition of my family.
 ==========================================================2015=02=17==========
 *camera-zoom-and-angle*
 By standing up or couching down, I can change the angle in which the camera
@@ -161,9 +170,27 @@ take 15-20 cm more than center stand but the center stand requires more force
 to work. By padding the side stand so that the bike is in standing position we
 can save spaces with less force.
 *resume-qigong-study*
+Learned the lesson of overly-control, I want to resume my study on qi-gong. Up
+until now, I have only learned about ren and du mai, and vaguely points in
+these two channel. It's time to learning exactly where the points are and
+expand my knowledge to others in the 8 odd channels.
 ==========================================================2015=02=19==========
 *mac-harddrive-dead*
+The mac book pro that sstvn gave me can not boot anymore. The reason is that
+the harddrive is badly damaged. Days ago, it kept putting I/O error in kernel
+buffer. I tried various methods but software methods can never work on
+hardware issues. So now I turns off the power and wait for a miracle (or a new
+harddrive).
 *n4s-rx8*
+Recently, the desktop at home (in Bien Hoa) always crashes when I play 3D
+games. I find out that the small fan on its graphic card does not work
+anymore. After removing that small fan and substitute it with a fan gotten
+from old mainboard that my cousin gave me the desktop does not crash anymore.
+I immediately open Need for Speed and try out a new car. The Mazda RX8 in real
+life is a car with rotary engine, there 's no way this fact is simulated in
+the game but they tuned the parameter to create very good handling for this
+car in game. It turn out much better than the muscle Ford Mustang that I tried
+earlier.
 ==========================================================2015=02=20==========
 *finish-1st-farseer-book*
 *resume-using-old-acer*
@@ -196,8 +223,21 @@ can save spaces with less force.
 *in-restarting*
 ==========================================================2015=03=15==========
 *minix-virtual-dev-env*
-*work-out-while-watching-video*
-
-
+*workout-while-watching-video*
+============================================2015=03=16=to=2015=03=29==========
+*too-busy-to-write*
+==========================================================2015=03=30==========
+*open-source-fantasy-world*
+*best-practices-in-software-development*
+==========================================================2015=03=31==========
+*list-of-languages*
+*lookup-table-interpreter*
+==========================================================2015=04=01==========
+*process-of-learning*
+*loose-coupling-software-system*
+*sauerbraten-aka-cube2*
+*stimulate-old-good-brain*
+==========================================================2015=04=02==========
+*algorithm-complexity*
 
 vim:tw=78:ts=8:ft=help:norl:
