@@ -1,61 +1,32 @@
+;; >>>>>>> START re-organizing configuration
+
+;; >>> START global interface fix
 ;; fix key M S C in mac
 (set-keyboard-coding-system nil)
 ;; do not show help
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
-;; fix the PATH variable
-;;(defun set-exec-path-from-shell-PATH ()
-;;  (let ((path-from-shell (shell-command-to-string "TERM=vt100 $SHELL -i -c 'echo $PATH'")))
-;;    (setenv "PATH" path-from-shell)
-;;    (setq exec-path (split-string path-from-shell path-separator))))
-;;(when window-system (set-exec-path-from-shell-PATH))
-;;(let ((path (shell-command-to-string ". ~/.profile; ~/.bash_profile; echo -n $PATH")))
-;; set $PATH for shells
-;(when (display-graphic-p)
-;  (let '(path "/Users/sstvn/Dev/Applications/groovy-2.1.9/bin:/Users/sstvn/springsource/spring-roo-1.2.4.RELEASE/bin:/Users/sstvn/Dev/Applications/mongodb-osx-x86_64-2.4.8/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/Users/sstvn/Dev/Applications/vert.x-2.0.2-final/bin:/Users/sstvn/Dev/Applications/apache-maven-3.1.1/bin:/usr/local/mysql/bin:/Users/sstvn/Dev/ShellScript:/Users/sstvn/clojure:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home:/Users/sstvn/scala-2.11.4/bin")
-;    (setenv "PATH" path)
-;    (setq exec-path
-;          (append
-;           (split-string-and-unquote path ":")
-;           exec-path)))
-;  (setenv "JAVA_HOME" "/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home")
-;)
-;; shells with different buffer names
-(defun bash (buffer-name)
-  "Start a terminal and rename buffer."
-  (interactive "sbuffer name: ")
-  (term "/bin/bash")
-  (rename-buffer buffer-name t))
-(defun zsh (buffer-name)
-  "Start a terminal and rename buffer."
-  (interactive "sbuffer name: ")
-  (term "/bin/zsh")
-  (rename-buffer buffer-name t))
-(defun fish (buffer-name)
-  "Start a terminal with BUFFER-NAME."
-  (interactive "sbuffer name:")
-  (term "/usr/local/bin/fish")
-  (rename-buffer buffer-name t))
 ;; monospace font for better drawing
 (when (display-graphic-p)
   (add-to-list 'default-frame-alist
-               '(font . "Terminus-14"))
+               '(font . "Inconsolata-14"))
   (set-face-attribute 'default nil
-                      :family "Terminus" :height 140)
-  (set-face-attribute 'fixed-pitch nil :font "Terminus-14")
-  (set-face-attribute 'variable-pitch nil :font "Terminus-14")
+                      :family "Inconsolata" :height 140)
+  (set-face-attribute 'fixed-pitch nil :font "Inconsolata-14")
+  (set-face-attribute 'variable-pitch nil :font "Inconsolata-14")
+  )
+(when (display-graphic-p)
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(org-level-1 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
+   '(org-level-2 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
+   '(org-level-3 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
+   '(org-level-4 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
+   '(org-level-5 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0)))))
 )
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-level-1 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
- '(org-level-2 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
- '(org-level-3 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
- '(org-level-4 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
- '(org-level-5 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0)))))
-;;(global-font-lock-mode 1)
 ;; disable all dialog
 (defadvice yes-or-no-p (around prevent-dialog activate)
   "Prevent yes-or-no-p from activating a dialog"
@@ -68,85 +39,16 @@
 (defadvice message-box (around prevent-dialog activate)
   "Prevent message-box from activating a dialog"
   (apply #'message (ad-get-args 0)))
-;; melpa package repository
-(require 'package)
-;;(add-to-list 'package-archives
-;;  '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")
-                         ("org" . "http://orgmode.org/elpa/")))
-(package-refresh-contents)
-(package-initialize)
-(unless (package-installed-p 'solarized-theme)
-  (package-install 'solarized-theme))
-;;(unless (package-installed-p 'icicles)
-;;  (package-install 'icicles))
-;;(unless (package-installed-p 'icomplete+)
-;;  (package-install 'icomplete+))
-(unless (package-installed-p 'cider)
-  (package-install 'cider))
-(unless (package-installed-p 'org)
-  (package-install 'org))
-;(unless (package-installed-p 'org-plus-contrib)
-;  (package-install 'org-plus-contrib))
-(unless (package-installed-p 'rainbow-delimiters)
-  (package-install 'rainbow-delimiters))
-;;(unless (package-installed-p 'company)
-;;  (package-install 'company))
-(unless (package-installed-p 'auto-complete)
-  (package-install 'auto-complete))
-(unless (package-installed-p 'ac-cider)
-  (package-install 'ac-cider))
-(unless (package-installed-p 'ac-nrepl)
-  (package-install 'ac-nrepl))
-(unless (package-installed-p 'paredit)
-  (package-install 'paredit))
-(unless (package-installed-p 'zenburn-theme)
-  (package-install 'zenburn-theme))
-(unless (package-installed-p 'multiple-cursors)
-  (package-install 'multiple-cursors))
-(unless (package-installed-p 'markdown-mode)
-  (package-install 'markdown-mode))
-(unless (package-installed-p 'inkpot-theme)
-  (package-install 'inkpot-theme))
-(unless (package-installed-p 'monokai-theme)
-  (package-install 'monokai-theme))
-(unless (package-installed-p 'rainbow-mode)
-  (package-install 'rainbow-mode))
-(unless (package-installed-p 'rainbow-blocks)
-  (package-install 'rainbow-blocks))
-(unless (package-installed-p 'ensime)
-  (package-install 'ensime))
-(unless (package-installed-p 'scala-mode2)
-  (package-install 'scala-mode2))
-(unless (package-installed-p 'obsidian-theme)
-  (package-install 'obsidian-theme))
-(unless (package-installed-p 'json-mode)
-  (package-install 'json-mode))
-(unless (package-installed-p 'projectile)
-  (package-install 'projectile))
-(unless (package-installed-p 'evil)
-  (package-install 'evil))
-(unless (package-installed-p 'evil-leader)
-  (package-install 'evil-leader))
-(unless (package-installed-p 'evil-tutor)
-  (package-install 'evil-tutor))
-(unless (package-installed-p 'powerline)
-  (package-install 'powerline))
-(unless (package-installed-p 'powerline-evil)
-  (package-install 'powerline-evil))
-(unless (package-installed-p 'relative-line-numbers)
-  (package-install 'relative-line-numbers))
-;;(unless (package-installed-p 'adoc-mode)
-;;  (package-install 'adoc-mode))
-;;(unless (package-installed-p 'zone-matrix)
-;;  (package-install 'zone-matrix))
-(byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
-;; matrix like idle
-;;(setq zone-programs [zone-matrix])
-;;(require 'zone)
-;;(zone-when-idle 60)
+;; disable scrollbar
+(when (display-graphic-p)
+  (scroll-bar-mode -1)
+)
+(setq mouse-wheel-progressive-speed nil)
+;; kill toolbar too
+(when (display-graphic-p)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+)
 ;; RET auto-indent
 (define-key global-map (kbd "RET") 'newline-and-indent)
 ;; spaces for tabs
@@ -157,43 +59,13 @@
 (add-hook 'prelude-prog-mode-hook 'disable-guru-mode t)
 ;;(setq visible-bell t)
 (setq visible-bell 'top-bottom)
-;;load color theme
-;;(package-initialize)
-;;(color-theme-initialize)
-;;(color-theme-matrix)
-;;(load-theme 'solarized-dark t)
-;;(setq solarized-use-terminal-theme t)
-;; Enable mouse support
-;(unless (display-graphic-p) ;;window-system
-;  (require 'mouse)
-;  (xterm-mouse-mode t)
-;  (global-set-key [mouse-4] '(lambda ()
-;                               (interactive)
-;                               (scroll-down 1)))
-;  (global-set-key [mouse-5] '(lambda ()
-;                               (interactive)
-;                               (scroll-up 1)))
-;  (defun track-mouse (e))
-;  (setq mouse-sel-mode t)
-;  )
-;; disable scrollbar
-(when (display-graphic-p)
-  (scroll-bar-mode -1)
-)
-(setq mouse-wheel-progressive-speed nil)
-;; kill toolbar too
-(menu-bar-mode -1)
-(tool-bar-mode -1)
 ;; icicle
 (icomplete-mode 99)
-;; company mode
-;;(add-hook 'prog-mode-hook 'global-company-mode)
-;;(icy-mode 1)
-;;(global-yascroll-bar-mode 1)
-;; very large file view
-;;(add-to-list 'load-path "~/.emacs.d/vlf-1.6")
-;;(require 'vlf)
-;;(require 'vlf-integrate)
+;; line display
+(line-number-mode t)
+(column-number-mode t)
+(global-hl-line-mode -1)
+;; view large files instead of editing it 
 (defun my-find-file-check-make-large-file-read-only-hook ()
   "If a file is over a given size, make the buffer read only."
   (when (> (buffer-size) (* 1024 1024))
@@ -201,187 +73,363 @@
     (buffer-disable-undo)
     (fundamental-mode)))
 (add-hook 'find-file-hooks 'my-find-file-check-make-large-file-read-only-hook)
-;; rainbow delimiters
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+;; <<< E N D global interface fix
+
+;; >>> START package manager
+;; melpa package repository
+(require 'package)
+;;(add-to-list 'package-archives
+;;  '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.milkbox.net/packages/")
+                         ("org" . "http://orgmode.org/elpa/")))
+;; uncomment after cleaning up
+;(package-refresh-contents)
+(package-initialize)
+;; themes
+(unless (package-installed-p 'solarized-theme)
+  (package-install 'solarized-theme))
+(unless (package-installed-p 'zenburn-theme)
+  (package-install 'zenburn-theme))
+(unless (package-installed-p 'obsidian-theme)
+  (package-install 'obsidian-theme))
+(unless (package-installed-p 'inkpot-theme)
+  (package-install 'inkpot-theme))
+(unless (package-installed-p 'monokai-theme)
+  (package-install 'monokai-theme))
+;; generic eye candies
+(unless (package-installed-p 'rainbow-delimiters)
+  (package-install 'rainbow-delimiters))
+(unless (package-installed-p 'auto-complete)
+  (package-install 'auto-complete))
+;(unless (package-installed-p 'rainbow-mode)
+;  (package-install 'rainbow-mode))
+;(unless (package-installed-p 'rainbow-blocks)
+;  (package-install 'rainbow-blocks))
+;(unless (package-installed-p 'evil)
+;  (package-install 'evil))
+;(unless (package-installed-p 'evil-leader)
+;  (package-install 'evil-leader))
+;(unless (package-installed-p 'evil-tutor)
+;  (package-install 'evil-tutor))
+(unless (package-installed-p 'powerline)
+  (package-install 'powerline))
+;(unless (package-installed-p 'powerline-evil)
+;  (package-install 'powerline-evil))
+(unless (package-installed-p 'relative-line-numbers)
+  (package-install 'relative-line-numbers))
+(unless (package-installed-p 'smart-tabs-mode)
+  (package-install 'smart-tabs-mode))
+;(unless (package-installed-p 'multiple-cursors)
+;  (package-install 'multiple-cursors))
+;; clojure development
+(unless (package-installed-p 'cider)
+  (package-install 'cider))
+(unless (package-installed-p 'ac-cider)
+  (package-install 'ac-cider))
+(unless (package-installed-p 'ac-nrepl)
+  (package-install 'ac-nrepl))
+(unless (package-installed-p 'paredit)
+  (package-install 'paredit))
+;; scala development
+(unless (package-installed-p 'ensime)
+  (package-install 'ensime))
+(unless (package-installed-p 'scala-mode2)
+  (package-install 'scala-mode2))
+;; misc modes
+(unless (package-installed-p 'json-mode)
+  (package-install 'json-mode))
+(unless (package-installed-p 'org)
+  (package-install 'org))
+(unless (package-installed-p 'markdown-mode)
+  (package-install 'markdown-mode))
+(unless (package-installed-p 'projectile)
+  (package-install 'projectile))
+(unless (package-installed-p 'key-chord)
+  (package-install 'key-chord))
+;; compile installed packages
+(byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
+;; <<< E N D package manager
+
+;; >>> START rainbow mode
+(when (package-installed-p 'rainbow-delimiters)
+  ;; rainbow delimiters
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+  )
 ;; rainbow blocks in org
-(require 'rainbow-blocks)
-(add-hook 'org-mode-hook 'rainbow-blocks-mode)
-;; true rainbow color for rainbow blocks
-(set-face-attribute 'rainbow-blocks-unmatched-face nil
+(when (package-installed-p 'rainbow-blocks)
+  (require 'rainbow-blocks)
+  (add-hook 'org-mode-hook 'rainbow-blocks-mode)
+  ;; true rainbow color for rainbow blocks
+  (set-face-attribute 'rainbow-blocks-unmatched-face nil
                       :foreground "#8B0000")
-(set-face-attribute 'rainbow-blocks-depth-1-face nil
+  (set-face-attribute 'rainbow-blocks-depth-1-face nil
                       :foreground "#FF0033")
-(set-face-attribute 'rainbow-blocks-depth-2-face nil
+  (set-face-attribute 'rainbow-blocks-depth-2-face nil
                       :foreground "#FF8C00")
-(set-face-attribute 'rainbow-blocks-depth-3-face nil
+  (set-face-attribute 'rainbow-blocks-depth-3-face nil
                       :foreground "##FFD700")
-(set-face-attribute 'rainbow-blocks-depth-4-face nil
+  (set-face-attribute 'rainbow-blocks-depth-4-face nil
                       :foreground "#90EE90")
-(set-face-attribute 'rainbow-blocks-depth-5-face nil
+  (set-face-attribute 'rainbow-blocks-depth-5-face nil
                       :foreground "#000080")
-(set-face-attribute 'rainbow-blocks-depth-6-face nil
+  (set-face-attribute 'rainbow-blocks-depth-6-face nil
                       :foreground "#800080")
-(set-face-attribute 'rainbow-blocks-depth-7-face nil
+  (set-face-attribute 'rainbow-blocks-depth-7-face nil
                       :foreground "#DA70D6")
-(set-face-attribute 'rainbow-blocks-depth-8-face nil
+  (set-face-attribute 'rainbow-blocks-depth-8-face nil
                       :foreground "#FF69B4")
-(set-face-attribute 'rainbow-blocks-depth-9-face nil
+  (set-face-attribute 'rainbow-blocks-depth-9-face nil
                       :foreground "#A52A2A")
-;; paredit
-(add-hook 'clojure-mode-hook 'paredit-mode)
-(add-hook 'cider-repl-mode-hook 'paredit-mode)
+)
+;; <<< E N D rainbow mode
+
+;; >>> START auto-complete configuration
+(when (package-installed-p 'auto-complete)
+  ;; Auto complete
+  (require 'auto-complete-config)
+  (ac-config-default)
+  (setq ac-quick-help-delay 0.2)
+  )
+;; <<< E N D auto-complete configuration
+
+;; >>> START clojure development
+(when (package-installed-p 'paredit)
+  ;; paredit
+  (add-hook 'clojure-mode-hook 'paredit-mode)
+  (add-hook 'cider-repl-mode-hook 'paredit-mode)
+)
 (show-paren-mode 1)
-;; Auto complete
-;;(add-to-list 'load-path "~/.emacs.d")    ; This may not be appeared if you have already added.
-;;(setq 'ac-dictionary-directories '("~/.emacs.d/ac-dict"))
-(require 'auto-complete-config)
-(ac-config-default)
-(setq ac-quick-help-delay 0.2)
-;; cider auto-complete
-(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
-(require 'ac-cider)
-(add-hook 'cider-mode-hook 'ac-flyspell-workaround)
-(add-hook 'cider-mode-hook 'ac-cider-setup)
-(add-hook 'cider-repl-mode-hook 'ac-cider-setup)
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'cider-mode))
-(defun set-auto-complete-as-completion-at-point-function ()
-  (setq completion-at-point-functions '(auto-complete)))
-(add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
-(add-hook 'cider-mode-hook 'set-auto-complete-as-completion-at-point-function)
-;; nrepl auto-complete
-(require 'ac-nrepl)
-(add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
-(add-hook 'cider-mode-hook 'ac-nrepl-setup)
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'cider-repl-mode))
-(add-hook 'cider-repl-mode-hook 'set-auto-complete-as-completion-at-point-function)
-;; line display
-(line-number-mode t)
-(column-number-mode t)
-(global-hl-line-mode -1)
-;; multiple cursor
-(require 'multiple-cursors)
-(global-set-key (kbd "C-c m ,") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-c m .") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c m 8") 'mc/mark-all-like-this)
-;; call init.el
-;;(add-to-list 'load-path "~/.emacs.d/")
-;;(load-library "init")
-;(add-to-list 'load-path "~/.emacs.d/")
-;(load-library "artist")
-;;; integrate ido with artist-mode
-;(defun artist-ido-select-operation (type)
-;  "Use ido to select a drawing operation in artist-mode"
-;  (interactive (list (ido-completing-read "Drawing operation: " 
-;                                          (list "Pen" "Pen Line" "line" "straight line" "rectangle" 
-;                                                "square" "poly-line" "straight poly-line" "ellipse" 
-;                                                "circle" "text see-thru" "text-overwrite" "spray-can" 
-;                                                "erase char" "erase rectangle" "vaporize line" "vaporize lines" 
-;                                                "cut rectangle" "cut square" "copy rectangle" "copy square" 
-;                                                "paste" "flood-fill"))))
-;  (artist-select-operation type))
-;(defun artist-ido-select-settings (type)
-;  "Use ido to select a setting to change in artist-mode"
-;  (interactive (list (ido-completing-read "Setting: " 
-;                                          (list "Set Fill" "Set Line" "Set Erase" "Spray-size" "Spray-chars" 
-;                                                "Rubber-banding" "Trimming" "Borders"))))
-;  (if (equal type "Spray-size") 
-;      (artist-select-operation "spray set size")
-;    (call-interactively (artist-fc-get-fn-from-symbol 
-;                         (cdr (assoc type '(("Set Fill" . set-fill)
-;                                            ("Set Line" . set-line)
-;                                            ("Set Erase" . set-erase)
-;                                            ("Rubber-banding" . rubber-band)
-;                                            ("Trimming" . trimming)
-;                                            ("Borders" . borders)
-;                                            ("Spray-chars" . spray-chars))))))))
-;(add-hook 'artist-mode-init-hook 
-;          (lambda ()
-;            (define-key artist-mode-map (kbd "C-c C-a C-o") 'artist-ido-select-operation)
-;            (define-key artist-mode-map (kbd "C-c C-a C-c") 'artist-ido-select-settings)))
-;; cedet
-;(load-file "~/cedet-1.1/common/cedet.el")
-;(global-ede-mode 1)                      ; Enable the Project management system
-;(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
-;(global-srecode-minor-mode 1)            ; Enable template insertion menu
-;; enable projectile
-(projectile-global-mode)
-(setq projectile-enable-caching t)
-;; scala ensime hook
-(require 'ensime)
-(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
-;; recentf
-(require 'recentf)
-(recentf-mode 1)
-(setq recentf-max-menu-items 25)
-(global-set-key "\C-x\ \C-r" 'recentf-open-files)
-;; powerline
-(require 'powerline)
-(powerline-default-theme)
-;; evil mode by default
-(require 'evil)
-(setq evil-leader/in-all-states 1)
-(global-evil-leader-mode t)
-(evil-mode 1)
-;; set cursor color
-(setq evil-emacs-state-cursor '("#98AFC7" box)) ; blue gray
-(setq evil-normal-state-cursor '("#6AFB92" box)) ; dragon green
-(setq evil-visual-state-cursor '("#659EC7" box)) ; blue koi
-(setq evil-insert-state-cursor '("#FFE87C" bar)) ; sun yellow
-(setq evil-replace-state-cursor '("#FFE87C" bar))
-(setq evil-operator-state-cursor '("#FFE87C" hollow))
-;; enable relative line number
-(global-relative-line-numbers-mode)
-;; set leader to space
-(evil-leader/set-leader "<SPC>")
-;(define-key evil-normal-state-map [escape] 'keyboard-quit)
-;(define-key evil-visual-state-map [escape] 'keyboard-quit)
-;(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-;(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-;(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-;(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-;(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-(evil-leader/set-key
-  "f" 'find-file
-  "r" 'recentf-open-files
-  "b" 'switch-to-buffer
-  "k" 'kill-buffer
-  "s" 'save-buffer
-  "q" 'save-buffers-kill-terminal)
-(evil-leader/set-key
-  "wsl" 'split-window-right
-  "wsj" 'split-window-below
-  "wo" 'other-window
-  "w0" 'delete-window)
-(evil-leader/set-key-for-mode 'emacs-lisp-mode
-  "xe" 'eval-last-sexp)
-(evil-leader/set-key-for-mode 'org-mode
-  "tc" 'org-ctrl-c-ctrl-c
-  "tt" 'org-todo)
-(evil-leader/set-key-for-mode 'dired-mode
-  "gf" 'grep-find)
-;(defun sys-open-current-buffer()
-;  "Open current buffer using system default application"
-;  (interactive)
-;  (when (buffer-modified-p)
-;    (when (y-or-n-p "Buffer is modified, Save?")
-;      (save-buffer)))
-;  (shell-command (concat "open " (buffer-file-name))))
-;(evil-leader/set-key
-;  "xx" 'sys-open-current-buffer)
+(when (package-installed-p 'ac-cider)
+  ;; cider auto-complete
+  (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+  (require 'ac-cider)
+  (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+  (add-hook 'cider-mode-hook 'ac-cider-setup)
+  (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+  (eval-after-load "auto-complete"
+    '(add-to-list 'ac-modes 'cider-mode))
+  (defun set-auto-complete-as-completion-at-point-function ()
+    (setq completion-at-point-functions '(auto-complete)))
+  (add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
+  (add-hook 'cider-mode-hook 'set-auto-complete-as-completion-at-point-function)
+  )
+(when (package-installed-p 'ac-nrepl)
+  ;; nrepl auto-complete
+  (require 'ac-nrepl)
+  (add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
+  (add-hook 'cider-mode-hook 'ac-nrepl-setup)
+  (eval-after-load "auto-complete"
+    '(add-to-list 'ac-modes 'cider-repl-mode))
+  (add-hook 'cider-repl-mode-hook 'set-auto-complete-as-completion-at-point-function)
+)
+;; <<< E N D clojure development
+
+;; >>> START multiple cursor
+(when (package-installed-p 'multiple-cursors)
+  ;; multiple cursor
+  (require 'multiple-cursors)
+  (global-set-key (kbd "C-c m ,") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-c m .") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c m 8") 'mc/mark-all-like-this)
+)
+;; <<< E N D multiple cursor
+
+;; >>> START projectile
+(when (package-installed-p 'projectile)
+  ;; enable projectile
+  (projectile-global-mode)
+  (setq projectile-enable-caching t)
+)
+;; <<< E N D projectile
+
+;; >>> START scala development
+(when (package-installed-p 'ensime)
+  ;; scala ensime hook
+  (require 'ensime)
+  (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+)
+;; <<< E N D scala development
+
+;; >>> START recent file
+(when (package-installed-p 'recentf)
+  ;; recentf
+  (require 'recentf)
+  (recentf-mode 1)
+  (setq recentf-max-menu-items 25)
+  (global-set-key "\C-x\ \C-r" 'recentf-open-files)
+)
+;; <<< E N D recent file
+
+;; >>> START powerline
+(when (package-installed-p 'powerline)
+  ;; powerline
+  (require 'powerline)
+  (powerline-default-theme)
+)
+;; <<< E N D powerline
+
+;; >>> START relative line number
+(when (package-installed-p 'relative-line-numbers)
+  ;; enable relative line number
+  (global-relative-line-numbers-mode)
+)
+;; <<< E N D relative line number
+
+;; >>> START evil
+(when (package-installed-p 'evil)
+  ;; evil mode by default
+  (require 'evil)
+  (setq evil-leader/in-all-states 1)
+  (global-evil-leader-mode t)
+  (evil-mode 1)
+  ;; set cursor color
+  (setq evil-emacs-state-cursor '("#98AFC7" box)) ; blue gray
+  (setq evil-normal-state-cursor '("#6AFB92" box)) ; dragon green
+  (setq evil-visual-state-cursor '("#659EC7" box)) ; blue koi
+  (setq evil-insert-state-cursor '("#FFE87C" bar)) ; sun yellow
+  (setq evil-replace-state-cursor '("#FFE87C" bar))
+  (setq evil-operator-state-cursor '("#FFE87C" hollow))
+  ;; set leader to space
+  (evil-leader/set-leader "<SPC>")
+  (define-key evil-normal-state-map [escape] 'keyboard-quit)
+  (define-key evil-visual-state-map [escape] 'keyboard-quit)
+  (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+  (evil-leader/set-key
+   "f" 'find-file
+   "r" 'recentf-open-files
+   "b" 'switch-to-buffer
+   "k" 'kill-buffer
+   "s" 'save-buffer
+   "q" 'save-buffers-kill-terminal)
+  (evil-leader/set-key
+   "wsl" 'split-window-right
+   "wsj" 'split-window-below
+   "wo" 'other-window
+   "w0" 'delete-window)
+  (evil-leader/set-key-for-mode 'emacs-lisp-mode
+                                "xe" 'eval-last-sexp)
+  (evil-leader/set-key-for-mode 'org-mode
+                                "tc" 'org-ctrl-c-ctrl-c
+                                "tt" 'org-todo)
+  (evil-leader/set-key-for-mode 'dired-mode
+                                "gf" 'grep-find)
+  (defun sys-open-current-buffer()
+    "Open current buffer using system default application"
+    (interactive)
+    (when (buffer-modified-p)
+      (when (y-or-n-p "Buffer is modified, Save?")
+        (save-buffer)))
+    (shell-command (concat "open " (buffer-file-name))))
+  (evil-leader/set-key
+   "xx" 'sys-open-current-buffer)
+)
+;; <<< E N D evil
+
+;; >>> START key-chord
+(when (package-installed-p 'key-chord)
+  (require 'key-chord)
+  (key-chord-mode 1)
+  ;; File open/close
+  (key-chord-define-global "ff" 'find-file)
+  (key-chord-define-global "fc" 'save-buffers-kill-terminal)
+  (key-chord-define-global "fs" 'save-buffer)
+  )
+;; <<< E N D key-chord
+
+;; >>> START generic modes
+(require 'generic-x)
+(define-generic-mode 'quan-journal-mode
+  '() ;; comment start list
+  '() ;; preserved key words list
+  '(("\\(^>[^<]*<$\\)" . 'font-lock-comment-face)
+    ("\\(==.*=\\)" . 'font-lock-constant-face)
+    ("\\(\*.*\*\\)" . 'font-lock-variable-name-face)
+    ("\\(vim:.*\\)" . 'font-lock-comment-face)) ;; customized render
+  '("journal.*$")
+  nil
+  "A mode for writting my journal in emacs, originally in vm help format"
+  )
+;; <<< E N D generic modes
+
+;; >>> START org
+(when (package-installed-p 'org)
+  ;;org mode work flow
+  (setq org-todo-keywords 
+        '((sequence "TODO(1!)" "DOING(2!)" "BLOCKED(3@/!)" "REVIEW(4)" "|" "DONE(5!)" "ARCHIVED(6@)")))
+  (setq org-todo-keyword-faces
+        '(("TODO" . "#FFE87C")
+          ("DOING" . "#6AFB92")
+          ("BLOCKED" . "red")
+          ("REVIEW" . "#659EC7")
+          ("DONE" . "#98AFC7")
+          ("ARCHIVED" .  "gray")))
+)
+;; <<< E N D org
+
+;; >>> START themes
+(when (and (package-installed-p 'monokai-theme) (package-installed-p 'zenburn-theme))
+  ;; theme setting
+  (if (display-graphic-p)
+      (load-theme 'monokai t)
+    (load-theme 'zenburn t)
+    )
+  )
+;;cursor
+(when (display-graphic-p)
+  (setq-default cursor-type 'hollow)
+  (set-cursor-color "#6AFB92")
+  (blink-cursor-mode 0)
+)
+;;transparency
+(when (and (display-graphic-p) nil)
+    (set-frame-parameter (selected-frame) 'alpha '(85 50))
+)
+;; <<< E N D themes
+
+;; >>> START functions for emacs shells
+(when nil
+  ;; set $PATH for shells
+  (when (display-graphic-p)
+    (let '(path "/Users/sstvn/Dev/Applications/groovy-2.1.9/bin:/Users/sstvn/springsource/spring-roo-1.2.4.RELEASE/bin:/Users/sstvn/Dev/Applications/mongodb-osx-x86_64-2.4.8/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/Users/sstvn/Dev/Applications/vert.x-2.0.2-final/bin:/Users/sstvn/Dev/Applications/apache-maven-3.1.1/bin:/usr/local/mysql/bin:/Users/sstvn/Dev/ShellScript:/Users/sstvn/clojure:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home:/Users/sstvn/scala-2.11.4/bin")
+      (setenv "PATH" path)
+      (setq exec-path
+            (append
+             (split-string-and-unquote path ":")
+             exec-path)))
+    (setenv "JAVA_HOME" "/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home")
+    )
+  ;; shells with different buffer names
+  (defun bash (buffer-name)
+    "Start a terminal and rename buffer."
+    (interactive "sbuffer name: ")
+    (term "/bin/bash")
+    (rename-buffer buffer-name t))
+  (defun zsh (buffer-name)
+    "Start a terminal and rename buffer."
+    (interactive "sbuffer name: ")
+    (term "/bin/zsh")
+    (rename-buffer buffer-name t))
+  (defun fish (buffer-name)
+    "Start a terminal with BUFFER-NAME."
+    (interactive "sbuffer name:")
+    (term "/usr/local/bin/fish")
+    (rename-buffer buffer-name t))
+  )
+;; <<< E N D functions for emacs shells
+
+;; <<<<<<< E N D re-organizing configuration
+
 ;; startup files
 ;(find-file "~/tryorg.org")
 ;(find-file "~/emacs-cheat-sheet.org")
 ;(find-file "~/vms-maven/.projectile")
-(if (display-graphic-p)
-  (load-theme 'monokai t)
-  (load-theme 'zenburn t)
-)
-;;transparency
-;(when (display-graphic-p)
-;    (set-frame-parameter (selected-frame) 'alpha '(85 50))
-;)
+
 ;;; .emacs ends here
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

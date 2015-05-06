@@ -234,10 +234,29 @@ earlier.
 *lookup-table-interpreter*
 ==========================================================2015=04=01==========
 *process-of-learning*
+The process of learning is already to familiar to us, not just learner but to
+everyone. We start learning from the day we was born and continue either
+formal or passive through our jobs, our everyday activities. Yet the process
+is still kind of unfamiliar, kind of mistery. Perhaps it is because each of us
+perceive this process in different ways.
+Mine came from a model I built up after AI course at university. Back then, I
+believe a person's knowledge consists of two sets: rules, and facts. Facts are
+what that person experienced with his own senses. Rules are what he deduced
+from facts and other rules.
+The truth values of facts and rules depend on the truth values of those that
+are connected to them.
 *loose-coupling-software-system*
 *sauerbraten-aka-cube2*
 *stimulate-old-good-brain*
 ==========================================================2015=04=02==========
 *algorithm-complexity*
+============================================2015=04=03=to=2015=04=06==========
+*getting-rid-of-coffee*
+==========================================================2015=04=07==========
+*qi-gong-basic-concepts*
+==========================================================2015=04=08==========
+*firefox-reader-mode*
+==========================================================2015=05=04==========
+*minimum-interprete-effort*
 
 vim:tw=78:ts=8:ft=help:norl:
