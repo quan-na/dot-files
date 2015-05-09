@@ -137,6 +137,12 @@
   (package-install 'ensime))
 (unless (package-installed-p 'scala-mode2)
   (package-install 'scala-mode2))
+;; lua development
+(unless (package-installed-p 'lua-mode)
+  (package-install 'lua-mode))
+;; C development
+(unless (package-installed-p 'cc-mode)
+  (package-install 'cc-mode))
 ;; misc modes
 (unless (package-installed-p 'json-mode)
   (package-install 'json-mode))
@@ -335,10 +341,81 @@
 (when (package-installed-p 'key-chord)
   (require 'key-chord)
   (key-chord-mode 1)
+  (setq key-chord-two-keys-delay 0.3)
+  ;; define keychord, but in one way fashion
+  (defun key-chord-define-oneway (keymap keys command)
+  "Define in KEYMAP, a key-chord of two keys in KEYS starting a COMMAND.
+\nKEYS can be a string or a vector of two elements. Currently only elements
+that corresponds to ascii codes in the range 32 to 126 can be used.
+\nCOMMAND can be an interactive function, a string, or nil.
+If COMMAND is nil, the key-chord is removed."
+  (if (/= 2 (length keys))
+      (error "Key-chord keys must have two elements"))
+  ;; Exotic chars in a string are >255 but define-key wants 128..255 for those
+  (let ((key1 (logand 255 (aref keys 0)))
+	(key2 (logand 255 (aref keys 1))))
+    (if (eq key1 key2)
+	(define-key keymap (vector 'key-chord key1 key2) command)
+      ;; else
+      (define-key keymap (vector 'key-chord key1 key2) command))))
+  ;; global define
+  (defun key-chord-define-oneway-global (keys command)
+  "Define a key-chord of two keys in KEYS starting a COMMAND.
+\nKEYS can be a string or a vector of two elements. Currently only elements
+that corresponds to ascii codes in the range 32 to 126 can be used.
+\nCOMMAND can be an interactive function, a string, or nil.
+If COMMAND is nil, the key-chord is removed."
+  (interactive "sSet key chord globally (2 keys): \nCSet chord \"%s\" to command: ")
+  (key-chord-define-oneway (current-global-map) keys command))
   ;; File open/close
-  (key-chord-define-global "ff" 'find-file)
-  (key-chord-define-global "fc" 'save-buffers-kill-terminal)
-  (key-chord-define-global "fs" 'save-buffer)
+  (key-chord-define-oneway-global "FF" 'find-file) ;; file find
+  (key-chord-define-oneway-global "FQ" 'save-buffers-kill-terminal) ;; file quit
+  (key-chord-define-oneway-global "FS" 'save-buffer) ;; file save
+  (key-chord-define-oneway-global "FK" 'kill-buffer) ;; file kill
+  (key-chord-define-oneway-global "FB" 'switch-to-buffer) ;; file buffer (switch)
+  (when (package-installed-p 'recentf)
+    (key-chord-define-oneway-global "FR" 'recentf-open-files)
+    )
+  ;; getting help
+  (key-chord-define-oneway-global "HK" 'describe-key) ;; help keys
+  (key-chord-define-oneway-global "HF" 'describe-function) ;; help functions
+  ;; moving point
+  (key-chord-define-oneway-global "MH" 'move-beginning-of-line) ;; move <-
+  (key-chord-define-oneway-global "ML" 'move-end-of-line) ;; move ->
+  (key-chord-define-oneway-global "MJ" 'scroll-up-command) ;; move _|_
+  (key-chord-define-oneway-global "MK" 'scroll-down-command) ;; move ^
+  ;; editing (clipboard)
+  (key-chord-define-oneway-global "EM" 'set-mark-command) ;; edit mark
+  (key-chord-define-oneway-global "EX" 'kill-region) ;; edit cut
+  (key-chord-define-oneway-global "EC" 'kill-ring-save) ;; edit copy
+  (key-chord-define-oneway-global "EP" 'yank) ;; edit paste
+  (key-chord-define-oneway-global "EU" 'undo) ;; edit undo
+  (key-chord-define-oneway-global "EY" 'kill-whole-line) ;; edit why
+  ;; window (split panes)
+  (key-chord-define-oneway-global "WC" 'delete-window) ;; window close
+  (key-chord-define-oneway-global "WL" 'split-window-right) ;; window ->
+  (key-chord-define-oneway-global "WJ" 'split-window-below) ;; window _|_
+  (key-chord-define-oneway-global "WO" 'other-window) ;; window other
+  ;; search
+  (key-chord-define-oneway-global "SJ" 'isearch-forward) ;; search _|_
+  (key-chord-define-oneway-global "SK" 'isearch-backward) ;; search ^
+  (key-chord-define-oneway-global "SR" 're-builder) ;; search regex
+  ;; execute commands
+  (key-chord-define-oneway-global "XX" 'execute-extended-command)
+  (key-chord-define-oneway-global "JK" 'keyboard-quit)
+  ;; org mode
+  (when (package-installed-p 'org)
+    (key-chord-define-oneway org-mode-map "OC" 'org-ctrl-c-ctrl-c) ;; org check
+    (key-chord-define-oneway org-mode-map "OT" 'org-todo) ;; org todo
+    (key-chord-define-oneway org-mode-map "OR" 'org-meta-return) ;; org return
+    )
+  ;; projectile
+  (when (package-installed-p 'projectile)
+    (key-chord-define-oneway projectile-mode-map "PF" 'projectile-find-file) ;; project file
+    (key-chord-define-oneway projectile-mode-map "PG" 'projectile-find-file-dwim) ;; project grep
+    (key-chord-define-oneway projectile-mode-map "PB" 'projectile-switch-to-buffer) ;; project buffer
+    (key-chord-define-oneway projectile-mode-map "PR" 'projectile-recentf) ;; project recent
+    )
   )
 ;; <<< E N D key-chord
 
@@ -350,7 +427,10 @@
   '(("\\(^>[^<]*<$\\)" . 'font-lock-comment-face)
     ("\\(==.*=\\)" . 'font-lock-constant-face)
     ("\\(\*.*\*\\)" . 'font-lock-variable-name-face)
-    ("\\(vim:.*\\)" . 'font-lock-comment-face)) ;; customized render
+    ("\\(vim:.*\\)" . 'font-lock-comment-face)
+    ("\\(^>$\\)" . 'font-lock-comment-face)
+    ("\\(^   .*\\)" . 'font-lock-comment-face)
+    ("\\(^<$\\)" . 'font-lock-comment-face)) ;; customized render
   '("journal.*$")
   nil
   "A mode for writting my journal in emacs, originally in vm help format"
