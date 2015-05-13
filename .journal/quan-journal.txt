@@ -24,23 +24,23 @@ are chosen by budhism practisioner for their peaceful feeling.
 Nature is like a bubble, leave alone and it will grow into perfect like a
 circle, try to control and it will burst.
 >
-                 `                
-            `. ,:,                
-         .   '#@@@#:;#+ :`.       
-     ``` #; ``';.``.:@@@'@`@#     
-     , :#@ ,            @@@@#@    
-   ` ;@';.                @@@@@   
-  @@;@@`                  `@@@@@  
- :@@@@::                  :@@@@@. 
- @@@@@@                    :@@@@@ 
- @@@@@#                    '@@@@@ 
- :@@@@@`                  '@@@@@. 
-  @@@@;;.                `@@@@@@  
-   @@@@@``              '@@@@@@   
-    @@@@@@@@@;         @@@@@;@`   
-      @@@@@@@@@:    ,.:@@@'@#     
-        +@@@@@@    . @+,`@+       
-                     ,:`          
+                    `                
+               `. ,:,                
+            .   '#@@@#:;#+ :`.       
+        ``` #; ``';.``.:@@@'@`@#     
+        , :#@ ,            @@@@#@    
+      ` ;@';.                @@@@@   
+     @@;@@`                  `@@@@@  
+    :@@@@::                  :@@@@@. 
+    @@@@@@                    :@@@@@ 
+    @@@@@#                    '@@@@@ 
+    :@@@@@`                  '@@@@@. 
+     @@@@;;.                `@@@@@@  
+      @@@@@``              '@@@@@@   
+       @@@@@@@@@;         @@@@@;@`   
+         @@@@@@@@@:    ,.:@@@'@#     
+           +@@@@@@    . @+,`@+       
+                        ,:`          
 <
 ==========================================================2015=02=09==========
 *better-vim*
@@ -94,10 +94,10 @@ language.
 mod and div in haskell has different meaning. To divide and modulus we must
 use quot and rem respectively.
 >
- Prelude> quot 34 2
- 17
- Prelude> rem 34 3
- 1
+   Prelude> quot 34 2
+   17
+   Prelude> rem 34 3
+   1
 <
 *complicated-io*
 ==========================================================2015=02=12==========
@@ -132,7 +132,7 @@ proceed, I must find out why the JITs can generate code at runtime. There 're
 3 Free project I have found:
  - OpenJDK : from java byte codes to machine code.
  - GNU Lightning : generate directly using assembly like syntax, probably most
-   suitable one to read
+  suitable one to read
  - IonMonkey : from javascript to machine code.
 *asm.js*
 While looking for IonMonkey, I found out about asm.js. It is a high
@@ -258,5 +258,8 @@ are connected to them.
 *firefox-reader-mode*
 ==========================================================2015=05=04==========
 *minimum-interprete-effort*
+==========================================================2015=05=06==========
+*first-step-with-lua*
+*emacs-key-chord*
 
 vim:tw=78:ts=8:ft=help:norl:

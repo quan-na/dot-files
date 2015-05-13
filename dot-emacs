@@ -408,6 +408,7 @@ If COMMAND is nil, the key-chord is removed."
     (key-chord-define-oneway org-mode-map "OC" 'org-ctrl-c-ctrl-c) ;; org check
     (key-chord-define-oneway org-mode-map "OT" 'org-todo) ;; org todo
     (key-chord-define-oneway org-mode-map "OR" 'org-meta-return) ;; org return
+    (key-chord-define-oneway org-mode-map "OA" 'org-agenda) ;; org agenda
     )
   ;; projectile
   (when (package-installed-p 'projectile)
@@ -441,14 +442,23 @@ If COMMAND is nil, the key-chord is removed."
 (when (package-installed-p 'org)
   ;;org mode work flow
   (setq org-todo-keywords 
-        '((sequence "TODO(1!)" "DOING(2!)" "BLOCKED(3@/!)" "REVIEW(4)" "|" "DONE(5!)" "ARCHIVED(6@)")))
+        '((sequence "TODO(1!)" "DOING(2!)" "BLOCKED(3@/!)" "REVIEW(4)" "|" "DONE(5!)" "ARCHIVED(6@)")
+          (sequence "NEW(A)" "ASSIGNED(B@/!)" "ONGOING(C)" "CONFIRM(D@)" "BUILDREADY(E!)" "VERIFYREADY(F)" "|" "PASSED(G!)")))
   (setq org-todo-keyword-faces
         '(("TODO" . "#FFE87C")
           ("DOING" . "#6AFB92")
           ("BLOCKED" . "red")
           ("REVIEW" . "#659EC7")
           ("DONE" . "#98AFC7")
-          ("ARCHIVED" .  "gray")))
+          ("ARCHIVED" .  "gray")
+          ("NEW" . "red")
+          ("ASSIGNED" . "green")
+          ("ONGOING" . "green")
+          ("CONFIRM" . "red")
+          ("BUILDREADY" . "blue")
+          ("VERIFYREADY" . "blue")
+          ("PASSED" . "gray")))
+  (setq org-agenda-files (quote ("~/org")))
 )
 ;; <<< E N D org
 
