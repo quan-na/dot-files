@@ -45,8 +45,8 @@
 )
 (setq mouse-wheel-progressive-speed nil)
 ;; kill toolbar too
+(menu-bar-mode -1)
 (when (display-graphic-p)
-  (menu-bar-mode -1)
   (tool-bar-mode -1)
 )
 ;; RET auto-indent
@@ -98,6 +98,8 @@
   (package-install 'inkpot-theme))
 (unless (package-installed-p 'monokai-theme)
   (package-install 'monokai-theme))
+(unless (package-installed-p 'subatomic256-theme)
+  (package-install 'subatomic256-theme))
 ;; generic eye candies
 (unless (package-installed-p 'rainbow-delimiters)
   (package-install 'rainbow-delimiters))
@@ -380,10 +382,18 @@ If COMMAND is nil, the key-chord is removed."
   (key-chord-define-oneway-global "HK" 'describe-key) ;; help keys
   (key-chord-define-oneway-global "HF" 'describe-function) ;; help functions
   ;; moving point
-  (key-chord-define-oneway-global "MH" 'move-beginning-of-line) ;; move <-
-  (key-chord-define-oneway-global "ML" 'move-end-of-line) ;; move ->
+  (key-chord-define-oneway-global "LH" 'move-beginning-of-line) ;; line <-
+  (key-chord-define-oneway-global "LL" 'move-end-of-line) ;; line ->
+  (key-chord-define-oneway-global "LJ" 'next-line) ;; line _|_
+  (key-chord-define-oneway-global "LK" 'previous-line) ;; line ^
+  (key-chord-define-oneway-global "BJ" 'end-of-buffer) ;; buffer _|_
+  (key-chord-define-oneway-global "BK" 'beginning-of-buffer) ;; buffer ^
   (key-chord-define-oneway-global "MJ" 'scroll-up-command) ;; move _|_
   (key-chord-define-oneway-global "MK" 'scroll-down-command) ;; move ^
+  (key-chord-define-oneway-global "GL" 'forward-list) ;; group ->
+  (key-chord-define-oneway-global "GH" 'backward-list) ;; group <-
+  (key-chord-define-oneway-global "GK" 'backward-up-list) ;; group ^
+  (key-chord-define-oneway-global "GJ" 'down-list) ;; group _|_
   ;; editing (clipboard)
   (key-chord-define-oneway-global "EM" 'set-mark-command) ;; edit mark
   (key-chord-define-oneway-global "EX" 'kill-region) ;; edit cut
@@ -463,11 +473,11 @@ If COMMAND is nil, the key-chord is removed."
 ;; <<< E N D org
 
 ;; >>> START themes
-(when (and (package-installed-p 'monokai-theme) (package-installed-p 'zenburn-theme))
+(when (and (package-installed-p 'monokai-theme) (package-installed-p 'subatomic256-theme))
   ;; theme setting
   (if (display-graphic-p)
       (load-theme 'monokai t)
-    (load-theme 'zenburn t)
+      (load-theme 'subatomic256 t)
     )
   )
 ;;cursor
@@ -526,5 +536,6 @@ If COMMAND is nil, the key-chord is removed."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("9dae95cdbed1505d45322ef8b5aa90ccb6cb59e0ff26fef0b8f411dfc416c552" "70cf411fbf9512a4da81aa1e87b064d3a3f0a47b19d7a4850578c8d64cac2353" default))))
-
+ '(custom-safe-themes
+   (quote
+    ("b85fc9f122202c71b9884c5aff428eb81b99d25d619ee6fde7f3016e08515f07" default))))
