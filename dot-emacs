@@ -443,7 +443,7 @@ If COMMAND is nil, the key-chord is removed."
   ;;org mode work flow
   (setq org-todo-keywords 
         '((sequence "TODO(1!)" "DOING(2!)" "BLOCKED(3@/!)" "REVIEW(4)" "|" "DONE(5!)" "ARCHIVED(6@)")
-          (sequence "NEW(A)" "ASSIGNED(B@/!)" "ONGOING(C)" "CONFIRM(D@)" "BUILDREADY(E!)" "VERIFYREADY(F)" "|" "PASSED(G!)")))
+          (sequence "NEW(A)" "ASSIGNED(B@/!)" "ONGOING(C)" "CONFIRM(D@)" "BUILDREADY(E!)" "VERIFYREADY(F)" "|" "PASSED(G!)" "DEFFER(H!)")))
   (setq org-todo-keyword-faces
         '(("TODO" . "#FFE87C")
           ("DOING" . "#6AFB92")
@@ -457,7 +457,8 @@ If COMMAND is nil, the key-chord is removed."
           ("CONFIRM" . "red")
           ("BUILDREADY" . "blue")
           ("VERIFYREADY" . "blue")
-          ("PASSED" . "gray")))
+          ("PASSED" . "gray")
+          ("DEFFER" . "gray")))
   (setq org-agenda-files (quote ("~/org")))
 )
 ;; <<< E N D org
