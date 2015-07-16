@@ -9,11 +9,11 @@
 ;; monospace font for better drawing
 (when (display-graphic-p)
   (add-to-list 'default-frame-alist
-               '(font . "Inconsolata-14"))
+               '(font . "Fira Mono-12"))
   (set-face-attribute 'default nil
-                      :family "Inconsolata" :height 140)
-  (set-face-attribute 'fixed-pitch nil :font "Inconsolata-14")
-  (set-face-attribute 'variable-pitch nil :font "Inconsolata-14")
+                      :family "Fira Mono" :height 120)
+  (set-face-attribute 'fixed-pitch nil :font "Fira Mono-12")
+  (set-face-attribute 'variable-pitch nil :font "Fira Mono-12")
   )
 (when (display-graphic-p)
   (custom-set-faces
@@ -65,6 +65,10 @@
 (line-number-mode t)
 (column-number-mode t)
 (global-hl-line-mode -1)
+;; IDO every where
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
 ;; view large files instead of editing it 
 (defun my-find-file-check-make-large-file-read-only-hook ()
   "If a file is over a given size, make the buffer read only."
@@ -83,7 +87,8 @@
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")
-                         ("org" . "http://orgmode.org/elpa/")))
+                         ("org" . "http://orgmode.org/elpa/")
+                         ("sunrisec" . "http://joseito.republika.pl/sunrise-commander/")))
 ;; uncomment after cleaning up
 ;(package-refresh-contents)
 (package-initialize)
@@ -145,17 +150,32 @@
 ;; C development
 (unless (package-installed-p 'cc-mode)
   (package-install 'cc-mode))
+;; Web development
+(unless (package-installed-p 'web-mode)
+  (package-install 'web-mode))
+(unless (package-installed-p 'web-beautify)
+  (package-install 'web-beautify))
+;; Org
+(unless (package-installed-p 'org)
+  (package-install 'org))
+(unless (package-installed-p 'babel)
+  (package-install 'babel))
+;; Sunrise Commander
+;(unless (package-installed-p 'sunrise-commander)
+;  (package-install 'sunrise-commander))
 ;; misc modes
 (unless (package-installed-p 'json-mode)
   (package-install 'json-mode))
-(unless (package-installed-p 'org)
-  (package-install 'org))
 (unless (package-installed-p 'markdown-mode)
   (package-install 'markdown-mode))
 (unless (package-installed-p 'projectile)
   (package-install 'projectile))
 (unless (package-installed-p 'key-chord)
   (package-install 'key-chord))
+(unless (package-installed-p 'sr-speedbar)
+  (package-install 'sr-speedbar))
+(unless (package-installed-p 'imenu)
+  (package-install 'imenu))
 ;; compile installed packages
 (byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
 ;; <<< E N D package manager
@@ -376,7 +396,11 @@ If COMMAND is nil, the key-chord is removed."
   (key-chord-define-oneway-global "FK" 'kill-buffer) ;; file kill
   (key-chord-define-oneway-global "FB" 'switch-to-buffer) ;; file buffer (switch)
   (when (package-installed-p 'recentf)
-    (key-chord-define-oneway-global "FR" 'recentf-open-files)
+    (key-chord-define-oneway-global "FR" 'recentf-open-files) ;; file recent
+    )
+  (when (package-installed-p 'sr-speedbar)
+    (key-chord-define-oneway-global "FL" 'sr-speedbar-open) ;; file ->
+    (key-chord-define-oneway-global "FH" 'sr-speedbar-close) ;; file <-
     )
   ;; getting help
   (key-chord-define-oneway-global "HK" 'describe-key) ;; help keys
@@ -412,6 +436,7 @@ If COMMAND is nil, the key-chord is removed."
   (key-chord-define-oneway-global "SR" 're-builder) ;; search regex
   ;; execute commands
   (key-chord-define-oneway-global "XX" 'execute-extended-command)
+  (key-chord-define-oneway-global "xx" 'execute-extended-command)
   (key-chord-define-oneway-global "JK" 'keyboard-quit)
   ;; org mode
   (when (package-installed-p 'org)
@@ -419,6 +444,9 @@ If COMMAND is nil, the key-chord is removed."
     (key-chord-define-oneway org-mode-map "OT" 'org-todo) ;; org todo
     (key-chord-define-oneway org-mode-map "OR" 'org-meta-return) ;; org return
     (key-chord-define-oneway org-mode-map "OA" 'org-agenda) ;; org agenda
+    )
+  (when (package-installed-p 'imenu)
+    (key-chord-define-oneway org-mode-map "IG" 'ido-goto-symbol) ;; org goto
     )
   ;; projectile
   (when (package-installed-p 'projectile)
@@ -453,7 +481,7 @@ If COMMAND is nil, the key-chord is removed."
   ;;org mode work flow
   (setq org-todo-keywords 
         '((sequence "TODO(1!)" "DOING(2!)" "BLOCKED(3@/!)" "REVIEW(4)" "|" "DONE(5!)" "ARCHIVED(6@)")
-          (sequence "NEW(A)" "ASSIGNED(B@/!)" "ONGOING(C)" "CONFIRM(D@)" "BUILDREADY(E!)" "VERIFYREADY(F)" "|" "PASSED(G!)" "DEFFER(H!)")))
+          (sequence "NEW(A!)" "FAIL(I!)" "ASSIGNED(B@/!)" "ONGOING(C!)" "CONFIRM(D@)" "BUILDREADY(E!)" "VERIFYREADY(F!)" "|" "PASSED(G!)" "DEFFER(H!)")))
   (setq org-todo-keyword-faces
         '(("TODO" . "#FFE87C")
           ("DOING" . "#6AFB92")
@@ -462,6 +490,7 @@ If COMMAND is nil, the key-chord is removed."
           ("DONE" . "#98AFC7")
           ("ARCHIVED" .  "gray")
           ("NEW" . "red")
+          ("FAIL" . "red")
           ("ASSIGNED" . "green")
           ("ONGOING" . "green")
           ("CONFIRM" . "red")
@@ -470,6 +499,56 @@ If COMMAND is nil, the key-chord is removed."
           ("PASSED" . "gray")
           ("DEFFER" . "gray")))
   (setq org-agenda-files (quote ("~/org")))
+  )
+(when (package-installed-p 'imenu)
+  ; by huylnq : goto symbols using imenu
+  (defun ido-goto-symbol (&optional symbol-list)
+    "Refresh imenu and jump to a place in the buffer using Ido."
+    (interactive)
+    (unless (featurep 'imenu)
+      (require 'imenu nil t))
+    (cond
+     ((not symbol-list)
+      (let ((ido-mode ido-mode)
+            (ido-enable-flex-matching
+             (if (boundp 'ido-enable-flex-matching)
+                 ido-enable-flex-matching t))
+            name-and-pos symbol-names position)
+        (unless ido-mode
+          (ido-mode 1)
+          (setq ido-enable-flex-matching t))
+        (while (progn
+                 (imenu--cleanup)
+                 (setq imenu--index-alist nil)
+                 (ido-goto-symbol (imenu--make-index-alist))
+                 (setq selected-symbol
+                       (ido-completing-read "Symbol? " symbol-names))
+                 (string= (car imenu--rescan-item) selected-symbol)))
+        (unless (and (boundp 'mark-active) mark-active)
+          (push-mark nil t nil))
+        (setq position (cdr (assoc selected-symbol name-and-pos)))
+        (cond
+         ((overlayp position)
+          (goto-char (overlay-start position)))
+         (t
+          (goto-char position)))))
+     ((listp symbol-list)
+      (dolist (symbol symbol-list)
+        (let (name position)
+          (cond
+           ((and (listp symbol) (imenu--subalist-p symbol))
+            (ido-goto-symbol symbol))
+           ((listp symbol)
+            (setq name (car symbol))
+            (setq position (cdr symbol)))
+           ((stringp symbol)
+            (setq name symbol)
+            (setq position
+                  (get-text-property 1 'org-imenu-marker symbol))))
+          (unless (or (null position) (null name)
+                      (string= (car imenu--rescan-item) name))
+            (add-to-list 'symbol-names name)
+            (add-to-list 'name-and-pos (cons name position))))))))
 )
 ;; <<< E N D org
 
