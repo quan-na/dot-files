@@ -425,6 +425,11 @@ If COMMAND is nil, the key-chord is removed."
   (key-chord-define-oneway-global "EP" 'yank) ;; edit paste
   (key-chord-define-oneway-global "EU" 'undo) ;; edit undo
   (key-chord-define-oneway-global "EY" 'kill-whole-line) ;; edit why
+  ;; rectangle (mark same as EM)
+  (key-chord-define-oneway-global "RC" 'copy-rectangle-as-kill) ;; rec copy
+  (key-chord-define-oneway-global "RX" 'kill-rectangle) ;; rec cut
+  (key-chord-define-oneway-global "RP" 'yank-rectangle) ;; rec paste
+  (key-chord-define-oneway-global "RD" 'delete-rectangle) ;; rec delete
   ;; window (split panes)
   (key-chord-define-oneway-global "WC" 'delete-window) ;; window close
   (key-chord-define-oneway-global "WL" 'split-window-right) ;; window ->
@@ -440,6 +445,7 @@ If COMMAND is nil, the key-chord is removed."
   (key-chord-define-oneway-global "JK" 'keyboard-quit)
   ;; org mode
   (when (package-installed-p 'org)
+    (require 'org)
     (key-chord-define-oneway org-mode-map "OC" 'org-ctrl-c-ctrl-c) ;; org check
     (key-chord-define-oneway org-mode-map "OT" 'org-todo) ;; org todo
     (key-chord-define-oneway org-mode-map "OR" 'org-meta-return) ;; org return
@@ -557,7 +563,7 @@ If COMMAND is nil, the key-chord is removed."
   ;; theme setting
   (if (display-graphic-p)
       (load-theme 'monokai t)
-      (load-theme 'subatomic256 t)
+      (load-theme 'zenburn t)
     )
   )
 ;;cursor
