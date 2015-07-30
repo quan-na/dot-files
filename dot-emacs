@@ -295,6 +295,9 @@
   ;; powerline
   (require 'powerline)
   (powerline-default-theme)
+  ;; use wave instead of arrow
+  (custom-set-variables '(powerline-default-separator 'contour))
+  (setq powerline-default-separator-dir '(left . right))
 )
 ;; <<< E N D powerline
 
