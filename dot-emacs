@@ -433,6 +433,8 @@ If COMMAND is nil, the key-chord is removed."
   (key-chord-define-oneway-global "RX" 'kill-rectangle) ;; rec cut
   (key-chord-define-oneway-global "RP" 'yank-rectangle) ;; rec paste
   (key-chord-define-oneway-global "RD" 'delete-rectangle) ;; rec delete
+  (key-chord-define-oneway-global "R[" 'picture-clear-rectangle) ;; rec out
+  (key-chord-define-oneway-global "R]" 'picture-yank-rectangle) ;; rec insert
   ;; window (split panes)
   (key-chord-define-oneway-global "WC" 'delete-window) ;; window close
   (key-chord-define-oneway-global "WL" 'split-window-right) ;; window ->
