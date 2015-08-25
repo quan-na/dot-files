@@ -160,6 +160,8 @@
   (package-install 'org))
 (unless (package-installed-p 'babel)
   (package-install 'babel))
+(unless (package-installed-p 'deft)
+  (package-install 'deft))
 ;; Sunrise Commander
 ;(unless (package-installed-p 'sunrise-commander)
 ;  (package-install 'sunrise-commander))
@@ -294,9 +296,13 @@
 (when (package-installed-p 'powerline)
   ;; powerline
   (require 'powerline)
-  (powerline-default-theme)
-  ;; use wave instead of arrow
-  (custom-set-variables '(powerline-default-separator 'contour))
+  (powerline-center-theme)
+  (if (display-graphic-p)
+    ;; use wave instead of arrow
+    (custom-set-variables '(powerline-default-separator 'contour))
+    (custom-set-variables
+     '(powerline-utf-8-separator-left #x003E)
+     '(powerline-utf-8-separator-right #x003C)))
   (setq powerline-default-separator-dir '(left . right))
 )
 ;; <<< E N D powerline
@@ -433,8 +439,12 @@ If COMMAND is nil, the key-chord is removed."
   (key-chord-define-oneway-global "RX" 'kill-rectangle) ;; rec cut
   (key-chord-define-oneway-global "RP" 'yank-rectangle) ;; rec paste
   (key-chord-define-oneway-global "RD" 'delete-rectangle) ;; rec delete
-  (key-chord-define-oneway-global "R[" 'picture-clear-rectangle) ;; rec out
-  (key-chord-define-oneway-global "R]" 'picture-yank-rectangle) ;; rec insert
+  (add-hook
+   'picture-mode-hook
+   (lambda ()
+          (key-chord-define-oneway picture-mode-map "R[" 'picture-clear-rectangle) ;; rec out
+          (key-chord-define-oneway picture-mode-map "R]" 'picture-yank-rectangle) ;; rec insert
+          ))
   ;; window (split panes)
   (key-chord-define-oneway-global "WC" 'delete-window) ;; window close
   (key-chord-define-oneway-global "WL" 'split-window-right) ;; window ->
@@ -458,6 +468,9 @@ If COMMAND is nil, the key-chord is removed."
     )
   (when (package-installed-p 'imenu)
     (key-chord-define-oneway org-mode-map "IG" 'ido-goto-symbol) ;; org goto
+    )
+  (when (package-installed-p 'deft)
+    (key-chord-define-oneway-global "NV" 'deft) ;; notational velocity
     )
   ;; projectile
   (when (package-installed-p 'projectile)
@@ -510,6 +523,22 @@ If COMMAND is nil, the key-chord is removed."
           ("PASSED" . "gray")
           ("DEFFER" . "gray")))
   (setq org-agenda-files (quote ("~/org")))
+  )
+;;enable babel languages
+(when (package-installed-p 'babel)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((sql . t) (java . t) (C . t) (emacs-lisp . t)))
+  (setq org-src-fontify-natively t)
+  )
+;; integrate deft with org
+(when (package-installed-p 'deft)
+  (require 'deft)
+  (setq
+      deft-extension "org"
+      deft-directory "~/org/deft/"
+      deft-text-mode 'org-mode)
+  ;(global-set-key (kbd "<f9>") 'deft))
   )
 (when (package-installed-p 'imenu)
   ; by huylnq : goto symbols using imenu
