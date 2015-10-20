@@ -9,11 +9,11 @@
 ;; monospace font for better drawing
 (when (display-graphic-p)
   (add-to-list 'default-frame-alist
-               '(font . "Fira Mono-12"))
+               '(font . "OCR A Extended-14"))
   (set-face-attribute 'default nil
-                      :family "Fira Mono" :height 120)
-  (set-face-attribute 'fixed-pitch nil :font "Fira Mono-12")
-  (set-face-attribute 'variable-pitch nil :font "Fira Mono-12")
+                      :family "OCR A Extended" :height 140)
+  (set-face-attribute 'fixed-pitch nil :font "OCR A Extended-14")
+  (set-face-attribute 'variable-pitch nil :font "OCR A Extended-14")
   )
 (when (display-graphic-p)
   (custom-set-faces
@@ -69,6 +69,163 @@
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode 1)
+;; fancier mode-line
+(when t
+  ;; Mode line setup
+  (setq-default
+   mode-line-format
+   '(; Clock
+     (:eval (propertize (format-time-string "%H:%M")
+              'help-echo
+              (concat (format-time-string "%c; ")
+                      (emacs-uptime "Uptime:%hh"))
+              'face 'mode-line-clock-face))
+     ; Position, including warning for 80 columns
+     (:propertize "%4l:" face mode-line-position-face)
+     (:eval (propertize "%3c" 'face
+                        (if (>= (current-column) 80)
+                            'mode-line-80col-face
+                          'mode-line-position-face)))
+     ;emacsclient [default -- keep?]
+     mode-line-client
+     " "
+     ; read-only or modified status
+     (:eval
+      (cond (buffer-read-only
+             (propertize "RO" 'face 'mode-line-read-only-face))
+            ((buffer-modified-p)
+             (propertize "**" 'face 'mode-line-modified-face))
+            (t "  ")))
+     " "
+     ; directory and buffer/file name
+     ;(:propertize (:eval (shorten-directory default-directory 30))
+     ;             face mode-line-folder-face)
+     (:propertize (:eval (abbrev-directory default-directory))
+             face mode-line-folder-face)
+     (:propertize "%b"
+                  face mode-line-filename-face)
+     ; narrow [default -- keep?]
+     " %n "
+     ; mode indicators: vc, recursive edit, major mode, minor modes, process, global
+     (vc-mode vc-mode)
+     "  %["
+     (:propertize mode-name
+                  face mode-line-mode-face)
+     "%] "
+     (:eval (propertize (format-mode-line minor-mode-alist)
+                        'face 'mode-line-minor-mode-face))
+     (:propertize mode-line-process
+                  face mode-line-process-face)
+     (global-mode-string global-mode-string)
+     " "
+     (:propertize mode-line-note
+                  face mode-line-note-face)
+     mode-line-end-spaces
+     ; nyan-mode uses nyan cat as an alternative to %p
+     ;(:eval (when nyan-mode (list (nyan-create))))
+     ))
+
+  ;; Display a small note to indicate what I am to do
+  (setq mode-line-note nil)
+  (defun mode-line-note-off ()
+    (interactive)
+    (setq mode-line-note nil)
+    (force-mode-line-update))
+  (defun mode-line-note-set (note-text)
+    (interactive "s::")
+    (if mode-line-note
+        (setq mode-line-note (concat note-text " < " mode-line-note))
+      (setq mode-line-note note-text))
+    (when (> (length mode-line-note) 52)
+      (setq mode-line-note (substring mode-line-note 0 52))
+      )
+    (force-mode-line-update))
+  ;; Helper function
+  (defun shorten-directory (dir max-length)
+    "Show up to `max-length' characters of a directory name `dir'."
+    (let ((path (reverse (split-string (abbreviate-file-name dir) "/")))
+          (output ""))
+      (when (and path (equal "" (car path)))
+        (setq path (cdr path)))
+      (while (and path (< (length output) (- max-length 4)))
+        (setq output (concat (car path) "/" output))
+        (setq path (cdr path)))
+      (when path
+        (setq output (concat ".../" output)))
+      output))
+  (defun abbrev-directory (dir)
+    "Show only 1 character for each parent dir"
+    (mapconcat 'identity
+               (mapcar (lambda (x)
+                         (if (equal x "") x (substring x 0 1)))
+                       (split-string (abbreviate-file-name dir) "/")) "/")
+    )
+  ;; Extra mode line faces
+  (make-face 'mode-line-read-only-face)
+  (make-face 'mode-line-modified-face)
+  (make-face 'mode-line-folder-face)
+  (make-face 'mode-line-filename-face)
+  (make-face 'mode-line-position-face)
+  (make-face 'mode-line-mode-face)
+  (make-face 'mode-line-minor-mode-face)
+  (make-face 'mode-line-process-face)
+  (make-face 'mode-line-80col-face)
+  (make-face 'mode-line-clock-face)
+  (make-face 'mode-line-note-face)
+
+  (set-face-attribute 'mode-line-clock-face nil
+                      :inherit 'mode-line-face
+                      :foreground "#659EC7"
+                      :box '(:line-width 2 :color "#659EC7"))
+  (set-face-attribute 'mode-line nil
+                      :foreground "gray60" :background "gray20"
+                      :inverse-video nil
+                      :box '(:line-width 6 :color "gray20" :style nil))
+  (set-face-attribute 'mode-line-inactive nil
+                      :foreground "gray80" :background "gray40"
+                      :inverse-video nil
+                      :box '(:line-width 6 :color "gray40" :style nil))
+
+  (set-face-attribute 'mode-line-read-only-face nil
+                      :inherit 'mode-line-face
+                      :foreground "#4271ae"
+                      :box '(:line-width 2 :color "#4271ae"))
+  (set-face-attribute 'mode-line-modified-face nil
+                      :inherit 'mode-line-face
+                      :foreground "#c82829"
+                      :background "#ffffff"
+                      :box '(:line-width 2 :color "#c82829"))
+  (set-face-attribute 'mode-line-folder-face nil
+                      :inherit 'mode-line-face
+                      :foreground "gray60")
+  (set-face-attribute 'mode-line-filename-face nil
+                      :inherit 'mode-line-face
+                      :foreground "#eab700"
+                      :weight 'bold)
+  (set-face-attribute 'mode-line-position-face nil
+                      :inherit 'mode-line-face
+                      ;:family "Menlo" :height 100
+                      )
+  (set-face-attribute 'mode-line-mode-face nil
+                      :inherit 'mode-line-face
+                      :foreground "gray80")
+  (set-face-attribute 'mode-line-minor-mode-face nil
+                      :inherit 'mode-line-mode-face
+                      :foreground "gray40"
+                      ;:height 110
+                      )
+  (set-face-attribute 'mode-line-process-face nil
+                      :inherit 'mode-line-face
+                      :foreground "#718c00")
+  (set-face-attribute 'mode-line-80col-face nil
+                      :inherit 'mode-line-position-face
+                      :foreground "black" :background "#eab700")
+  (set-face-attribute 'mode-line-note-face nil
+                      :inherit 'mode-line-face
+                      :foreground "#DC143C" ; Crimson
+                      ;:box '(:line-width 2 :color "#4271ae")
+                      )
+  )
 ;; view large files instead of editing it 
 (defun my-find-file-check-make-large-file-read-only-hook ()
   "If a file is over a given size, make the buffer read only."
@@ -120,8 +277,8 @@
 ;  (package-install 'evil-leader))
 ;(unless (package-installed-p 'evil-tutor)
 ;  (package-install 'evil-tutor))
-(unless (package-installed-p 'powerline)
-  (package-install 'powerline))
+;(unless (package-installed-p 'powerline)
+;  (package-install 'powerline))
 ;(unless (package-installed-p 'powerline-evil)
 ;  (package-install 'powerline-evil))
 (unless (package-installed-p 'relative-line-numbers)
@@ -172,12 +329,18 @@
   (package-install 'markdown-mode))
 (unless (package-installed-p 'projectile)
   (package-install 'projectile))
-(unless (package-installed-p 'key-chord)
-  (package-install 'key-chord))
+(unless (package-installed-p 'ggtags)
+  (package-install 'ggtags))
+;(unless (package-installed-p 'key-chord)
+;  (package-install 'key-chord))
 (unless (package-installed-p 'sr-speedbar)
   (package-install 'sr-speedbar))
 (unless (package-installed-p 'imenu)
   (package-install 'imenu))
+(unless (package-installed-p 'hydra)
+  (package-install 'hydra))
+(unless (package-installed-p 'undo-tree)
+  (package-install 'undo-tree))
 ;; compile installed packages
 (byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
 ;; <<< E N D package manager
@@ -273,6 +436,22 @@
   (setq projectile-enable-caching t)
 )
 ;; <<< E N D projectile
+
+;; >>> START ggtags
+(when (package-installed-p 'ggtags)
+  (when (package-installed-p 'cc-mode)
+    (add-hook 'c-mode-hook
+              (lambda ()
+                (ggtags-mode 1)))
+    (add-hook 'c++-mode-hook
+              (lambda ()
+                (ggtags-mode 1)))
+    (add-hook 'java-mode-hook
+              (lambda ()
+                (ggtags-mode 1)))
+    )
+  )
+;; <<< E N D ggtags
 
 ;; >>> START scala development
 (when (package-installed-p 'ensime)
@@ -428,6 +607,119 @@
 )
 ;; <<< E N D evil
 
+;; >>> START keys define
+(when (package-installed-p 'hydra)
+  (require 'hydra)
+  ;; File open/close
+  (global-set-key (kbd "<f2> f f") 'find-file) ;; file find
+  (global-set-key (kbd "<f2> f q") 'save-buffers-kill-terminal) ;; file quit
+  (global-set-key (kbd "<f2> f s") 'save-buffer) ;; file save
+  (global-set-key (kbd "<f2> f k") 'kill-buffer) ;; file quit
+  (global-unset-key (kbd "<f2> b")) ;; unbind associate buffer
+  (global-set-key (kbd "<f2> b b") 'switch-to-buffer) ;; file buffer _tka
+  (when (package-installed-p 'recentf)
+    (global-set-key (kbd "<f2> r r") 'recentf-open-files) ;; file recent _tka
+    )
+  (when (package-installed-p 'sr-speedbar)
+    (global-set-key (kbd "<f2> f l") 'sr-speedbar-open) ;; file buffer
+    (global-set-key (kbd "<f2> f h") 'sr-speedbar-close) ;; file buffer
+    )
+  ;; getting help
+  (global-set-key (kbd "<f2> h k") 'describe-key)
+  (global-set-key (kbd "<f2> h f") 'describe-function)
+  ;; moving point
+  (defhydra hydra-move ()
+    ("l" (move-to-column (+ (current-column) 1)) "right")
+    ("h" (move-to-column (max 0 (- (current-column) 1))) "left")
+    ("j" (next-line 1) "down")
+    ("k" (previous-line 1) "up")
+    ("o" move-end-of-line "end")
+    ("y" move-beginning-of-line "home")
+    ("u" end-of-buffer "end")
+    ("i" beginning-of-buffer "begin"))
+  (global-set-key (kbd "<f5> m") 'hydra-move/body)
+  ;; editing
+  (global-set-key (kbd "<f2> m m") 'set-mark-command) ;; _tka
+  (global-set-key (kbd "<f2> x x") 'kill-region) ;; _tka
+  (global-set-key (kbd "<f2> c c") 'kill-ring-save) ;; _tka
+  (global-set-key (kbd "<f2> p p") 'yank) ;; _tka
+  (when (package-installed-p 'undo-tree)
+    (global-undo-tree-mode)
+    (global-set-key (kbd "<f2> u v") 'undo-tree-visualize))
+  (global-set-key (kbd "<f2> u u") 'undo) ;; _tka
+  (global-set-key (kbd "<f2> y y") 'kill-whole-line) ;; _tka
+  ;; rectangle
+  (global-set-key (kbd "<f2> [ c") 'copy-rectangle-as-kill) ;; rec copy _tka
+  (global-set-key (kbd "<f2> [ x") 'kill-rectangle) ;; rec cut _tka
+  (global-set-key (kbd "<f2> r p") 'yank-rectangle) ;; rec paste
+  (global-set-key (kbd "<f2> [ d") 'delete-rectangle) ;; rec delete
+  (add-hook
+   'picture-mode-hook
+   (lambda ()
+     (define-key picture-mode-map (kbd "<f2> r o") 'picture-clear-rectangle) ;; rec out
+     (define-key picture-mode-map (kbd "<f2> r i") 'picture-yank-rectangle) ;; rec insert
+     ))
+  ;; window
+  (global-set-key (kbd "<f2> w h") 'delete-window) ;; window close _tka
+  (global-set-key (kbd "<f2> w l") 'split-window-right) ;; window ->
+  (global-set-key (kbd "<f2> w j") 'split-window-below) ;; window _|_
+  (global-set-key (kbd "<f2> w o") 'other-window) ;; window other
+  ;; search
+  (global-unset-key (kbd "<f2> s")) 
+  (global-set-key (kbd "<f2> s j") 'isearch-forward) ;; search _|_
+  (global-set-key (kbd "<f2> s k") 'isearch-backward) ;; search ^
+  (add-hook 'isearch-mode-hook
+            (lambda ()
+              (define-key isearch-mode-map (kbd "<f2> j") 'isearch-repeat-forward)
+              (define-key isearch-mode-map (kbd "<f2> k") 'isearch-repeat-backward)
+              ))
+  (global-set-key (kbd "<f2> s r") 're-builder) ;; search regex
+  ;; execute commands
+  ; use build-in ESC-x to execute commands
+  (global-set-key (kbd "<f2> x x") 'execute-extended-command)
+  (global-set-key (kbd "<f2> x c") 'compile)
+  (global-set-key (kbd "<f2> x e") 'eval-last-sexp)
+  (global-set-key (kbd "<f2> g") 'keyboard-quit)
+  ;; my use of note
+  (when (fboundp 'mode-line-note-set)
+    (global-set-key (kbd "<f2> n s") 'mode-line-note-set)
+    (global-set-key (kbd "<f2> n x") 'mode-line-note-off)
+    )
+  ;; org mode
+  (when (package-installed-p 'org)
+    (require 'org)
+    (define-key org-mode-map (kbd "<f2> o c") 'org-ctrl-c-ctrl-c) ;; org check
+    (define-key org-mode-map (kbd "<f2> o t") 'org-todo) ;; org todo
+    (define-key org-mode-map (kbd "<f2> o r") 'org-meta-return) ;; org return
+    (define-key org-mode-map (kbd "<f2> o a") 'org-agenda) ;; org agenda
+    )
+  (when (package-installed-p 'imenu)
+    (define-key org-mode-map (kbd "<f2> i g") 'ido-goto-symbol) ;; org goto
+    )
+  (when (package-installed-p 'deft)
+    (global-set-key (kbd "<f2> n v") 'deft) ;; notational velocity
+    )
+  ;; projectile
+  (when (package-installed-p 'projectile)
+    (define-key projectile-mode-map (kbd "<f2> p f") 'projectile-find-file) ;; project file
+    (define-key projectile-mode-map (kbd "<f2> p g") 'projectile-find-file-dwim)
+    (define-key projectile-mode-map (kbd "<f2> p b") 'projectile-switch-to-buffer)
+    (define-key projectile-mode-map (kbd "<f2> p r") 'projectile-recentf) ;; project recent
+    )
+  ;; ggtags
+  (when (package-installed-p 'ggtags)
+    (add-hook 'ggtags-mode-hook
+          (lambda ()
+            (local-set-key (kbd "<f2> p t f") 'ggtags-find-file)
+            (local-set-key (kbd "<f2> p t r") 'ggtags-find-reference)
+            (local-set-key (kbd "<f2> p t d") 'ggtags-find-definition)
+            (local-set-key (kbd "<f2> p t t") 'ggtags-find-tag-dwim)
+            ))
+    )
+  )
+
+;; <<< E N D keys define 
+
 ;; >>> START key-chord
 (when (package-installed-p 'key-chord)
   (require 'key-chord)
@@ -475,16 +767,16 @@ If COMMAND is nil, the key-chord is removed."
       (set-cursor-color "#6AFB92")
       (blink-cursor-mode 0)))
   ;; Set global flag on/off
-  (key-chord-define-oneway-global "jk" 'chord-command-on) ;; down-up
-  (key-chord-define-oneway-global "kj" 'chord-command-off) ;; up-down
+  (key-chord-define-oneway-global "fj" 'chord-command-on) ;; down-up
+  (key-chord-define-oneway-global "jf" 'chord-command-off) ;; up-down
   ;; File open/close
   (key-chord-define-oneway-global "ff" (lambda () (interactive) (if use-chord-command (call-interactively 'find-file) (insert "ff")))) ;; file find
   (key-chord-define-oneway-global "fq" (lambda () (interactive) (if use-chord-command (call-interactively 'save-buffers-kill-terminal) (insert "fq")))) ;; file quit
   (key-chord-define-oneway-global "fs" (lambda () (interactive) (if use-chord-command (call-interactively 'save-buffer) (insert "fs")))) ;; file save
   (key-chord-define-oneway-global "fk" (lambda () (interactive) (if use-chord-command (call-interactively 'kill-buffer) (insert "fk")))) ;; file quit
-  (key-chord-define-oneway-global "fb" (lambda () (interactive) (if use-chord-command (call-interactively 'switch-to-buffer) (insert "fb")))) ;; file buffer
+  (key-chord-define-oneway-global "bb" (lambda () (interactive) (if use-chord-command (call-interactively 'switch-to-buffer) (insert "bb")))) ;; file buffer _tka
   (when (package-installed-p 'recentf)
-    (key-chord-define-oneway-global "fr" (lambda () (interactive) (if use-chord-command (call-interactively 'recentf-open-files) (insert "fr")))) ;; file recent
+    (key-chord-define-oneway-global "rr" (lambda () (interactive) (if use-chord-command (call-interactively 'recentf-open-files) (insert "rr")))) ;; file recent _tka
     )
   (when (package-installed-p 'sr-speedbar)
     (key-chord-define-oneway-global "fl" (lambda () (interactive) (if use-chord-command (call-interactively 'sr-speedbar-open) (insert "fl")))) ;; file buffer
@@ -503,17 +795,17 @@ If COMMAND is nil, the key-chord is removed."
   (key-chord-define-oneway-global "bj" (lambda () (interactive) (if use-chord-command (call-interactively 'end-of-buffer) (insert "bj"))))
   (key-chord-define-oneway-global "bk" (lambda () (interactive) (if use-chord-command (call-interactively 'beginning-of-buffer) (insert "bk"))))
   ;; editing
-  (key-chord-define-oneway-global "em" (lambda () (interactive) (if use-chord-command (call-interactively 'set-mark-command) (insert "em"))))
-  (key-chord-define-oneway-global "ex" (lambda () (interactive) (if use-chord-command (call-interactively 'kill-region) (insert "ex"))))
-  (key-chord-define-oneway-global "ec" (lambda () (interactive) (if use-chord-command (call-interactively 'kill-ring-save) (insert "ec"))))
-  (key-chord-define-oneway-global "ep" (lambda () (interactive) (if use-chord-command (call-interactively 'yank) (insert "ep"))))
+  (key-chord-define-oneway-global "mm" (lambda () (interactive) (if use-chord-command (call-interactively 'set-mark-command) (insert "mm")))) ;; _tka
+  (key-chord-define-oneway-global "cx" (lambda () (interactive) (if use-chord-command (call-interactively 'kill-region) (insert "cx")))) ;; _tka
+  (key-chord-define-oneway-global "cc" (lambda () (interactive) (if use-chord-command (call-interactively 'kill-ring-save) (insert "cc")))) ;; _tka
+  (key-chord-define-oneway-global "cp" (lambda () (interactive) (if use-chord-command (call-interactively 'yank) (insert "cp")))) ;; _tka
   (key-chord-define-oneway-global "eu" (lambda () (interactive) (if use-chord-command (call-interactively 'undo) (insert "eu"))))
-  (key-chord-define-oneway-global "ey" (lambda () (interactive) (if use-chord-command (call-interactively 'kill-whole-line) (insert "ey"))))
+  (key-chord-define-oneway-global "yy" (lambda () (interactive) (if use-chord-command (call-interactively 'kill-whole-line) (insert "yy")))) ;; _tka
   ;; rectangle
-  (key-chord-define-oneway-global "rc" (lambda () (interactive) (if use-chord-command (call-interactively 'copy-rectangle-as-kill) (insert "rc")))) ;; rec copy
-  (key-chord-define-oneway-global "rx" (lambda () (interactive) (if use-chord-command (call-interactively 'kill-rectangle) (insert "rx")))) ;; rec cut
+  (key-chord-define-oneway-global "[c" (lambda () (interactive) (if use-chord-command (call-interactively 'copy-rectangle-as-kill) (insert "[c")))) ;; rec copy _tka
+  (key-chord-define-oneway-global "[x" (lambda () (interactive) (if use-chord-command (call-interactively 'kill-rectangle) (insert "[x")))) ;; rec cut _tka
   (key-chord-define-oneway-global "rp" (lambda () (interactive) (if use-chord-command (call-interactively 'yank-rectangle) (insert "rp")))) ;; rec paste
-  (key-chord-define-oneway-global "rd" (lambda () (interactive) (if use-chord-command (call-interactively 'delete-rectangle) (insert "rd")))) ;; rec delete
+  (key-chord-define-oneway-global "[d" (lambda () (interactive) (if use-chord-command (call-interactively 'delete-rectangle) (insert "[d")))) ;; rec delete
   (add-hook
    'picture-mode-hook
    (lambda ()
@@ -521,16 +813,28 @@ If COMMAND is nil, the key-chord is removed."
      (key-chord-define-oneway picture-mode-map "r]" (lambda () (interactive) (if use-chord-command (call-interactively 'picture-yank-rectangle) (insert "r]")))) ;; rec insert
      ))
   ;; window
-  (key-chord-define-oneway-global "wc" (lambda () (interactive) (if use-chord-command (call-interactively 'delete-window) (insert "wc")))) ;; window close
+  (key-chord-define-oneway-global "wh" (lambda () (interactive) (if use-chord-command (call-interactively 'delete-window) (insert "wh")))) ;; window close _tka
   (key-chord-define-oneway-global "wl" (lambda () (interactive) (if use-chord-command (call-interactively 'split-window-right) (insert "wl")))) ;; window ->
   (key-chord-define-oneway-global "wj" (lambda () (interactive) (if use-chord-command (call-interactively 'split-window-below) (insert "wj")))) ;; window _|_
   (key-chord-define-oneway-global "wo" (lambda () (interactive) (if use-chord-command (call-interactively 'other-window) (insert "wo")))) ;; window other
   ;; search
   (key-chord-define-oneway-global "sj" (lambda () (interactive) (if use-chord-command (call-interactively 'isearch-forward) (insert "sj")))) ;; search _|_
   (key-chord-define-oneway-global "sk" (lambda () (interactive) (if use-chord-command (call-interactively 'isearch-backward) (insert "sk")))) ;; search ^
+  ;(add-hook 'isearch-mode-hook
+  ;          (lambda ()
+  ;            (key-chord-mode 1)
+  ;            (key-chord-define-oneway isearch-mode-map "sl"
+  ;              (lambda () (interactive) (if use-chord-command (call-interactively 'isearch-repeat-forward) (insert "sl"))))
+  ;            (key-chord-define-oneway isearch-mode-map "sh"
+  ;              (lambda () (interactive) (if use-chord-command (call-interactively 'isearch-repeat-backward) (insert "sh"))))
+  ;            ))
   (key-chord-define-oneway-global "sr" (lambda () (interactive) (if use-chord-command (call-interactively 're-builder) (insert "sr")))) ;; search regex
   ;; execute commands
   (key-chord-define-oneway-global "xx" 'execute-extended-command)
+  (key-chord-define-oneway-global "ee" (lambda () (interactive) (if use-chord-command (call-interactively 'async-shell-command) (insert "ee"))))
+  (key-chord-define-oneway-global "jk" (lambda () (interactive)
+                                         (if use-chord-command (progn (call-interactively 'abort-recursive-edit)
+                                                                      (call-interactively 'keyboard-quit)) (insert "jk"))))
   ;; org mode
   (when (package-installed-p 'org)
     (require 'org)
@@ -694,12 +998,13 @@ If COMMAND is nil, the key-chord is removed."
   )
 ;; integrate deft with org
 (when (package-installed-p 'deft)
+                                        ;(setq deft-extension nil)
+  (setq deft-extensions '("org" "md"))
+  (setq deft-directory "~/org/deft/")
+  (setq deft-text-mode 'org-mode)
+                                        ;(setq deft-use-filename-as-title t)
+                                        ;(global-set-key (kbd "<f9>") 'deft))
   (require 'deft)
-  (setq
-      deft-extension "org"
-      deft-directory "~/org/deft/"
-      deft-text-mode 'org-mode)
-  ;(global-set-key (kbd "<f9>") 'deft))
   )
 (when (package-installed-p 'imenu)
   ; by huylnq : goto symbols using imenu
