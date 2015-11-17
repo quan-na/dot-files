@@ -307,6 +307,9 @@
 ;; C development
 (unless (package-installed-p 'cc-mode)
   (package-install 'cc-mode))
+;; Haskell development
+(unless (package-installed-p 'haskell-mode)
+  (package-install 'haskell-mode))
 ;; Web development
 (unless (package-installed-p 'web-mode)
   (package-install 'web-mode))
@@ -341,9 +344,19 @@
   (package-install 'hydra))
 (unless (package-installed-p 'undo-tree)
   (package-install 'undo-tree))
+(unless (package-installed-p 'smartparens)
+  (package-installed 'smartparens))
 ;; compile installed packages
 (byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
 ;; <<< E N D package manager
+
+;; >>> START smartparens
+(when (package-installed-p 'smartparens)
+  (require 'smartparens-config)
+  (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
+  (add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
+  )
+;; <<< E N D smartparens
 
 ;; >>> START rainbow mode
 (when (package-installed-p 'rainbow-delimiters)
@@ -437,21 +450,174 @@
 )
 ;; <<< E N D projectile
 
-;; >>> START ggtags
-(when (package-installed-p 'ggtags)
-  (when (package-installed-p 'cc-mode)
+;; >>> START cc-mode
+(when (package-installed-p 'cc-mode)
+  ;; tempo setup
+  (require 'tempo)
+  (setq tempo-interactive t)
+  (defvar java-tempo-tags nil
+    "Tempo tags for java mode")
+  (defvar c-tempo-tags nil
+    "Tempo tags for C mode")
+  (when (package-installed-p 'ggtags)
     (add-hook 'c-mode-hook
               (lambda ()
-                (ggtags-mode 1)))
+                (ggtags-mode 1)
+                (tempo-use-tag-list 'c-tempo-tags)))
     (add-hook 'c++-mode-hook
               (lambda ()
                 (ggtags-mode 1)))
     (add-hook 'java-mode-hook
               (lambda ()
-                (ggtags-mode 1)))
+                (ggtags-mode 1)
+                (tempo-use-tag-list 'java-tempo-tags)))
     )
+  ;; the following macros allow to set point using the ~ character in tempo templates
+  (defvar tempo-initial-pos nil
+    "Initial position in template after expansion")
+  (defadvice tempo-insert( around tempo-insert-pos act )
+    "Define initial position."
+    (if (eq element '~)
+        (setq tempo-initial-pos (point-marker))
+      ad-do-it))
+  (defadvice tempo-insert-template( around tempo-insert-template-pos act )
+    "Set initial position when defined. ChristophConrad"
+    (setq tempo-initial-pos nil)
+    ad-do-it
+    (if tempo-initial-pos
+        (progn
+          (put template 'no-self-insert t)
+          (goto-char tempo-initial-pos))
+      (put template 'no-self-insert nil)))
+  ;; java templates
+  (tempo-define-template "java-package"
+                         '("package "
+                           (when (string-match "/src/main/java/" default-directory)
+                             (replace-regexp-in-string "/" "."
+                                                       (substring default-directory
+                                                                  (+ (string-match "/src/main/java/" default-directory) 15)
+                                                                  (- (length default-directory) 1)))
+                             )
+                           ";" > n)
+                         "pack"
+                         "Declare package at the beginning of java source file"
+                         'java-tempo-tags)
+  (tempo-define-template "java-import"
+                         '("import " >  (p "Import: ") ";" n)
+                         "imp"
+                         "Declare imports"
+                         'java-tempo-tags)
+  (tempo-define-template "java-class"
+                         '("public class " > (substring (buffer-name) 0 (- (length (buffer-name)) 5)) > n " {" > n > r ~ > n "}" > n )
+                         "cla"
+                         "Declare a class"
+                         'java-tempo-tags)
+  (tempo-define-template "java-interface"
+                         '("public interface " > (substring (buffer-name) 0 (- (length (buffer-name)) 5)) > n " {" > n > r ~ > n "}" > n )
+                         "inter"
+                         "Declare an interface"
+                         'java-tempo-tags)
+  (tempo-define-template "java-attr"
+                       '("private " (p "Type: " type) " " (p "Name: " var) ";" > n n
+                         "public " > (s type) " get" (upcase-initials (tempo-lookup-named 'var))
+                         "() {" > n
+                         "return this." (s var)  ";" > n "}" > n n
+                         "public void set" (upcase-initials (tempo-lookup-named 'var))
+                         "(final " (s type) " " (s var) ") {" > n
+                         "this." (s var) " = " (s var) ";" > n "}" > n)
+                         "attr"
+                         "Declare attribute with getter, setter"
+                         'java-tempo-tags)
+  ; TODOS: osgi templates
+  ;; c templates
+  (tempo-define-template "c-include"
+                         '("#include <" r ".h>" > n
+                           )
+                         "include"
+                         "Insert a #include <> statement"
+                         'c-tempo-tags)
+
+  (tempo-define-template "c-define"
+                         '("#define " r " " > n
+                           )
+                         "define"
+                         "Insert a #define statement"
+                         'c-tempo-tags)
+
+  (tempo-define-template "c-ifdef"
+                         '("#ifdef " (p "ifdef-condition: " clause) > n> p n
+                           "#else /* !(" (s clause) ") */" n> p n
+                           "#endif // " (s clause) n>
+                           )
+                         "ifdef"
+                         "Insert a #ifdef #else #endif statement"
+                         'c-tempo-tags)
+
+  (tempo-define-template "c-ifndef"
+                         '("#ifndef " (p "ifndef-clause: " clause) > n 
+                           "#define " (s clause) n> p n
+                           "#endif // " (s clause) n>
+                           )
+                         "ifndef"
+                         "Insert a #ifndef #define #endif statement"
+                         'c-tempo-tags)
+  (tempo-define-template "c-if"
+                         '(> "if (" ~ " ) { "  n>
+                             > n
+                             "}" > n> 
+                             )
+                         "if"
+                         "Insert a C if statement"
+                         'c-tempo-tags)
+
+  (tempo-define-template "c-else"
+                         '(> "else {" n>
+                             > ~ n 
+                             "}" > n>
+                             )
+                         "else"
+                         "Insert a C else statement"
+                         'c-tempo-tags)
+  (tempo-define-template "c-while"
+                         '(> "while (" ~ " ) { "  n>
+                             > n
+                             "}" > n>      
+                             )
+                         "while"
+                         "Insert a C while statement"
+                         'c-tempo-tags)
+
+  (tempo-define-template "c-for"
+                         '(> "for (" ~ " ) { "  n>
+                             > n
+                             "}" > n>      
+                             )
+                         "for"
+                         "Insert a C for statement"
+                         'c-tempo-tags)
+  (tempo-define-template "c-main"
+                         '(> "int main(int argc, char *argv[]) {" >  n> 
+                             > r n
+                             "return 0;" > n
+                             "}" > n>
+                             )
+                         "main"
+                         "Insert a C main statement"
+                         'c-tempo-tags)
+
+  (tempo-define-template "c-switch"
+                         '(> "switch(" (p "variable to check: " clause) ") {" >  n>  
+                             "case " > (p "first value: ") ": " ~ > n>
+                             " break;" > n>
+                             >"default:" > n>
+                             "}" > n>
+                             )
+                         "switch"
+                         "Insert a C switch statement"
+                         'c-tempo-tags)
+  ;; TODO: function template
   )
-;; <<< E N D ggtags
+;; <<< E N D cc-mode
 
 ;; >>> START scala development
 (when (package-installed-p 'ensime)
@@ -628,16 +794,32 @@
   (global-set-key (kbd "<f2> h k") 'describe-key)
   (global-set-key (kbd "<f2> h f") 'describe-function)
   ;; moving point
+  (global-set-key (kbd "<f2> l l") 'move-end-of-line)
+  (global-set-key (kbd "<f2> h h") 'move-beginning-of-line)
+  (when (package-installed-p 'smartparens)
+    (add-hook 'prog-mode-hook (lambda () (interactive)
+                                (local-set-key (kbd "<f2> j j") 'sp-end-of-sexp)
+                                (local-set-key (kbd "<f2> k k") 'sp-beginning-of-sexp)
+                                (local-set-key (kbd "<f2> DEL") 'sp-unwrap-sexp)
+                                ))
+    )
   (defhydra hydra-move ()
-    ("l" (move-to-column (+ (current-column) 1)) "right")
-    ("h" (move-to-column (max 0 (- (current-column) 1))) "left")
-    ("j" (next-line 1) "down")
-    ("k" (previous-line 1) "up")
+    ("l" (lambda (delta) (interactive "p") (move-to-column (+ (current-column) delta))) "right")
+    ("h" (lambda (delta) (interactive "p") (move-to-column (max 0 (- (current-column) delta)))) "left")
+    ("j" (lambda (delta) (interactive "p") (next-line delta)) "down")
+    ("k" (lambda (delta) (interactive "p") (previous-line delta)) "up")
     ("o" move-end-of-line "end")
     ("y" move-beginning-of-line "home")
     ("u" end-of-buffer "end")
     ("i" beginning-of-buffer "begin"))
   (global-set-key (kbd "<f5> m") 'hydra-move/body)
+  (defhydra hydra-resize-window ()
+    ("h" shrink-window-horizontally "shrink left")
+    ("l" enlarge-window-horizontally "enlarge right")
+    ("k" shrink-window "shrink up")
+    ("j" enlarge-window "enlarge down")
+    ("o" other-window "to other"))
+  (global-set-key (kbd "<f5> w") 'hydra-resize-window/body)
   ;; editing
   (global-set-key (kbd "<f2> m m") 'set-mark-command) ;; _tka
   (global-set-key (kbd "<f2> x x") 'kill-region) ;; _tka
@@ -648,11 +830,12 @@
     (global-set-key (kbd "<f2> u v") 'undo-tree-visualize))
   (global-set-key (kbd "<f2> u u") 'undo) ;; _tka
   (global-set-key (kbd "<f2> y y") 'kill-whole-line) ;; _tka
+  (global-set-key (kbd "<f2> t") 'tempo-complete-tag)
   ;; rectangle
-  (global-set-key (kbd "<f2> [ c") 'copy-rectangle-as-kill) ;; rec copy _tka
-  (global-set-key (kbd "<f2> [ x") 'kill-rectangle) ;; rec cut _tka
+  (global-set-key (kbd "<f2> r c") 'copy-rectangle-as-kill) ;; rec copy _tka
+  (global-set-key (kbd "<f2> r x") 'kill-rectangle) ;; rec cut _tka
   (global-set-key (kbd "<f2> r p") 'yank-rectangle) ;; rec paste
-  (global-set-key (kbd "<f2> [ d") 'delete-rectangle) ;; rec delete
+  (global-set-key (kbd "<f2> r d") 'delete-rectangle) ;; rec delete
   (add-hook
    'picture-mode-hook
    (lambda ()
@@ -676,7 +859,7 @@
   (global-set-key (kbd "<f2> s r") 're-builder) ;; search regex
   ;; execute commands
   ; use build-in ESC-x to execute commands
-  (global-set-key (kbd "<f2> x x") 'execute-extended-command)
+  (global-set-key (kbd "<f2> z z") 'execute-extended-command)
   (global-set-key (kbd "<f2> x c") 'compile)
   (global-set-key (kbd "<f2> x e") 'eval-last-sexp)
   (global-set-key (kbd "<f2> g") 'keyboard-quit)
@@ -1062,13 +1245,13 @@ If COMMAND is nil, the key-chord is removed."
 (when (and (package-installed-p 'monokai-theme) (package-installed-p 'subatomic256-theme))
   ;; theme setting
   (if (display-graphic-p)
-      (load-theme 'monokai t)
+      (load-theme 'solarized-dark t)
       (load-theme 'zenburn t)
     )
   )
 ;;cursor
 (when (display-graphic-p)
-  (setq-default cursor-type 'hollow)
+  (setq-default cursor-type 'box) ;(setq-default cursor-type 'hollow)
   (set-cursor-color "#6AFB92")
   (blink-cursor-mode 0)
   )

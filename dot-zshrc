@@ -24,7 +24,7 @@ alias vim='/usr/local/Cellar/vim/7.4.488/bin/vim'
 alias vi='/usr/local/Cellar/vim/7.4.488/bin/vim' 
 alias mysqlc="mysql -u root -proot -h 127.0.0.1 "
 alias mysqls="sudo /usr/local/mysql/support-files/mysql.server "
-alias kbfast="defaults write -g InitialKeyRepeat -int 10; and defaults write -g KeyRepeat -int 1 "
+alias kbfast="defaults write -g InitialKeyRepeat -int 10 && defaults write -g KeyRepeat -int 1 "
 alias noatime="sudo mount -vuwo noatime / "
 alias foreui="/Applications/ForeUI.app/Contents/Resources/Java/launch.sh &"
 function workenv () {
