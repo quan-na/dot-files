@@ -1,9 +1,28 @@
 "=================================
+"==  Vundle setup               ==
+"=================================
+
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'
+
+" Plugins
+Plugin 'bling/vim-airline'
+Plugin 'scrooloose/nerdtree'
+
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+"=================================
 "==  My Personal customization  ==
 "=================================
 set nocp
 set nocompatible
-execute pathogen#infect()
 
 colorscheme badwolf
 syntax enable
