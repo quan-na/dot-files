@@ -1,0 +1,388 @@
+% -*- mmm-noweb-code-mode : emacs-lisp-mode; tab-width: 2; -*-
+
+\section{Generic Part}
+\subsection{File Structure}
+This no-web document will generate dot-emacs, which in turn linked to .emacs file at home folder. At beginning of this file is generic emacs start-up codes.
+<<dot-emacs>>=
+;; START generic
+<<generics>>
+;; E N D generic
+@ Also there 's a part of this file which will check and install packages. This part will require the package package and setup repositories.
+<<dot-emacs>>=
+;; START package manager
+(require 'package)
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.milkbox.net/packages/")
+                         ("org" . "http://orgmode.org/elpa/")
+                         ("sunrisec" .
+                          "http://joseito.republika.pl/sunrise-commander/")))
+;; uncomment after cleaning up
+;(package-refresh-contents)
+(package-initialize)
+<<packages>>
+;; E N D package manager
+@ Each package requires its own configuration, all these configurations will go in package configurations part.
+<<dot-emacs>>=
+<<package configurations>>
+@ Lastly, there 's part for emacs customization, it 's annoying but it prevents emacs from messing up my code.
+<<dot-emacs>>=
+<<emacs customization>>
+@
+\subsection{Global Interface Customizations}
+By default, emacs on MacOSX binds Command to Meta, I don't want that.
+<<generics>>=
+(set-keyboard-coding-system nil)
+@ The following code will disable emacs startup message and screen.
+<<generics>>=
+(setq inhibit-splash-screen t)
+(setq inhibit-startup-message t)
+@ Using a monospace font for all emacs interface elements for better viewing and easier programming. It 's recommended if you intends to create ASCII Arts in emacs.
+<<generics>>=
+(when (display-graphic-p)
+  (add-to-list 'default-frame-alist
+               '(font . "OCR A Extended-14"))
+  (set-face-attribute 'default nil
+                      :family "OCR A Extended" :height 140)
+  (set-face-attribute 'fixed-pitch nil :font "OCR A Extended-14")
+  (set-face-attribute 'variable-pitch nil :font "OCR A Extended-14")
+  )
+@ Because org variates font sizes for its headers, it messed up my interface. I disable this also.
+<<generics>>=
+(when (display-graphic-p)
+  (custom-set-faces
+   '(org-level-1 ((((class color) (min-colors 89))
+                   (:inherit variable-pitch :height 1.0))))
+   '(org-level-2 ((((class color) (min-colors 89))
+                   (:inherit variable-pitch :height 1.0))))
+   '(org-level-3 ((((class color) (min-colors 89))
+                   (:inherit variable-pitch :height 1.0))))
+   '(org-level-4 ((((class color) (min-colors 89))
+                   (:inherit variable-pitch :height 1.0))))
+   '(org-level-5 ((((class color) (min-colors 89))
+                   (:inherit variable-pitch :height 1.0))))
+   '(org-document-title
+     ((((class color)
+        (min-colors 89))
+       (:inherit variable-pitch :foreground "#DC143C" :height 1.0)))))
+)
+@ Dialogs are not so neat, and sometimes crashes emacs. Disable them is a need.
+<<generics>>=
+(defadvice yes-or-no-p (around prevent-dialog activate)
+  "Prevent yes-or-no-p from activating a dialog"
+  (let ((use-dialog-box nil))
+    ad-do-it))
+(defadvice y-or-n-p (around prevent-dialog-yorn activate)
+  "Prevent y-or-n-p from activating a dialog"
+  (let ((use-dialog-box nil))
+    ad-do-it))
+(defadvice message-box (around prevent-dialog activate)
+  "Prevent message-box from activating a dialog"
+  (apply #'message (ad-get-args 0)))
+@ The following part disable feature that 's not emacs 's but depend on OSs it 's running on.
+<<generics>>=
+;; disable scrollbar
+(when (display-graphic-p)
+  (scroll-bar-mode -1)
+)
+(setq mouse-wheel-progressive-speed nil)
+;; kill toolbar too
+(menu-bar-mode -1)
+(when (display-graphic-p)
+  (tool-bar-mode -1)
+)
+@ This code auto-indent when RET, but sometimes it 's messy.
+<<generics>>=
+;(define-key global-map (kbd "RET") 'newline-and-indent)
+@ Global fix tab size.
+<<generics>>=
+;; spaces for tabs
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 2)
+(setq-default indent-line-function 'insert-tab)
+;;(setq-default tab-stop-list (number-sequence 2 200 2))
+@ I am no guru, get me some easy thing to use.
+<<generics>>=
+;; enable navigate with arrows
+(defun disable-guru-mode ()
+  (guru-mode -1))
+(add-hook 'prelude-prog-mode-hook 'disable-guru-mode t)
+@ Quoted from HuyLeNQ: ``error bells, even visible ones, are totally useless''.
+<<generics>>=
+(add-hook 'prelude-prog-mode-hook 'disable-guru-mode t)
+;;(setq visible-bell t)
+;;(setq visible-bell 'top-bottom)
+(setq ring-bell-function 'ignore)
+@ Show line \& collumn numbers, disable current line highlighting.
+<<generics>>=
+;; line display
+(line-number-mode t)
+(column-number-mode t)
+(global-hl-line-mode -1)
+@ icomplete and ido for auto-complete every where.
+<<generics>>=
+;; icicle
+(icomplete-mode 99)
+;; IDO every where
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
+@
+\subsection{Fancy Mode Line}
+This is a fancy modeline (lower screen bar) that I copied from various internet sources.
+<<generics>>=
+;; fancier mode-line
+(when t
+  ;; Mode line setup
+  (setq-default
+   mode-line-format
+   '(<<modeline clock>>
+     <<modeline position>>
+     ;emacsclient [default -- keep?]
+     mode-line-client
+     " "
+     <<modeline readonly>>
+     <<modeline buffername>>
+     ; narrow [default -- keep?]
+     " %n "
+     <<modeline modes>>
+     <<modeline note>>
+     mode-line-end-spaces
+     ; nyan-mode uses nyan cat as an alternative to %p
+     ;(:eval (when nyan-mode (list (nyan-create))))
+     ))
+  <<modeline helpers>>
+  <<modeline faces>>
+)
+@ Customize default mode line faces.
+<<modeline faces>>=
+(set-face-attribute 'mode-line nil
+                    :foreground "gray60" :background "gray20"
+                    :inverse-video nil
+                    :box '(:line-width 2 :color "gray20" :style nil))
+(set-face-attribute 'mode-line-inactive nil
+                    :foreground "gray80" :background "gray40"
+                    :inverse-video nil
+                    :box '(:line-width 2 :color "gray40" :style nil))
+@ Clock display time at buffer corner
+<<modeline clock>>=
+(:eval (propertize (format-time-string "%H:%M")
+              'help-echo
+              (concat (format-time-string "%c; ")
+                      (emacs-uptime "Uptime:%hh"))
+              'face 'mode-line-clock-face))
+@ It uses the created clock face that 's based on modeline default face.
+<<modeline faces>>=
+(make-face 'mode-line-clock-face)
+(set-face-attribute 'mode-line-clock-face nil
+                      :inherit 'mode-line-face
+                      :foreground "#659EC7"
+                      :box '(:line-width 2 :color "#659EC7"))
+@ Positions display that warns users when get over 80 collumns.
+<<modeline position>>=
+; Position, including warning for 80 columns
+(:propertize "%4l:" face mode-line-position-face)
+(:eval (propertize "%3c" 'face
+                   (if (>= (current-column) 80)
+                       'mode-line-80col-face
+                     'mode-line-position-face)))
+@ Position displays use 2 fonts: normal position font, and over 80 warning font.
+<<modeline faces>>=
+(make-face 'mode-line-position-face)
+(make-face 'mode-line-80col-face)
+(set-face-attribute 'mode-line-position-face nil
+                      :inherit 'mode-line-face)
+(set-face-attribute 'mode-line-80col-face nil
+                      :inherit 'mode-line-position-face
+                      :foreground "black" :background "#eab700")
+@ Readonly display show ``RO'' for readonly, ``**'' for modified with diferent colors.
+<<modeline readonly>>=
+; read-only or modified status
+(:eval
+ (cond (buffer-read-only
+        (propertize "RO" 'face 'mode-line-read-only-face))
+       ((buffer-modified-p)
+        (propertize "**" 'face 'mode-line-modified-face))
+       (t "  ")))
+" "
+@ Readonly displays defines 2 more faces.
+<<modeline faces>>=
+(make-face 'mode-line-read-only-face)
+(make-face 'mode-line-modified-face)
+(set-face-attribute 'mode-line-read-only-face nil
+                    :inherit 'mode-line-face
+                    :foreground "#4271ae"
+                    :box '(:line-width 2 :color "#4271ae"))
+(set-face-attribute 'mode-line-modified-face nil
+                    :inherit 'mode-line-face
+                    :foreground "#c82829"
+                    :background "#ffffff"
+                    :box '(:line-width 2 :color "#c82829"))
+@ Buffer name display 1st character for each folder.
+<<modeline buffername>>=
+; directory and buffer/file name
+;(:propertize (:eval (shorten-directory default-directory 30))
+;             face mode-line-folder-face)
+(:propertize (:eval (abbrev-directory default-directory))
+  face mode-line-folder-face)
+(:propertize "%b"
+  face mode-line-filename-face)
+@ I did write my own function for this kind of abbreviation.
+<<modeline helpers>>=
+(defun shorten-directory (dir max-length)
+  "Show up to `max-length' characters of a directory name `dir'."
+  (let ((path (reverse (split-string (abbreviate-file-name dir) "/")))
+        (output ""))
+    (when (and path (equal "" (car path)))
+      (setq path (cdr path)))
+    (while (and path (< (length output) (- max-length 4)))
+      (setq output (concat (car path) "/" output))
+      (setq path (cdr path)))
+    (when path
+      (setq output (concat ".../" output)))
+    output))
+(defun abbrev-directory (dir)
+  "Show only 1 character for each parent dir"
+  (mapconcat 'identity
+             (mapcar (lambda (x)
+                       (if (equal x "") x (substring x 0 1)))
+                     (split-string (abbreviate-file-name dir) "/")) "/"))
+@ Buffer name uses 2 faces: 1 for folders, and 1 for file name.
+<<modeline faces>>=
+(make-face 'mode-line-folder-face)
+(make-face 'mode-line-filename-face)
+(set-face-attribute 'mode-line-folder-face nil
+                      :inherit 'mode-line-face
+                      :foreground "gray60")
+  (set-face-attribute 'mode-line-filename-face nil
+                      :inherit 'mode-line-face
+                      :foreground "#eab700"
+                      :weight 'bold)
+@ Modes show mayor and minor modes.
+<<modeline modes>>=
+; mode indicators: vc, recursive edit, major mode, minor modes, process, global
+(vc-mode vc-mode)
+"  %["
+(:propertize mode-name
+             face mode-line-mode-face)
+"%] "
+(:eval (propertize (format-mode-line minor-mode-alist)
+                   'face 'mode-line-minor-mode-face))
+(:propertize mode-line-process
+             face mode-line-process-face)
+(global-mode-string global-mode-string)
+" "
+@ Modes use 3 more faces.
+<<modeline faces>>=
+(make-face 'mode-line-mode-face)
+(make-face 'mode-line-minor-mode-face)
+(make-face 'mode-line-process-face)
+(set-face-attribute 'mode-line-mode-face nil
+                    :inherit 'mode-line-face
+                    :foreground "gray80")
+(set-face-attribute 'mode-line-minor-mode-face nil
+                    :inherit 'mode-line-mode-face
+                    :foreground "gray40")
+(set-face-attribute 'mode-line-process-face nil
+                    :inherit 'mode-line-face
+                    :foreground "#718c00")
+@ I want a quick note in modeline, set and clear with single key binding so that I know what to do when I come back from interuption.
+<<modeline note>>=
+(:propertize mode-line-note
+             face mode-line-note-face)
+@ The function for this note is simple as set and get single property.
+<<modeline helpers>>=
+;; Display a small note to indicate what I am to do
+(setq mode-line-note nil)
+(defun mode-line-note-off ()
+  (interactive)
+  (setq mode-line-note nil)
+  (force-mode-line-update))
+(defun mode-line-note-set (note-text)
+  (interactive "s::")
+  (if mode-line-note
+      (setq mode-line-note (concat note-text " < " mode-line-note))
+    (setq mode-line-note note-text))
+  (when (> (length mode-line-note) 52)
+    (setq mode-line-note (substring mode-line-note 0 52))
+    )
+  (force-mode-line-update))
+@ One extra face is defined for this note, it 's brilliant red.
+<<modeline faces>>=
+(make-face 'mode-line-note-face)
+(set-face-attribute 'mode-line-note-face nil
+                    :inherit 'mode-line-face
+                    :foreground "#DC143C" ; Crimson
+                    ;:box '(:line-width 2 :color "#4271ae")
+                    )
+@
+\subsection{Large File Readonly}
+Sometimes large files are openned only for reading, but edit feature slows emacs down. This hook forces large files to be openned in readonly mode.
+<<generics>>=
+;; view large files instead of editing it 
+(defun my-find-file-check-make-large-file-read-only-hook ()
+  "If a file is over a given size, make the buffer read only."
+  (when (> (buffer-size) (* 1024 1024))
+    (setq buffer-read-only t)
+    (buffer-disable-undo)
+    (fundamental-mode)))
+(add-hook 'find-file-hooks 'my-find-file-check-make-large-file-read-only-hook)
+@
+\subsection{Emacs Customization Place Holder}
+This section declares safe themes \& local variables.
+<<emacs customization>>=
+;;; .emacs ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("b85fc9f122202c71b9884c5aff428eb81b99d25d619ee6fde7f3016e08515f07" default)))
+ '(safe-local-variable-values
+   (quote
+    ((mmm-noweb-code-mode . haskell-mode)
+     (mmm-noweb-code-mode . c-mode)))))
+@
+\section{Packages}
+\subsection{Themes}
+There 're a number of themes that I found attractive.
+<<packages>>=
+;; themes
+(unless (package-installed-p 'solarized-theme)
+  (package-install 'solarized-theme))
+(unless (package-installed-p 'zenburn-theme)
+  (package-install 'zenburn-theme))
+(unless (package-installed-p 'obsidian-theme)
+  (package-install 'obsidian-theme))
+(unless (package-installed-p 'inkpot-theme)
+  (package-install 'inkpot-theme))
+(unless (package-installed-p 'monokai-theme)
+  (package-install 'monokai-theme))
+(unless (package-installed-p 'subatomic256-theme)
+  (package-install 'subatomic256-theme))
+@ This code will enable different themes for GUI and terminal interfaces.
+<<package configurations>>=
+;; Theme configs
+(when (and (package-installed-p 'inkpot-theme) (package-installed-p 'zenburn-theme))
+  ;; theme setting
+  (if (display-graphic-p)
+      (load-theme 'inkpot t)
+      (load-theme 'zenburn t)
+    )
+  )
+@ This code will change cursor color to `dragon green'.
+<<package configurations>>=
+;;cursor
+(when (display-graphic-p)
+  (setq-default cursor-type 'box) ;(setq-default cursor-type 'hollow)
+  (set-cursor-color "#6AFB92")
+  (blink-cursor-mode 0))
+@ Transparency is no good at all.
+<<package deprecated configurations>>=
+;;transparency
+(when (and (display-graphic-p) nil)
+    (set-frame-parameter (selected-frame) 'alpha '(85 50)))
+@
+\section{Key Bindings}
