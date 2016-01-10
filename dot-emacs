@@ -25,7 +25,8 @@
    '(org-level-2 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
    '(org-level-3 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
    '(org-level-4 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
-   '(org-level-5 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0)))))
+   '(org-level-5 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
+   '(org-document-title ((((class color) (min-colors 89)) (:inherit variable-pitch :foreground "#DC143C" :height 1.0)))))
 )
 ;; disable all dialog
 (defadvice yes-or-no-p (around prevent-dialog activate)
@@ -53,12 +54,16 @@
 (define-key global-map (kbd "RET") 'newline-and-indent)
 ;; spaces for tabs
 (setq-default indent-tabs-mode nil)
+(setq-default tab-width 2)
+(setq-default indent-line-function 'insert-tab)
+;;(setq-default tab-stop-list (number-sequence 2 200 2))
 ;; enable navigate with arrows
 (defun disable-guru-mode ()
   (guru-mode -1))
 (add-hook 'prelude-prog-mode-hook 'disable-guru-mode t)
 ;;(setq visible-bell t)
-(setq visible-bell 'top-bottom)
+;;(setq visible-bell 'top-bottom)
+(setq ring-bell-function 'ignore)
 ;; icicle
 (icomplete-mode 99)
 ;; line display
@@ -180,11 +185,11 @@
   (set-face-attribute 'mode-line nil
                       :foreground "gray60" :background "gray20"
                       :inverse-video nil
-                      :box '(:line-width 6 :color "gray20" :style nil))
+                      :box '(:line-width 2 :color "gray20" :style nil))
   (set-face-attribute 'mode-line-inactive nil
                       :foreground "gray80" :background "gray40"
                       :inverse-video nil
-                      :box '(:line-width 6 :color "gray40" :style nil))
+                      :box '(:line-width 2 :color "gray40" :style nil))
 
   (set-face-attribute 'mode-line-read-only-face nil
                       :inherit 'mode-line-face
@@ -204,7 +209,7 @@
                       :weight 'bold)
   (set-face-attribute 'mode-line-position-face nil
                       :inherit 'mode-line-face
-                      ;:family "Menlo" :height 100
+                                        ;:family "Menlo" :height 100
                       )
   (set-face-attribute 'mode-line-mode-face nil
                       :inherit 'mode-line-face
@@ -212,7 +217,7 @@
   (set-face-attribute 'mode-line-minor-mode-face nil
                       :inherit 'mode-line-mode-face
                       :foreground "gray40"
-                      ;:height 110
+                                        ;:height 110
                       )
   (set-face-attribute 'mode-line-process-face nil
                       :inherit 'mode-line-face
@@ -223,7 +228,7 @@
   (set-face-attribute 'mode-line-note-face nil
                       :inherit 'mode-line-face
                       :foreground "#DC143C" ; Crimson
-                      ;:box '(:line-width 2 :color "#4271ae")
+                                        ;:box '(:line-width 2 :color "#4271ae")
                       )
   )
 ;; view large files instead of editing it 
@@ -299,8 +304,8 @@
 ;; scala development
 ;(unless (package-installed-p 'ensime)
 ;  (package-install 'ensime))
-;(unless (package-installed-p 'scala-mode2)
-;  (package-install 'scala-mode2))
+;(unless (package-installed-p 'scala-mode)
+;  (package-install 'scala-mode))
 ;; lua development
 (unless (package-installed-p 'lua-mode)
   (package-install 'lua-mode))
@@ -344,11 +349,83 @@
   (package-install 'hydra))
 (unless (package-installed-p 'undo-tree)
   (package-install 'undo-tree))
-(unless (package-installed-p 'smartparens)
-  (package-installed 'smartparens))
+;(unless (package-installed-p 'smartparens)
+;  (package-install 'smartparens))
+;(unless (package-installed-p 'emacs-eclim)
+;  (package-install 'emacs-eclim))
+;(unless (package-installed-p 'company) ; Install because eclim will get compile error without it
+;  (package-install 'company))
+;(unless (package-installed-p 'polymode)
+;  (package-install 'polymode))
+(unless (package-installed-p 'mmm-mode)
+  (package-install 'mmm-mode))
 ;; compile installed packages
 (byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
 ;; <<< E N D package manager
+
+;; >>> START tengwar org-mode
+(when (and t (package-installed-p 'org))
+  (custom-set-faces
+   ;; set tengwar region between #+begin_verse and #+end_verse
+   '(org-verse ((((class color) (min-colors 89)) (:inherit variable-pitch :foreground "#BCC6CC" :family "Tengwar Annatar" :height 1.7)))))
+  (custom-set-variables
+   '(org-fontify-quote-and-verse-blocks t))
+  (quail-define-package
+   "tengwar-e2002" "Tengwar" "TE" t
+   "Quanna’s personal input method defining tengwar characters"
+   nil t nil nil nil nil nil nil nil nil t)
+  ; TODO: need alot of refinement
+  (quail-define-rules
+   ("a1" ?C) ; left most
+   ("a2" ?D) ; second left
+   ("a3" ?E) ; second right
+   ("a4" ?#) ; right most
+   ("b" ?w) ; b
+   ("c" ?z) ; c
+   ("d" ?2) ; d
+   ("e" ?F) ; sounded e
+   ("E" ?Ê) ; silence e
+   ("f" ?e) ; f
+   ("g" ?x) ; g
+   ("h" ?9) ; h
+   ("i" ?B) ; i
+   ("j" ?f) ; j
+   ("k" ?z) ; k=c
+   ("l" ?j) ; l
+   ("m" ?t) ; m
+   ("n" ?5) ; n
+   ("o" ?N) ; o
+   ("p" ?q) ; p
+   ("qu" ["zê"]) ; qu
+   ("r" ?7) ; sounded r
+   ("R" ?6) ; silence r
+   ("s" ?8) ; main s
+   ("S" ?i) ; alternate s
+   ("t" ?1) ; t
+   ("u1" ?M) ; variant 1
+   ("u2" ?J) ; variant 2
+   ("u3" ?&) ; variant 3
+   ("v" ?r) ; v
+   ("w" ?y) ; w
+   ("x" ["z|"]) ; x
+   ("y" ?n) ; cons y
+   ("Y" ?Í) ; vowel y
+   ("z" ?k) ; main z
+   ("Z" ?,) ; alternate z
+   ("." ?-) ; dot
+   ("," ?=) ; comma
+   ("th" ?3) ; th
+   ("ch" ?c) ; ch
+   ("sh" ?d) ; sh
+   ("nt" ["1p"]) ; nt
+   ("nd" ["2p"]) ; nd
+   ("mp" ["qp"]) ; mp
+   ("mb" ["wP"]) ; mb
+   ("ie" ["BË"]) ; ie ?
+   ("ee" ["~V"]) ; ee 
+   ) 
+  )
+;; <<< E N D tengwar org-mode
 
 ;; >>> START smartparens
 (when (package-installed-p 'smartparens)
@@ -399,6 +476,63 @@
   (setq ac-quick-help-delay 0.2)
   )
 ;; <<< E N D auto-complete configuration
+
+;; >>> START mmm-mode
+(when (package-installed-p 'mmm-mode)
+  (require 'mmm-auto)
+  (setq mmm-global-mode 'maybe)
+  (add-to-list 'auto-mode-alist '("\\.nw" . latex-mode))
+  (mmm-add-mode-ext-class nil "\\.nw\\'" 'noweb)
+  ; add this line for region mode
+  ; % -*- mmm-noweb-code-mode : c-mode; -*-
+  )
+;; <<< E N D mmm-mode
+
+;; >>> START polymode
+(when (package-installed-p 'polymode)
+  (global-font-lock-mode t)
+  (require 'polymode)
+  (require 'poly-noweb)
+  (defcustom pm-inner/noweb+C
+    (clone pm-inner/noweb :mode 'c-mode)
+    "Noweb innermode for C"
+    :group 'innermodes
+    :type 'object)
+  (defcustom pm-poly/noweb+C
+    (clone pm-poly/noweb :innermode 'pm-inner/noweb+C)
+    "Noweb polymode for C"
+    :group 'polymodes
+    :type 'object)
+  (define-polymode poly-noweb+C-mode pm-poly/noweb+C)
+  (add-to-list 'auto-mode-alist '("\\.Cnw" . poly-noweb+C-mode))
+  (when (package-installed-p 'rainbow-delimiters)
+    (add-hook 'poly-noweb+C-mode-hook 'rainbow-delimiters-mode)
+    )
+  )
+;; <<< E N D poly mode
+
+;; >>> START java (eclim)
+(when (package-installed-p 'emacs-eclim)
+  (require 'eclim)
+  (global-eclim-mode)
+  ;; control eclimd from emacs
+  (require 'eclimd)
+  ;; eclipse path
+  (custom-set-variables
+   '(eclim-eclipse-dirs '("/Volumes/DATA/Eclipse.app/Contents/Eclipse/"))
+   '(eclim-executable "/Volumes/DATA/Eclipse.app/Contents/Eclipse/eclim"))
+  ;; display local help at error points
+  (setq help-at-pt-display-when-idle t)
+  (setq help-at-pt-timer-delay 0.1)
+  (help-at-pt-set-timer)
+  ;; configure auto-complete
+  (when (package-installed-p 'auto-complete)
+    ;; add the emacs-eclim source
+    (require 'ac-emacs-eclim-source)
+    (ac-emacs-eclim-config)
+    )
+  )
+;; <<< E N D java (eclim)
 
 ;; >>> START clojure development
 (when (package-installed-p 'paredit)
@@ -621,6 +755,7 @@
 
 ;; >>> START scala development
 (when (package-installed-p 'ensime)
+  (setq exec-path (append exec-path '("/usr/local/bin")))
   ;; scala ensime hook
   (require 'ensime)
   (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
@@ -810,8 +945,8 @@
     ("k" (lambda (delta) (interactive "p") (previous-line delta)) "up")
     ("o" move-end-of-line "end")
     ("y" move-beginning-of-line "home")
-    ("u" end-of-buffer "end")
-    ("i" beginning-of-buffer "begin"))
+    ("u" end-of-buffer "buffer end")
+    ("i" beginning-of-buffer "buffer begin"))
   (global-set-key (kbd "<f5> m") 'hydra-move/body)
   (defhydra hydra-resize-window ()
     ("h" shrink-window-horizontally "shrink left")
@@ -1131,26 +1266,27 @@ If COMMAND is nil, the key-chord is removed."
 ;; <<< E N D key-chord
 
 ;; >>> START generic modes
-(require 'generic-x)
-(define-generic-mode 'quan-journal-mode
-  '() ;; comment start list
-  '() ;; preserved key words list
-  '(("\\(^>[^<]*<$\\)" . 'font-lock-comment-face)
-    ("\\(==.*=\\)" . 'font-lock-constant-face)
-    ("\\(\*.*\*\\)" . 'font-lock-variable-name-face)
-    ("\\(vim:.*\\)" . 'font-lock-comment-face)
-    ("\\(^>$\\)" . 'font-lock-comment-face)
-    ("\\(^   .*\\)" . 'font-lock-comment-face)
-    ("\\(^<$\\)" . 'font-lock-comment-face)) ;; customized render
-  '("journal.*$")
-  nil
-  "A mode for writting my journal in emacs, originally in vm help format"
-  )
+(when nil
+  (require 'generic-x)
+  (define-generic-mode 'quan-journal-mode
+    '() ;; comment start list
+    '() ;; preserved key words list
+    '(("\\(^>[^<]*<$\\)" . 'font-lock-comment-face)
+      ("\\(==.*=\\)" . 'font-lock-constant-face)
+      ("\\(\*.*\*\\)" . 'font-lock-variable-name-face)
+      ("\\(vim:.*\\)" . 'font-lock-comment-face)
+      ("\\(^>$\\)" . 'font-lock-comment-face)
+      ("\\(^   .*\\)" . 'font-lock-comment-face)
+      ("\\(^<$\\)" . 'font-lock-comment-face)) ;; customized render
+    '("journal.*$")
+    nil
+    "A mode for writting my journal in emacs, originally in vm help format"
+  ))
 ;; <<< E N D generic modes
 
 ;; >>> START org
 (when (package-installed-p 'org)
-  ;;org mode work flow
+  ;; org mode work flow
   (setq org-todo-keywords 
         '((sequence "TODO(1!)" "DOING(2!)" "BLOCKED(3@/!)" "REVIEW(4)" "|" "DONE(5!)" "ARCHIVED(6@)")
           (sequence "NEW(A!)" "FAIL(I!)" "ASSIGNED(B@/!)" "ONGOING(C!)" "CONFIRM(D@)" "BUILDREADY(E!)" "VERIFYREADY(F!)" "|" "PASSED(G!)" "DEFFER(H!)")))
@@ -1172,7 +1308,7 @@ If COMMAND is nil, the key-chord is removed."
           ("DEFFER" . "gray")))
   (setq org-agenda-files (quote ("~/org")))
   )
-;;enable babel languages
+;; enable babel languages
 (when (package-installed-p 'babel)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -1245,7 +1381,7 @@ If COMMAND is nil, the key-chord is removed."
 (when (and (package-installed-p 'monokai-theme) (package-installed-p 'subatomic256-theme))
   ;; theme setting
   (if (display-graphic-p)
-      (load-theme 'solarized-dark t)
+      (load-theme 'inkpot t)
       (load-theme 'zenburn t)
     )
   )
@@ -1307,4 +1443,8 @@ If COMMAND is nil, the key-chord is removed."
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("b85fc9f122202c71b9884c5aff428eb81b99d25d619ee6fde7f3016e08515f07" default))))
+    ("b85fc9f122202c71b9884c5aff428eb81b99d25d619ee6fde7f3016e08515f07" default)))
+ '(safe-local-variable-values
+   (quote
+    ((mmm-noweb-code-mode . haskell-mode)
+     (mmm-noweb-code-mode . c-mode)))))
