@@ -70,6 +70,7 @@
 (line-number-mode t)
 (column-number-mode t)
 (global-hl-line-mode -1)
+(setq-default truncate-lines t)
 ;; IDO every where
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -339,6 +340,8 @@
   (package-install 'projectile))
 (unless (package-installed-p 'ggtags)
   (package-install 'ggtags))
+(unless (package-installed-p 'fish-mode)
+  (package-install 'fish-mode))
 ;(unless (package-installed-p 'key-chord)
 ;  (package-install 'key-chord))
 (unless (package-installed-p 'sr-speedbar)
@@ -594,6 +597,9 @@
   (defvar c-tempo-tags nil
     "Tempo tags for C mode")
   (when (package-installed-p 'ggtags)
+    ; get emacs to find global external program
+    (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
+    (setq exec-path (append exec-path '("/usr/local/bin")))
     (add-hook 'c-mode-hook
               (lambda ()
                 (ggtags-mode 1)
@@ -1381,7 +1387,7 @@ If COMMAND is nil, the key-chord is removed."
 (when (and (package-installed-p 'monokai-theme) (package-installed-p 'subatomic256-theme))
   ;; theme setting
   (if (display-graphic-p)
-      (load-theme 'inkpot t)
+      (load-theme 'monokai t)
       (load-theme 'zenburn t)
     )
   )
@@ -1444,7 +1450,23 @@ If COMMAND is nil, the key-chord is removed."
  '(custom-safe-themes
    (quote
     ("b85fc9f122202c71b9884c5aff428eb81b99d25d619ee6fde7f3016e08515f07" default)))
+ '(org-fontify-quote-and-verse-blocks t)
+ '(package-selected-packages
+   (quote
+    (fish-mode zenburn-theme web-mode web-beautify undo-tree subatomic256-theme sr-speedbar solarized-theme s relative-line-numbers rainbow-delimiters projectile polymode obsidian-theme monokai-theme mmm-mode markdown-mode lua-mode json-mode inkpot-theme hydra haskell-mode ggtags deft babel auto-complete)))
  '(safe-local-variable-values
    (quote
     ((mmm-noweb-code-mode . haskell-mode)
      (mmm-noweb-code-mode . c-mode)))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-document-title ((((class color) (min-colors 89)) (:inherit variable-pitch :foreground "#DC143C" :height 1.0))))
+ '(org-level-1 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
+ '(org-level-2 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
+ '(org-level-3 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
+ '(org-level-4 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
+ '(org-level-5 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
+ '(org-verse ((((class color) (min-colors 89)) (:inherit variable-pitch :foreground "#BCC6CC" :family "Tengwar Annatar" :height 1.7))) t))

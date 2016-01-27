@@ -119,7 +119,10 @@ By default, emacs on MacOSX binds Command to Meta, I don't want that.
 (line-number-mode t)
 (column-number-mode t)
 (global-hl-line-mode -1)
-@ icomplete and ido for auto-complete every where.
+@ Disable line wrap by default.
+<<generics>>=
+(setq-default truncate-lines t)
+@ iComplete and ido for auto-complete every where.
 <<generics>>=
 ;; icicle
 (icomplete-mode 99)
