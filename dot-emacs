@@ -273,40 +273,10 @@
   (package-install 'rainbow-delimiters))
 (unless (package-installed-p 'auto-complete)
   (package-install 'auto-complete))
-;(unless (package-installed-p 'rainbow-mode)
-;  (package-install 'rainbow-mode))
-;(unless (package-installed-p 'rainbow-blocks)
-;  (package-install 'rainbow-blocks))
-;(unless (package-installed-p 'evil)
-;  (package-install 'evil))
-;(unless (package-installed-p 'evil-leader)
-;  (package-install 'evil-leader))
-;(unless (package-installed-p 'evil-tutor)
-;  (package-install 'evil-tutor))
-;(unless (package-installed-p 'powerline)
-;  (package-install 'powerline))
-;(unless (package-installed-p 'powerline-evil)
-;  (package-install 'powerline-evil))
+; removed : evil, rainbow blocks
 (unless (package-installed-p 'relative-line-numbers)
   (package-install 'relative-line-numbers))
-;(unless (package-installed-p 'smart-tabs-mode)
-;  (package-install 'smart-tabs-mode))
-;(unless (package-installed-p 'multiple-cursors)
-;  (package-install 'multiple-cursors))
-;; clojure development
-;(unless (package-installed-p 'cider)
-;  (package-install 'cider))
-;(unless (package-installed-p 'ac-cider)
-;  (package-install 'ac-cider))
-;(unless (package-installed-p 'ac-nrepl)
-;  (package-install 'ac-nrepl))
-;(unless (package-installed-p 'paredit)
-;  (package-install 'paredit))
-;; scala development
-;(unless (package-installed-p 'ensime)
-;  (package-install 'ensime))
-;(unless (package-installed-p 'scala-mode)
-;  (package-install 'scala-mode))
+; removed : clojure, scala
 ;; lua development
 (unless (package-installed-p 'lua-mode)
   (package-install 'lua-mode))
@@ -328,9 +298,7 @@
   (package-install 'babel))
 (unless (package-installed-p 'deft)
   (package-install 'deft))
-;; Sunrise Commander
-;(unless (package-installed-p 'sunrise-commander)
-;  (package-install 'sunrise-commander))
+;; removed : Sunrise Commander
 ;; misc modes
 (unless (package-installed-p 'json-mode)
   (package-install 'json-mode))
@@ -342,8 +310,7 @@
   (package-install 'ggtags))
 (unless (package-installed-p 'fish-mode)
   (package-install 'fish-mode))
-;(unless (package-installed-p 'key-chord)
-;  (package-install 'key-chord))
+; removed : keychord
 (unless (package-installed-p 'sr-speedbar)
   (package-install 'sr-speedbar))
 (unless (package-installed-p 'imenu)
@@ -352,14 +319,7 @@
   (package-install 'hydra))
 (unless (package-installed-p 'undo-tree)
   (package-install 'undo-tree))
-;(unless (package-installed-p 'smartparens)
-;  (package-install 'smartparens))
-;(unless (package-installed-p 'emacs-eclim)
-;  (package-install 'emacs-eclim))
-;(unless (package-installed-p 'company) ; Install because eclim will get compile error without it
-;  (package-install 'company))
-;(unless (package-installed-p 'polymode)
-;  (package-install 'polymode))
+; removed : smartparens, eclim, company, polymode
 (unless (package-installed-p 'mmm-mode)
   (package-install 'mmm-mode))
 ;; compile installed packages
@@ -367,7 +327,7 @@
 ;; <<< E N D package manager
 
 ;; >>> START tengwar org-mode
-(when (and t (package-installed-p 'org))
+(when (and nil (package-installed-p 'org))
   (custom-set-faces
    ;; set tengwar region between #+begin_verse and #+end_verse
    '(org-verse ((((class color) (min-colors 89)) (:inherit variable-pitch :foreground "#BCC6CC" :family "Tengwar Annatar" :height 1.7)))))
@@ -639,22 +599,22 @@
                                                                   (- (length default-directory) 1)))
                              )
                            ";" > n)
-                         "pack"
+                         "package"
                          "Declare package at the beginning of java source file"
                          'java-tempo-tags)
   (tempo-define-template "java-import"
                          '("import " >  (p "Import: ") ";" n)
-                         "imp"
+                         "import"
                          "Declare imports"
                          'java-tempo-tags)
   (tempo-define-template "java-class"
                          '("public class " > (substring (buffer-name) 0 (- (length (buffer-name)) 5)) > n " {" > n > r ~ > n "}" > n )
-                         "cla"
+                         "class"
                          "Declare a class"
                          'java-tempo-tags)
   (tempo-define-template "java-interface"
                          '("public interface " > (substring (buffer-name) 0 (- (length (buffer-name)) 5)) > n " {" > n > r ~ > n "}" > n )
-                         "inter"
+                         "interface"
                          "Declare an interface"
                          'java-tempo-tags)
   (tempo-define-template "java-attr"
@@ -665,7 +625,7 @@
                          "public void set" (upcase-initials (tempo-lookup-named 'var))
                          "(final " (s type) " " (s var) ") {" > n
                          "this." (s var) " = " (s var) ";" > n "}" > n)
-                         "attr"
+                         "attribute"
                          "Declare attribute with getter, setter"
                          'java-tempo-tags)
   ; TODOS: osgi templates
@@ -822,60 +782,10 @@
   (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
   ;; define keys
   (define-key evil-normal-state-map "ff" 'find-file) ;; file find
-  (define-key evil-normal-state-map "fq" 'save-buffers-kill-terminal) ;; file quit
-  (define-key evil-normal-state-map "fs" 'save-buffer) ;; file save
-  (define-key evil-normal-state-map "fk" 'kill-buffer) ;; file kill
-  (define-key evil-normal-state-map "fb" 'switch-to-buffer) ;; file buffer (switch)
   (when (package-installed-p 'recentf)
     (define-key evil-normal-state-map "fr" 'recentf-open-files) ;; file recent
     )
-  (when (package-installed-p 'sr-speedbar)
-    (define-key evil-normal-state-map "fl" 'sr-speedbar-open) ;; file ->
-    (define-key evil-normal-state-map "fh" 'sr-speedbar-close) ;; file <-
-    )
-  ;; getting help
-  (define-key evil-normal-state-map "hk" 'describe-key) ;; help keys
-  (define-key evil-normal-state-map "hf" 'describe-function) ;; help functions
-  ;; moving point
-  ;(define-key evil-insert-state-map "hh" 'move-beginning-of-line) ;; line <-
-  ;(define-key evil-insert-state-map "ll" 'move-end-of-line) ;; line ->
-  ;; rectangle (mark same as EM)
-  (define-key evil-normal-state-map "bc" 'copy-rectangle-as-kill) ;; box copy
-  (define-key evil-normal-state-map "bx" 'kill-rectangle) ;; box cut
-  (define-key evil-normal-state-map "bp" 'yank-rectangle) ;; box paste
-  (define-key evil-normal-state-map "bd" 'delete-rectangle) ;; box delete
-  (add-hook
-   'picture-mode-hook
-   (lambda ()
-          (evil-define-key 'normal picture-mode-map "b[" 'picture-clear-rectangle) ;; box out
-          (evil-define-key 'normal picture-mode-map "b]" 'picture-yank-rectangle) ;; box insert
-          ))
-  ;; window (split panes)
-  (define-key evil-normal-state-map "wc" 'delete-window) ;; window close
-  (define-key evil-normal-state-map "wsl" 'split-window-right) ;; window ->
-  (define-key evil-normal-state-map "wsj" 'split-window-below) ;; window _|_
-  (define-key evil-normal-state-map "wo" 'other-window) ;; window other
-  ;; execute commands
-  (define-key evil-normal-state-map ",," 'execute-extended-command)
-  ;; org mode
-  (when (package-installed-p 'org)
-    (require 'org)
-    (evil-define-key 'normal org-mode-map "oc" 'org-ctrl-c-ctrl-c) ;; org check
-    (evil-define-key 'normal org-mode-map "ot" 'org-todo) ;; org todo
-    (evil-define-key 'normal org-mode-map "or" 'org-meta-return) ;; org return
-    (evil-define-key 'normal org-mode-map "oa" 'org-agenda) ;; org agenda
-    )
-  (when (package-installed-p 'imenu)
-    (evil-define-key 'normal org-mode-map "ig" 'ido-goto-symbol) ;; org goto
-    )
-  (when (package-installed-p 'deft)
-    (define-key evil-normal-state-map "nv" 'deft) ;; notational velocity
-    )
-  ;; projectile
-  (when (package-installed-p 'projectile)
-    (evil-define-key 'normal projectile-mode-map "fp" 'projectile-find-file) ;; project file
-    (evil-define-key 'normal projectile-mode-map "fg" 'projectile-find-file-dwim) ;; project grep
-    )
+  ; removed : various key map
   ;; evil-leader settings
   (when (package-installed-p 'evil-leader)
     (setq evil-leader/in-all-states 1)
@@ -884,23 +794,8 @@
     (evil-leader/set-leader "<SPC>")
     (evil-leader/set-key
      "f" 'find-file
-     "r" 'recentf-open-files
-     "b" 'switch-to-buffer
-     "k" 'kill-buffer
-     "s" 'save-buffer
      "q" 'save-buffers-kill-terminal)
-    (evil-leader/set-key
-     "wsl" 'split-window-right
-     "wsj" 'split-window-below
-     "wo" 'other-window
-     "w0" 'delete-window)
-    (evil-leader/set-key-for-mode 'emacs-lisp-mode
-                                  "xe" 'eval-last-sexp)
-    (evil-leader/set-key-for-mode 'org-mode
-                                  "tc" 'org-ctrl-c-ctrl-c
-                                  "tt" 'org-todo)
-    (evil-leader/set-key-for-mode 'dired-mode
-                                  "gf" 'grep-find)
+    ; removed : various leader map
     (defun sys-open-current-buffer()
       "Open current buffer using system default application"
       (interactive)
@@ -989,9 +884,11 @@
   (global-set-key (kbd "<f2> w j") 'split-window-below) ;; window _|_
   (global-set-key (kbd "<f2> w o") 'other-window) ;; window other
   ;; search
-  (global-unset-key (kbd "<f2> s")) 
+  (global-unset-key (kbd "<f2> s"))
   (global-set-key (kbd "<f2> s j") 'isearch-forward) ;; search _|_
   (global-set-key (kbd "<f2> s k") 'isearch-backward) ;; search ^
+  (global-set-key (kbd "<f2> /") 'isearch-forward) ;; search _|_
+  (global-set-key (kbd "<f2> \\") 'isearch-backward) ;; search ^
   (add-hook 'isearch-mode-hook
             (lambda ()
               (define-key isearch-mode-map (kbd "<f2> j") 'isearch-repeat-forward)
@@ -1096,177 +993,18 @@ If COMMAND is nil, the key-chord is removed."
   ;; File open/close
   (key-chord-define-oneway-global "ff" (lambda () (interactive) (if use-chord-command (call-interactively 'find-file) (insert "ff")))) ;; file find
   (key-chord-define-oneway-global "fq" (lambda () (interactive) (if use-chord-command (call-interactively 'save-buffers-kill-terminal) (insert "fq")))) ;; file quit
-  (key-chord-define-oneway-global "fs" (lambda () (interactive) (if use-chord-command (call-interactively 'save-buffer) (insert "fs")))) ;; file save
-  (key-chord-define-oneway-global "fk" (lambda () (interactive) (if use-chord-command (call-interactively 'kill-buffer) (insert "fk")))) ;; file quit
-  (key-chord-define-oneway-global "bb" (lambda () (interactive) (if use-chord-command (call-interactively 'switch-to-buffer) (insert "bb")))) ;; file buffer _tka
   (when (package-installed-p 'recentf)
     (key-chord-define-oneway-global "rr" (lambda () (interactive) (if use-chord-command (call-interactively 'recentf-open-files) (insert "rr")))) ;; file recent _tka
     )
-  (when (package-installed-p 'sr-speedbar)
-    (key-chord-define-oneway-global "fl" (lambda () (interactive) (if use-chord-command (call-interactively 'sr-speedbar-open) (insert "fl")))) ;; file buffer
-    (key-chord-define-oneway-global "fh" (lambda () (interactive) (if use-chord-command (call-interactively 'sr-speedbar-close) (insert "fh")))) ;; file buffer
-    )
-  ;; getting help
-  (key-chord-define-oneway-global "hk" (lambda () (interactive) (if use-chord-command (call-interactively 'describe-key) (insert "hk"))))
-  (key-chord-define-oneway-global "hf" (lambda () (interactive) (if use-chord-command (call-interactively 'describe-function) (insert "hf"))))
-  ;; moving point
-  (key-chord-define-oneway-global "ll" (lambda () (interactive) (if use-chord-command (move-to-column (+ (current-column) 25)) (insert "ll"))))
-  (key-chord-define-oneway-global "hh" (lambda () (interactive) (if use-chord-command (move-to-column (max 0 (- (current-column) 25))) (insert "hh"))))
-  (key-chord-define-oneway-global "jj" (lambda () (interactive) (if use-chord-command (scroll-up 25) (insert "jj"))))
-  (key-chord-define-oneway-global "kk" (lambda () (interactive) (if use-chord-command (scroll-down 25) (insert "kk"))))
-  (key-chord-define-oneway-global "bl" (lambda () (interactive) (if use-chord-command (call-interactively 'move-end-of-line) (insert "bl"))))
-  (key-chord-define-oneway-global "bh" (lambda () (interactive) (if use-chord-command (call-interactively 'move-beginning-of-line) (insert "bh"))))
-  (key-chord-define-oneway-global "bj" (lambda () (interactive) (if use-chord-command (call-interactively 'end-of-buffer) (insert "bj"))))
-  (key-chord-define-oneway-global "bk" (lambda () (interactive) (if use-chord-command (call-interactively 'beginning-of-buffer) (insert "bk"))))
-  ;; editing
-  (key-chord-define-oneway-global "mm" (lambda () (interactive) (if use-chord-command (call-interactively 'set-mark-command) (insert "mm")))) ;; _tka
-  (key-chord-define-oneway-global "cx" (lambda () (interactive) (if use-chord-command (call-interactively 'kill-region) (insert "cx")))) ;; _tka
-  (key-chord-define-oneway-global "cc" (lambda () (interactive) (if use-chord-command (call-interactively 'kill-ring-save) (insert "cc")))) ;; _tka
-  (key-chord-define-oneway-global "cp" (lambda () (interactive) (if use-chord-command (call-interactively 'yank) (insert "cp")))) ;; _tka
-  (key-chord-define-oneway-global "eu" (lambda () (interactive) (if use-chord-command (call-interactively 'undo) (insert "eu"))))
-  (key-chord-define-oneway-global "yy" (lambda () (interactive) (if use-chord-command (call-interactively 'kill-whole-line) (insert "yy")))) ;; _tka
-  ;; rectangle
-  (key-chord-define-oneway-global "[c" (lambda () (interactive) (if use-chord-command (call-interactively 'copy-rectangle-as-kill) (insert "[c")))) ;; rec copy _tka
-  (key-chord-define-oneway-global "[x" (lambda () (interactive) (if use-chord-command (call-interactively 'kill-rectangle) (insert "[x")))) ;; rec cut _tka
-  (key-chord-define-oneway-global "rp" (lambda () (interactive) (if use-chord-command (call-interactively 'yank-rectangle) (insert "rp")))) ;; rec paste
-  (key-chord-define-oneway-global "[d" (lambda () (interactive) (if use-chord-command (call-interactively 'delete-rectangle) (insert "[d")))) ;; rec delete
-  (add-hook
-   'picture-mode-hook
-   (lambda ()
-     (key-chord-define-oneway picture-mode-map "r[" (lambda () (interactive) (if use-chord-command (call-interactively 'picture-clear-rectangle) (insert "r[")))) ;; rec out
-     (key-chord-define-oneway picture-mode-map "r]" (lambda () (interactive) (if use-chord-command (call-interactively 'picture-yank-rectangle) (insert "r]")))) ;; rec insert
-     ))
-  ;; window
-  (key-chord-define-oneway-global "wh" (lambda () (interactive) (if use-chord-command (call-interactively 'delete-window) (insert "wh")))) ;; window close _tka
-  (key-chord-define-oneway-global "wl" (lambda () (interactive) (if use-chord-command (call-interactively 'split-window-right) (insert "wl")))) ;; window ->
-  (key-chord-define-oneway-global "wj" (lambda () (interactive) (if use-chord-command (call-interactively 'split-window-below) (insert "wj")))) ;; window _|_
-  (key-chord-define-oneway-global "wo" (lambda () (interactive) (if use-chord-command (call-interactively 'other-window) (insert "wo")))) ;; window other
-  ;; search
-  (key-chord-define-oneway-global "sj" (lambda () (interactive) (if use-chord-command (call-interactively 'isearch-forward) (insert "sj")))) ;; search _|_
-  (key-chord-define-oneway-global "sk" (lambda () (interactive) (if use-chord-command (call-interactively 'isearch-backward) (insert "sk")))) ;; search ^
-  ;(add-hook 'isearch-mode-hook
-  ;          (lambda ()
-  ;            (key-chord-mode 1)
-  ;            (key-chord-define-oneway isearch-mode-map "sl"
-  ;              (lambda () (interactive) (if use-chord-command (call-interactively 'isearch-repeat-forward) (insert "sl"))))
-  ;            (key-chord-define-oneway isearch-mode-map "sh"
-  ;              (lambda () (interactive) (if use-chord-command (call-interactively 'isearch-repeat-backward) (insert "sh"))))
-  ;            ))
-  (key-chord-define-oneway-global "sr" (lambda () (interactive) (if use-chord-command (call-interactively 're-builder) (insert "sr")))) ;; search regex
-  ;; execute commands
-  (key-chord-define-oneway-global "xx" 'execute-extended-command)
-  (key-chord-define-oneway-global "ee" (lambda () (interactive) (if use-chord-command (call-interactively 'async-shell-command) (insert "ee"))))
-  (key-chord-define-oneway-global "jk" (lambda () (interactive)
-                                         (if use-chord-command (progn (call-interactively 'abort-recursive-edit)
-                                                                      (call-interactively 'keyboard-quit)) (insert "jk"))))
-  ;; org mode
-  (when (package-installed-p 'org)
-    (require 'org)
-    (key-chord-define-oneway org-mode-map "oc" (lambda () (interactive) (if use-chord-command (call-interactively 'org-ctrl-c-ctrl-c) (insert "oc")))) ;; org check
-    (key-chord-define-oneway org-mode-map "ot" (lambda () (interactive) (if use-chord-command (call-interactively 'org-todo) (insert "ot")))) ;; org todo
-    (key-chord-define-oneway org-mode-map "or" (lambda () (interactive) (if use-chord-command (call-interactively 'org-meta-return) (insert "or")))) ;; org return
-    (key-chord-define-oneway org-mode-map "oa" (lambda () (interactive) (if use-chord-command (call-interactively 'org-agenda) (insert "oa")))) ;; org agenda
-    )
-  (when (package-installed-p 'imenu)
-    (key-chord-define-oneway org-mode-map "ig" (lambda () (interactive) (if use-chord-command (call-interactively 'ido-goto-symbol) (insert "ig")))) ;; org goto
-    )
-  (when (package-installed-p 'deft)
-    (key-chord-define-oneway-global "nv" (lambda () (interactive) (if use-chord-command (call-interactively 'deft) (insert "nv")))) ;; notational velocity
-    )
-  ;; projectile
-  (when (package-installed-p 'projectile)
-    (key-chord-define-oneway projectile-mode-map "pf" (lambda () (interactive) (if use-chord-command (call-interactively 'projectile-find-file) (insert "pf")))) ;; project file
-    (key-chord-define-oneway projectile-mode-map "pg" (lambda () (interactive) (if use-chord-command (call-interactively 'projectile-find-file-dwim) (insert "pg"))))
-    (key-chord-define-oneway projectile-mode-map "pb" (lambda () (interactive) (if use-chord-command (call-interactively 'projectile-switch-to-buffer) (insert "pb"))))
-    (key-chord-define-oneway projectile-mode-map "pr" (lambda () (interactive) (if use-chord-command (call-interactively 'projectile-recentf) (insert "pr")))) ;; project recent
-    )
+  ; removed : various similar keychord-'mode' key map
   (when nil
     ;; File open/close
     (key-chord-define-oneway-global "FF" 'find-file) ;; file find
     (key-chord-define-oneway-global "FQ" 'save-buffers-kill-terminal) ;; file quit
-    (key-chord-define-oneway-global "FS" 'save-buffer) ;; file save
-    (key-chord-define-oneway-global "FK" 'kill-buffer) ;; file kill
-    (key-chord-define-oneway-global "FB" 'switch-to-buffer) ;; file buffer (switch)
     (when (package-installed-p 'recentf)
       (key-chord-define-oneway-global "FR" 'recentf-open-files) ;; file recent
       )
-    (when (package-installed-p 'sr-speedbar)
-      (key-chord-define-oneway-global "FL" 'sr-speedbar-open) ;; file ->
-      (key-chord-define-oneway-global "FH" 'sr-speedbar-close) ;; file <-
-      )
-    ;; getting help
-    (key-chord-define-oneway-global "HK" 'describe-key) ;; help keys
-    (key-chord-define-oneway-global "HF" 'describe-function) ;; help functions
-    ;; moving point
-    (key-chord-define-oneway-global "LH" 'move-beginning-of-line) ;; line <-
-    (key-chord-define-oneway-global "LL" 'move-end-of-line) ;; line ->
-    (key-chord-define-oneway-global "LJ" 'next-line) ;; line _|_
-    (key-chord-define-oneway-global "LK" 'previous-line) ;; line ^
-    (key-chord-define-oneway-global "BJ" 'end-of-buffer) ;; buffer _|_
-    (key-chord-define-oneway-global "BK" 'beginning-of-buffer) ;; buffer ^
-    (key-chord-define-oneway-global "MJ" 'scroll-up-command) ;; move _|_
-    (key-chord-define-oneway-global "MK" 'scroll-down-command) ;; move ^
-    (put 'scroll-left 'disabled nil)
-    (key-chord-define-oneway-global "MH" 'scroll-left) ;; move <-
-    (key-chord-define-oneway-global "ML" 'scroll-right) ;; move ->
-    (key-chord-define-oneway-global "GL" 'forward-list) ;; group ->
-    (key-chord-define-oneway-global "GH" 'backward-list) ;; group <-
-    (key-chord-define-oneway-global "GK" 'backward-up-list) ;; group ^
-    (key-chord-define-oneway-global "GJ" 'down-list) ;; group _|_
-    ;; editing (clipboard)
-    (key-chord-define-oneway-global "EM" 'set-mark-command) ;; edit mark
-    (key-chord-define-oneway-global "EX" 'kill-region) ;; edit cut
-    (key-chord-define-oneway-global "EC" 'kill-ring-save) ;; edit copy
-    (key-chord-define-oneway-global "EP" 'yank) ;; edit paste
-    (key-chord-define-oneway-global "EU" 'undo) ;; edit undo
-    (key-chord-define-oneway-global "EY" 'kill-whole-line) ;; edit why
-    ;; rectangle (mark same as EM)
-    (key-chord-define-oneway-global "RC" 'copy-rectangle-as-kill) ;; rec copy
-    (key-chord-define-oneway-global "RX" 'kill-rectangle) ;; rec cut
-    (key-chord-define-oneway-global "RP" 'yank-rectangle) ;; rec paste
-    (key-chord-define-oneway-global "RD" 'delete-rectangle) ;; rec delete
-    (add-hook
-     'picture-mode-hook
-     (lambda ()
-       (key-chord-define-oneway picture-mode-map "R[" 'picture-clear-rectangle) ;; rec out
-       (key-chord-define-oneway picture-mode-map "R]" 'picture-yank-rectangle) ;; rec insert
-       ))
-    ;; window (split panes)
-    (key-chord-define-oneway-global "WC" 'delete-window) ;; window close
-    (key-chord-define-oneway-global "WL" 'split-window-right) ;; window ->
-    (key-chord-define-oneway-global "WJ" 'split-window-below) ;; window _|_
-    (key-chord-define-oneway-global "WO" 'other-window) ;; window other
-    ;; search
-    (key-chord-define-oneway-global "SJ" 'isearch-forward) ;; search _|_
-    (key-chord-define-oneway-global "SK" 'isearch-backward) ;; search ^
-    (key-chord-define-oneway-global "SR" 're-builder) ;; search regex
-    ;; execute commands
-    (key-chord-define-oneway-global "XX" 'execute-extended-command)
-    (key-chord-define-oneway-global "xx" 'execute-extended-command)
-    (key-chord-define-oneway-global "JK" 'keyboard-quit)
-    (key-chord-define-oneway minibuffer-local-map "JK" 'abort-recursive-edit)
-                                        ;(key-chord-define-oneway minibuffer-local-isearch-map "JK" 'abort-recursive-edit)
-    ;; org mode
-    (when (package-installed-p 'org)
-      (require 'org)
-      (key-chord-define-oneway org-mode-map "OC" 'org-ctrl-c-ctrl-c) ;; org check
-      (key-chord-define-oneway org-mode-map "OT" 'org-todo) ;; org todo
-      (key-chord-define-oneway org-mode-map "OR" 'org-meta-return) ;; org return
-      (key-chord-define-oneway org-mode-map "OA" 'org-agenda) ;; org agenda
-      )
-    (when (package-installed-p 'imenu)
-      (key-chord-define-oneway org-mode-map "IG" 'ido-goto-symbol) ;; org goto
-      )
-    (when (package-installed-p 'deft)
-      (key-chord-define-oneway-global "NV" 'deft) ;; notational velocity
-      )
-    ;; projectile
-    (when (package-installed-p 'projectile)
-      (key-chord-define-oneway projectile-mode-map "PF" 'projectile-find-file) ;; project file
-      (key-chord-define-oneway projectile-mode-map "PG" 'projectile-find-file-dwim) ;; project grep
-      (key-chord-define-oneway projectile-mode-map "PB" 'projectile-switch-to-buffer) ;; project buffer
-      (key-chord-define-oneway projectile-mode-map "PR" 'projectile-recentf) ;; project recent
-      )
+    ; removed : various keychord caplock binding
     )
   )
 ;; <<< E N D key-chord
@@ -1450,23 +1188,7 @@ If COMMAND is nil, the key-chord is removed."
  '(custom-safe-themes
    (quote
     ("b85fc9f122202c71b9884c5aff428eb81b99d25d619ee6fde7f3016e08515f07" default)))
- '(org-fontify-quote-and-verse-blocks t)
- '(package-selected-packages
-   (quote
-    (fish-mode zenburn-theme web-mode web-beautify undo-tree subatomic256-theme sr-speedbar solarized-theme s relative-line-numbers rainbow-delimiters projectile polymode obsidian-theme monokai-theme mmm-mode markdown-mode lua-mode json-mode inkpot-theme hydra haskell-mode ggtags deft babel auto-complete)))
  '(safe-local-variable-values
    (quote
     ((mmm-noweb-code-mode . haskell-mode)
      (mmm-noweb-code-mode . c-mode)))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-document-title ((((class color) (min-colors 89)) (:inherit variable-pitch :foreground "#DC143C" :height 1.0))))
- '(org-level-1 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
- '(org-level-2 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
- '(org-level-3 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
- '(org-level-4 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
- '(org-level-5 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
- '(org-verse ((((class color) (min-colors 89)) (:inherit variable-pitch :foreground "#BCC6CC" :family "Tengwar Annatar" :height 1.7))) t))
