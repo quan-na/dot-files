@@ -1,0 +1,121 @@
+% -*- mmm-noweb-code-mode : javascript-mode; tab-width: 2; -*-
+\part*{Basic Idea}
+This project is intended to visualize a mind palace using three.js library.
+Because a large screen is mind taxing, the screen will be broken into blocks.
+Each block is corresponding to a block of 1\(\times\)1\(\times\)1 m\textsuperscript{3}.
+There should be 2 tools: 1 for viewing the completed palace, other will help
+creator in designing blocks by showing only 1 block at a time.
+\part*{HTMLs}
+There is 2 html files, each for 1 tool. The viewer is for viewing the mind
+palace.
+<<vn.quanna.mp3js.viewer.html>>=
+<html>
+<<generic-header>>
+<body>
+<script src="three.min.js"></script>
+<<models>>
+<script src="vn.quanna.mp3js.viewer.js"></script>
+</body>
+</html>
+@ And the designer is for viewing individual models.
+<<vn.quanna.mp3js.designer.html>>=
+<html>
+<<generic-header>>
+<body>
+<script src="three.min.js"></script>
+<<models>>
+<script src="vn.quanna.mp3js.designer.js"></script>
+</body>
+</html>
+@ Headers are same in both viewer and designer.
+<<generic-header>>=
+<head>
+  <meta charset=utf-8>
+  <title>My MP on Three.js</title>
+  <style>
+    body { margin: 0; }
+    canvas { width: 100%; height: 100% }
+  </style>
+</head>
+@
+\part*{Javascripts}
+\section*{Viewer}
+<<vn.quanna.mp3js.viewer.js>>=
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+@
+\section*{Designer}
+<<vn.quanna.mp3js.designer.js>>=
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+@ Designer care only for last added model, it will loop through models map to retrieve last one.
+<<vn.quanna.mp3js.designer.js>>=
+var lastModel = '';
+for (var key in models) {
+  lastModel = key;
+}
+console.log('Last model name : \n' + lastModel);
+@ After that, designer will render the object with constant rotating.
+<<vn.quanna.mp3js.designer.js>>=
+var model = models[lastModel]();
+scene.add(model);
+var frame = models['sample']();
+scene.add(frame);
+camera.position.z = 20;
+camera.position.y = 10;
+camera.lookAt(new THREE.Vector3());
+var render = function () {
+  requestAnimationFrame( render, 100 );
+
+  model.rotation.y += 0.04;
+  frame.rotation.y += 0.04;
+
+  renderer.render(scene, camera);
+};
+render();
+@
+\section*{Models}
+\subsection*{Generic Model Structure}
+Each model will be coded in 1 single javascript source file. The javascript
+file will contain a single line of code in which it will put a function into a
+models map. The key of this map is the name of this model, the function will
+return a THREE.Mesh which is centered at point 0, 0 and expand to -5, 5 cube.
+<<vn.quanna.mp3js.model.sample.js>>=
+if (typeof(models) != 'object')
+  models = {};
+models['sample'] = function() {
+    var geometry = new THREE.BoxGeometry( 10, 10, 10 );
+    var texture = THREE.ImageUtils.loadTexture("com.graphicsfuel.targetgreen512.png");
+    var material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true } );
+    return new THREE.Mesh( geometry, material );
+  };
+@ All models will be included into html files, designer only care about last one.
+<<models>>=
+<script src='vn.quanna.mp3js.model.sample.js'></script>
+@
+\subsection*{Floor Wood}
+The floor wood occupies the upper face of the cube. It is used as basic for
+floor creation.
+<<vn.quanna.mp3js.model.floorwood.js>>=
+if (typeof(models) != 'object')
+  models = {};
+models['floorwood'] = function() {
+    var geometry = new THREE.BoxGeometry(10, 0.5, 10);
+    var translate = new THREE.Matrix4().makeTranslation(0, 5-0.25, 0);
+    geometry.applyMatrix(translate);
+    var texture = THREE.ImageUtils.loadTexture("com.textures.woodfine.11.jpg");
+    var material = new THREE.MeshBasicMaterial( { map: texture } );
+    return new THREE.Mesh( geometry, material );
+  }
+@ Include floor into html files.
+<<models>>=
+<script src='vn.quanna.mp3js.model.floorwood.js'></script>
+@
