@@ -974,6 +974,15 @@
   (global-set-key (kbd "<f2> k r") 'helm-show-kill-ring)
   (global-set-key (kbd "<f2> f f") 'helm-find-files)
   (global-set-key (kbd "<f2> r r") 'helm-mini)
+  (when (package-installed-p 'helm-swoop)
+    (global-set-key (kbd "<f2> h s") 'helm-swoop)
+    )
+  (when (package-installed-p 'helm-projectile)
+    (define-key projectile-mode-map (kbd "<f2> p f") 'helm-projectile) ;; project file
+    (define-key projectile-mode-map (kbd "<f2> p g") 'helm-projectile-grep)
+    (define-key projectile-mode-map (kbd "<f2> p b") 'helm-projectile-switch-to-buffer)
+    (define-key projectile-mode-map (kbd "<f2> p r") 'helm-projectile-recentf) ;; project recent
+    )
   )
 ;; <<< E N D helm
 
@@ -1162,7 +1171,7 @@ If COMMAND is nil, the key-chord is removed."
   ;; theme setting
   (if (display-graphic-p)
       (load-theme 'monokai t)
-      (load-theme 'subatomic256 t)
+      (load-theme 'zenburn t)
     )
   )
 ;;cursor
