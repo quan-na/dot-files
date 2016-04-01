@@ -9,11 +9,11 @@
 ;; monospace font for better drawing
 (when (display-graphic-p)
   (add-to-list 'default-frame-alist
-               '(font . "OCR A Extended-14"))
+               '(font . "DejaVu Sans Mono-10"))
   (set-face-attribute 'default nil
-                      :family "OCR A Extended" :height 140)
-  (set-face-attribute 'fixed-pitch nil :font "OCR A Extended-14")
-  (set-face-attribute 'variable-pitch nil :font "OCR A Extended-14")
+                      :family "DejaVu Sans Mono" :height 100)
+  (set-face-attribute 'fixed-pitch nil :font "DejaVu Sans Mono-10")
+  (set-face-attribute 'variable-pitch nil :font "DejaVu Sans Mono-10")
   )
 (when (display-graphic-p)
   (custom-set-faces
@@ -51,7 +51,7 @@
   (tool-bar-mode -1)
 )
 ;; RET auto-indent
-(define-key global-map (kbd "RET") 'newline-and-indent)
+;(define-key global-map (kbd "RET") 'newline-and-indent)
 ;; spaces for tabs
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
@@ -65,16 +65,16 @@
 ;;(setq visible-bell 'top-bottom)
 (setq ring-bell-function 'ignore)
 ;; icicle
-(icomplete-mode 99)
+;(icomplete-mode 99)
 ;; line display
 (line-number-mode t)
 (column-number-mode t)
 (global-hl-line-mode -1)
 (setq-default truncate-lines t)
 ;; IDO every where
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
+;(setq ido-enable-flex-matching t)
+;(setq ido-everywhere t)
+;(ido-mode 1)
 ;; fancier mode-line
 (when t
   ;; Mode line setup
@@ -313,8 +313,8 @@
 ; removed : keychord
 (unless (package-installed-p 'sr-speedbar)
   (package-install 'sr-speedbar))
-(unless (package-installed-p 'imenu)
-  (package-install 'imenu))
+;(unless (package-installed-p 'imenu)
+;  (package-install 'imenu))
 (unless (package-installed-p 'hydra)
   (package-install 'hydra))
 (unless (package-installed-p 'undo-tree)
@@ -322,6 +322,15 @@
 ; removed : smartparens, eclim, company, polymode
 (unless (package-installed-p 'mmm-mode)
   (package-install 'mmm-mode))
+; change workflow to helm instead of ido
+(unless (package-installed-p 'helm)
+  (package-install 'helm))
+(unless (package-installed-p 'helm-swoop)
+  (package-install 'helm-swoop))
+(unless (package-installed-p 'helm-projectile)
+  (package-install 'helm-projectile))
+(unless (package-installed-p 'ac-helm)
+  (package-install 'ac-helm))
 ;; compile installed packages
 (byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
 ;; <<< E N D package manager
@@ -900,7 +909,7 @@
   (global-set-key (kbd "<f2> z z") 'execute-extended-command)
   (global-set-key (kbd "<f2> x c") 'compile)
   (global-set-key (kbd "<f2> x e") 'eval-last-sexp)
-  (global-set-key (kbd "<f2> g") 'keyboard-quit)
+  (global-set-key (kbd "<f2> g") 'keyboard-escape-quit)
   ;; my use of note
   (when (fboundp 'mode-line-note-set)
     (global-set-key (kbd "<f2> n s") 'mode-line-note-set)
@@ -940,6 +949,42 @@
   )
 
 ;; <<< E N D keys define 
+
+;; >>> START helm
+(when (package-installed-p 'helm)
+  (require 'helm)
+  (require 'helm-config)
+  ; change helm prefix
+  (global-set-key (kbd "<f2> h x") 'helm-command-prefix)
+  (global-unset-key (kbd "C-x c"))
+  ; change some config
+  (setq helm-split-window-in-side-p            t
+        helm-move-to-line-cycle-in-source      t
+        helm-ff-search-library-in-sexp         t
+        helm-scroll-amount                     8
+        helm-ff-file-name-history-use-recentf  t
+        helm-M-x-fuzzy-match                   t
+        helm-buffers-fuzzy-matching            t
+        helm-recentf-fuzzy-match               t)
+  ; start helm
+  (helm-mode 1)
+  (helm-autoresize-mode t)
+  ; bind keys
+  (global-set-key (kbd "<f2> z z") 'helm-M-x)
+  (global-set-key (kbd "<f2> k r") 'helm-show-kill-ring)
+  (global-set-key (kbd "<f2> f f") 'helm-find-files)
+  (global-set-key (kbd "<f2> r r") 'helm-mini)
+  (when (package-installed-p 'helm-swoop)
+    (global-set-key (kbd "<f2> h s") 'helm-swoop)
+    )
+  (when (package-installed-p 'helm-projectile)
+    (define-key projectile-mode-map (kbd "<f2> p f") 'helm-projectile) ;; project file
+    (define-key projectile-mode-map (kbd "<f2> p g") 'helm-projectile-grep)
+    (define-key projectile-mode-map (kbd "<f2> p b") 'helm-projectile-switch-to-buffer)
+    (define-key projectile-mode-map (kbd "<f2> p r") 'helm-projectile-recentf) ;; project recent
+    )
+  )
+;; <<< E N D helm
 
 ;; >>> START key-chord
 (when (package-installed-p 'key-chord)
