@@ -5,39 +5,6 @@ Because a large screen is mind taxing, the screen will be broken into blocks.
 Each block is corresponding to a block of 1\(\times\)1\(\times\)1 m\textsuperscript{3}.
 There should be 2 tools: 1 for viewing the completed palace, other will help
 creator in designing blocks by showing only 1 block at a time.
-\part*{HTMLs}
-There is 2 html files, each for 1 tool. The viewer is for viewing the mind
-palace.
-<<vn.quanna.mp3js.viewer.html>>=
-<html>
-<<generic-header>>
-<body>
-<script src="three.min.js"></script>
-<<models>>
-<script src="vn.quanna.mp3js.viewer.js"></script>
-</body>
-</html>
-@ And the designer is for viewing individual models.
-<<vn.quanna.mp3js.designer.html>>=
-<html>
-<<generic-header>>
-<body>
-<script src="three.min.js"></script>
-<<models>>
-<script src="vn.quanna.mp3js.designer.js"></script>
-</body>
-</html>
-@ Headers are same in both viewer and designer.
-<<generic-header>>=
-<head>
-  <meta charset=utf-8>
-  <title>My MP on Three.js</title>
-  <style>
-    body { margin: 0; }
-    canvas { width: 100%; height: 100% }
-  </style>
-</head>
-@
 \part*{Javascripts}
 \section*{Viewer}
 <<vn.quanna.mp3js.viewer.js>>=
@@ -47,6 +14,17 @@ var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHe
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
+@ The screen is divide in to cubes that 's 10\(\times\)10\(\times\)10 in size,
+A function is needed to put a model in x,y,z \(\times\)10 position and with 4
+rotations 1-4 (y-rotation only)
+<<vn.quanna.mp3js.viewer.js>>=
+var putModel = function(modelName, x, y, z, r) {
+  var model = models[modelName]();
+  model.position.x = x*10;
+  model.position.y = y*10;
+  model.position.z = z*10;
+  model.rotation.y = r*90; // not sure about this
+};
 @
 \section*{Designer}
 <<vn.quanna.mp3js.designer.js>>=
@@ -118,4 +96,37 @@ models['floorwood'] = function() {
 @ Include floor into html files.
 <<models>>=
 <script src='vn.quanna.mp3js.model.floorwood.js'></script>
+@
+\part*{HTMLs}
+There is 2 html files, each for 1 tool. The viewer is for viewing the mind
+palace.
+<<vn.quanna.mp3js.viewer.html>>=
+<html>
+<<generic-header>>
+<body>
+<script src="three.min.js"></script>
+<<models>>
+<script src="vn.quanna.mp3js.viewer.js"></script>
+</body>
+</html>
+@ And the designer is for viewing individual models.
+<<vn.quanna.mp3js.designer.html>>=
+<html>
+<<generic-header>>
+<body>
+<script src="three.min.js"></script>
+<<models>>
+<script src="vn.quanna.mp3js.designer.js"></script>
+</body>
+</html>
+@ Headers are same in both viewer and designer.
+<<generic-header>>=
+<head>
+  <meta charset=utf-8>
+  <title>My MP on Three.js</title>
+  <style>
+    body { margin: 0; }
+    canvas { width: 100%; height: 100% }
+  </style>
+</head>
 @
