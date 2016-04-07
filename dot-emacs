@@ -9,11 +9,11 @@
 ;; monospace font for better drawing
 (when (display-graphic-p)
   (add-to-list 'default-frame-alist
-               '(font . "DejaVu Sans Mono-10"))
+               '(font . "Source Code Pro-12"))
   (set-face-attribute 'default nil
-                      :family "DejaVu Sans Mono" :height 100)
-  (set-face-attribute 'fixed-pitch nil :font "DejaVu Sans Mono-10")
-  (set-face-attribute 'variable-pitch nil :font "DejaVu Sans Mono-10")
+                      :family "Source Code Pro" :height 120)
+  (set-face-attribute 'fixed-pitch nil :font "Source Code Pro-12")
+  (set-face-attribute 'variable-pitch nil :font "Source Code Pro-12")
   )
 (when (display-graphic-p)
   (custom-set-faces
@@ -71,6 +71,8 @@
 (column-number-mode t)
 (global-hl-line-mode -1)
 (setq-default truncate-lines t)
+;; disable auto-save
+(setq auto-save-default nil)
 ;; IDO every where
 ;(setq ido-enable-flex-matching t)
 ;(setq ido-everywhere t)
@@ -266,13 +268,17 @@
   (package-install 'inkpot-theme))
 (unless (package-installed-p 'monokai-theme)
   (package-install 'monokai-theme))
+(unless (package-installed-p 'ample-theme)
+  (package-install 'ample-theme))
 (unless (package-installed-p 'subatomic256-theme)
   (package-install 'subatomic256-theme))
+(unless (package-installed-p 'badwolf-theme)
+  (package-install 'badwolf-theme))
 ;; generic eye candies
 (unless (package-installed-p 'rainbow-delimiters)
   (package-install 'rainbow-delimiters))
-(unless (package-installed-p 'auto-complete)
-  (package-install 'auto-complete))
+;(unless (package-installed-p 'auto-complete)
+;  (package-install 'auto-complete))
 ; removed : evil, rainbow blocks
 (unless (package-installed-p 'relative-line-numbers)
   (package-install 'relative-line-numbers))
@@ -329,11 +335,37 @@
   (package-install 'helm-swoop))
 (unless (package-installed-p 'helm-projectile)
   (package-install 'helm-projectile))
-(unless (package-installed-p 'ac-helm)
-  (package-install 'ac-helm))
+;(unless (package-installed-p 'ac-helm)
+;  (package-install 'ac-helm))
+;; company mode instead of auto-complete
+(unless (package-installed-p 'company)
+  (package-install 'company))
+;; RUST development
+(unless (package-installed-p 'rust-mode)
+  (package-install 'rust-mode))
 ;; compile installed packages
 (byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
 ;; <<< E N D package manager
+
+;; >>> START themes
+(when (and (package-installed-p 'monokai-theme) (package-installed-p 'subatomic256-theme))
+  ;; theme setting
+  (if (display-graphic-p)
+      (load-theme 'badwolf t)
+      (load-theme 'badwolf t)
+    )
+  )
+;;cursor
+(when (display-graphic-p)
+  (setq-default cursor-type 'box) ;(setq-default cursor-type 'hollow)
+  (set-cursor-color "#6AFB92")
+  (blink-cursor-mode 0)
+  )
+;;transparency
+(when (and (display-graphic-p) nil)
+    (set-frame-parameter (selected-frame) 'alpha '(85 50))
+)
+;; <<< E N D themes
 
 ;; >>> START tengwar org-mode
 (when (and nil (package-installed-p 'org))
@@ -409,8 +441,32 @@
 
 ;; >>> START rainbow mode
 (when (package-installed-p 'rainbow-delimiters)
+  (require 'rainbow-delimiters)
   ;; rainbow delimiters
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+  ;; true rainbow color for rainbow blocks
+  (set-face-attribute 'rainbow-delimiters-mismatched-face nil
+                      :foreground "#C0C0C0" :background "#8B0000")
+  (set-face-attribute 'rainbow-delimiters-unmatched-face nil
+                      :foreground "#E6E7E8" :background "#8B0000")
+  (set-face-attribute 'rainbow-delimiters-depth-1-face nil
+                      :foreground "#FF0033")
+  (set-face-attribute 'rainbow-delimiters-depth-2-face nil
+                      :foreground "#FF8C00")
+  (set-face-attribute 'rainbow-delimiters-depth-3-face nil
+                      :foreground "##FFD700")
+  (set-face-attribute 'rainbow-delimiters-depth-4-face nil
+                      :foreground "#90EE90")
+  (set-face-attribute 'rainbow-delimiters-depth-5-face nil
+                      :foreground "#000080")
+  (set-face-attribute 'rainbow-delimiters-depth-6-face nil
+                      :foreground "#800080")
+  (set-face-attribute 'rainbow-delimiters-depth-7-face nil
+                      :foreground "#DA70D6")
+  (set-face-attribute 'rainbow-delimiters-depth-8-face nil
+                      :foreground "#FF69B4")
+  (set-face-attribute 'rainbow-delimiters-depth-9-face nil
+                      :foreground "#A52A2A")
   )
 ;; rainbow blocks in org
 (when (package-installed-p 'rainbow-blocks)
@@ -448,6 +504,12 @@
   (setq ac-quick-help-delay 0.2)
   )
 ;; <<< E N D auto-complete configuration
+
+;; >>> START company
+(when (package-installed-p 'company)
+  (add-hook 'after-init-hook 'global-company-mode)
+  )
+;; <<< E N D company
 
 ;; >>> START mmm-mode
 (when (package-installed-p 'mmm-mode)
@@ -954,6 +1016,13 @@
 (when (package-installed-p 'helm)
   (require 'helm)
   (require 'helm-config)
+  ; change helm header font
+  (custom-set-faces
+   '(helm-source-header ((t (:background "#22083397778B"
+                                         :foreground "white"
+                                         :weight bold
+                                         :height 1.0
+                                         :family "Source Code Pro")))))
   ; change helm prefix
   (global-set-key (kbd "<f2> h x") 'helm-command-prefix)
   (global-unset-key (kbd "C-x c"))
@@ -1165,26 +1234,6 @@ If COMMAND is nil, the key-chord is removed."
             (add-to-list 'name-and-pos (cons name position))))))))
 )
 ;; <<< E N D org
-
-;; >>> START themes
-(when (and (package-installed-p 'monokai-theme) (package-installed-p 'subatomic256-theme))
-  ;; theme setting
-  (if (display-graphic-p)
-      (load-theme 'monokai t)
-      (load-theme 'zenburn t)
-    )
-  )
-;;cursor
-(when (display-graphic-p)
-  (setq-default cursor-type 'box) ;(setq-default cursor-type 'hollow)
-  (set-cursor-color "#6AFB92")
-  (blink-cursor-mode 0)
-  )
-;;transparency
-(when (and (display-graphic-p) nil)
-    (set-frame-parameter (selected-frame) 'alpha '(85 50))
-)
-;; <<< E N D themes
 
 ;; >>> START functions for emacs shells
 (when nil
