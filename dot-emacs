@@ -77,6 +77,180 @@
 ;(setq ido-enable-flex-matching t)
 ;(setq ido-everywhere t)
 ;(ido-mode 1)
+;; random quote inspiration
+(defconst yt/quotes
+  '(;; Fantasy novels
+    "Only in silence the word, Only in dark the light, Only in dying life, Bright the hawk's flight On the empty sky. -- Ursula K. Le Guin"
+    "When you light a candle, you also cast a shadow. -- Ursula K. Le Guin"
+    "Sometimes asking questions is more important than finding answers. -- Robert Jordan"
+    "I’m bad, and that’s good. I will never be good, and that’s not bad. There’s no one I’d rather be than me. -- Wreck-It Ralph"
+    "It's the questions we can't answer that teach us the most. They teach us how to think. If you give a man an answer, all he gains is a little fact. But give him a question and he'll look for his own answers. -- Patrick Rothfuss"
+    ;; Scientists
+    "The important thing is not to stop questioning. -- Albert Einstein"
+    "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. -- Albert Einstein"
+    "The most beautiful experience we can have is the mysterious. It is the fundamental emotion that stands at the cradle of true art and true science. -- Albert Einstein"
+    ;; Confucius
+    "Life is really simple, but we insist on making it complicated. -- Confucius"
+    ;; Politics
+    "In the end, it's not the years in your life that count. It's the life in your years. -- Abraham Lincoln"
+    "Be the change that you wish to see in the world. --  Mahatma Gandhi"
+    ;; Buddhism
+    "The purpose of our lives is to be happy. -- Dalai Lama"
+    "Better than a thousand hollow words, is one word that brings peace. -- Buddha"
+    "What we think, we become. -- Buddha"
+    ;; Poetry
+    "You talk when you cease to be at peace with your thoughts. -- Kahlil Gibran"
+    )
+  "Good quotes
+   they can be useful for creative writers as well.")
+(defun yt/show-random-quotes ()
+  "Show random quotes to minibuffer"
+  (interactive)
+  (message "%s"
+           (nth (random (length yt/quotes))
+                yt/quotes)))
+(run-with-idle-timer 60 t 'yt/show-random-quotes)
+;; view large files instead of editing it 
+(defun my-find-file-check-make-large-file-read-only-hook ()
+  "If a file is over a given size, make the buffer read only."
+  (when (> (buffer-size) (* 1024 1024))
+    (setq buffer-read-only t)
+    (buffer-disable-undo)
+    (fundamental-mode)))
+(add-hook 'find-file-hooks 'my-find-file-check-make-large-file-read-only-hook)
+;; <<< E N D global interface fix
+
+;; >>> START package manager
+;; melpa package repository
+(require 'package)
+;;(add-to-list 'package-archives
+;;  '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.milkbox.net/packages/")
+                         ("org" . "http://orgmode.org/elpa/")
+                         ("sunrisec" . "http://joseito.republika.pl/sunrise-commander/")))
+;; uncomment after cleaning up
+;(package-refresh-contents)
+(package-initialize)
+;; themes
+(unless (package-installed-p 'solarized-theme)
+  (package-install 'solarized-theme))
+(unless (package-installed-p 'zenburn-theme)
+  (package-install 'zenburn-theme))
+(unless (package-installed-p 'obsidian-theme)
+  (package-install 'obsidian-theme))
+(unless (package-installed-p 'inkpot-theme)
+  (package-install 'inkpot-theme))
+(unless (package-installed-p 'monokai-theme)
+  (package-install 'monokai-theme))
+(unless (package-installed-p 'ample-theme)
+  (package-install 'ample-theme))
+(unless (package-installed-p 'subatomic256-theme)
+  (package-install 'subatomic256-theme))
+(unless (package-installed-p 'badwolf-theme)
+  (package-install 'badwolf-theme))
+;; generic eye candies
+(unless (package-installed-p 'rainbow-delimiters)
+  (package-install 'rainbow-delimiters))
+;(unless (package-installed-p 'auto-complete)
+;  (package-install 'auto-complete))
+; removed : evil, rainbow blocks
+(unless (package-installed-p 'relative-line-numbers)
+  (package-install 'relative-line-numbers))
+; removed : clojure, scala
+;; lua development
+(unless (package-installed-p 'lua-mode)
+  (package-install 'lua-mode))
+;; C development
+(unless (package-installed-p 'cc-mode)
+  (package-install 'cc-mode))
+;; Haskell development
+(unless (package-installed-p 'haskell-mode)
+  (package-install 'haskell-mode))
+;; Web development
+(unless (package-installed-p 'web-mode)
+  (package-install 'web-mode))
+(unless (package-installed-p 'web-beautify)
+  (package-install 'web-beautify))
+;; Org
+(unless (package-installed-p 'org)
+  (package-install 'org))
+(unless (package-installed-p 'babel)
+  (package-install 'babel))
+(unless (package-installed-p 'deft)
+  (package-install 'deft))
+;; removed : Sunrise Commander
+;; misc modes
+(unless (package-installed-p 'json-mode)
+  (package-install 'json-mode))
+(unless (package-installed-p 'markdown-mode)
+  (package-install 'markdown-mode))
+(unless (package-installed-p 'projectile)
+  (package-install 'projectile))
+(unless (package-installed-p 'ggtags)
+  (package-install 'ggtags))
+(unless (package-installed-p 'fish-mode)
+  (package-install 'fish-mode))
+; removed : keychord
+(unless (package-installed-p 'sr-speedbar)
+  (package-install 'sr-speedbar))
+;(unless (package-installed-p 'imenu)
+;  (package-install 'imenu))
+(unless (package-installed-p 'hydra)
+  (package-install 'hydra))
+(unless (package-installed-p 'undo-tree)
+  (package-install 'undo-tree))
+; removed : smartparens, eclim, company, polymode
+(unless (package-installed-p 'mmm-mode)
+  (package-install 'mmm-mode))
+; change workflow to helm instead of ido
+(unless (package-installed-p 'helm)
+  (package-install 'helm))
+(unless (package-installed-p 'helm-swoop)
+  (package-install 'helm-swoop))
+(unless (package-installed-p 'helm-projectile)
+  (package-install 'helm-projectile))
+;(unless (package-installed-p 'ac-helm)
+;  (package-install 'ac-helm))
+;; company mode instead of auto-complete
+(unless (package-installed-p 'company)
+  (package-install 'company))
+;; RUST development
+(unless (package-installed-p 'rust-mode)
+  (package-install 'rust-mode))
+;; Writting
+(unless (package-installed-p 'flyspell)
+  (package-install 'flyspell))
+(unless (package-installed-p 'artbollocks-mode)
+  (package-install 'artbollocks-mode))
+(unless (package-installed-p 'synosaurus)
+  (package-install 'synosaurus))
+;; compile installed packages
+(byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
+;; <<< E N D package manager
+
+;; >>> START themes
+(when (and (package-installed-p 'monokai-theme) (package-installed-p 'subatomic256-theme))
+  ;; theme setting
+  (if (display-graphic-p)
+      (load-theme 'badwolf t)
+      (load-theme 'badwolf t)
+    )
+  )
+;;cursor
+(when (display-graphic-p)
+  (setq-default cursor-type 'box) ;(setq-default cursor-type 'hollow)
+  (set-cursor-color "#6AFB92")
+  (blink-cursor-mode 0)
+  )
+;;transparency
+(when (and (display-graphic-p) nil)
+    (set-frame-parameter (selected-frame) 'alpha '(85 50))
+)
+;; <<< E N D themes
+
+;; >>> START fancy mode line
 ;; fancier mode-line
 (when t
   ;; Mode line setup
@@ -234,138 +408,50 @@
                                         ;:box '(:line-width 2 :color "#4271ae")
                       )
   )
-;; view large files instead of editing it 
-(defun my-find-file-check-make-large-file-read-only-hook ()
-  "If a file is over a given size, make the buffer read only."
-  (when (> (buffer-size) (* 1024 1024))
-    (setq buffer-read-only t)
-    (buffer-disable-undo)
-    (fundamental-mode)))
-(add-hook 'find-file-hooks 'my-find-file-check-make-large-file-read-only-hook)
-;; <<< E N D global interface fix
+;; <<< E N D fancy mode line
 
-;; >>> START package manager
-;; melpa package repository
-(require 'package)
-;;(add-to-list 'package-archives
-;;  '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")
-                         ("org" . "http://orgmode.org/elpa/")
-                         ("sunrisec" . "http://joseito.republika.pl/sunrise-commander/")))
-;; uncomment after cleaning up
-;(package-refresh-contents)
-(package-initialize)
-;; themes
-(unless (package-installed-p 'solarized-theme)
-  (package-install 'solarized-theme))
-(unless (package-installed-p 'zenburn-theme)
-  (package-install 'zenburn-theme))
-(unless (package-installed-p 'obsidian-theme)
-  (package-install 'obsidian-theme))
-(unless (package-installed-p 'inkpot-theme)
-  (package-install 'inkpot-theme))
-(unless (package-installed-p 'monokai-theme)
-  (package-install 'monokai-theme))
-(unless (package-installed-p 'ample-theme)
-  (package-install 'ample-theme))
-(unless (package-installed-p 'subatomic256-theme)
-  (package-install 'subatomic256-theme))
-(unless (package-installed-p 'badwolf-theme)
-  (package-install 'badwolf-theme))
-;; generic eye candies
-(unless (package-installed-p 'rainbow-delimiters)
-  (package-install 'rainbow-delimiters))
-;(unless (package-installed-p 'auto-complete)
-;  (package-install 'auto-complete))
-; removed : evil, rainbow blocks
-(unless (package-installed-p 'relative-line-numbers)
-  (package-install 'relative-line-numbers))
-; removed : clojure, scala
-;; lua development
-(unless (package-installed-p 'lua-mode)
-  (package-install 'lua-mode))
-;; C development
-(unless (package-installed-p 'cc-mode)
-  (package-install 'cc-mode))
-;; Haskell development
-(unless (package-installed-p 'haskell-mode)
-  (package-install 'haskell-mode))
-;; Web development
-(unless (package-installed-p 'web-mode)
-  (package-install 'web-mode))
-(unless (package-installed-p 'web-beautify)
-  (package-install 'web-beautify))
-;; Org
-(unless (package-installed-p 'org)
-  (package-install 'org))
-(unless (package-installed-p 'babel)
-  (package-install 'babel))
-(unless (package-installed-p 'deft)
-  (package-install 'deft))
-;; removed : Sunrise Commander
-;; misc modes
-(unless (package-installed-p 'json-mode)
-  (package-install 'json-mode))
-(unless (package-installed-p 'markdown-mode)
-  (package-install 'markdown-mode))
-(unless (package-installed-p 'projectile)
-  (package-install 'projectile))
-(unless (package-installed-p 'ggtags)
-  (package-install 'ggtags))
-(unless (package-installed-p 'fish-mode)
-  (package-install 'fish-mode))
-; removed : keychord
-(unless (package-installed-p 'sr-speedbar)
-  (package-install 'sr-speedbar))
-;(unless (package-installed-p 'imenu)
-;  (package-install 'imenu))
-(unless (package-installed-p 'hydra)
-  (package-install 'hydra))
-(unless (package-installed-p 'undo-tree)
-  (package-install 'undo-tree))
-; removed : smartparens, eclim, company, polymode
-(unless (package-installed-p 'mmm-mode)
-  (package-install 'mmm-mode))
-; change workflow to helm instead of ido
-(unless (package-installed-p 'helm)
-  (package-install 'helm))
-(unless (package-installed-p 'helm-swoop)
-  (package-install 'helm-swoop))
-(unless (package-installed-p 'helm-projectile)
-  (package-install 'helm-projectile))
-;(unless (package-installed-p 'ac-helm)
-;  (package-install 'ac-helm))
-;; company mode instead of auto-complete
-(unless (package-installed-p 'company)
-  (package-install 'company))
-;; RUST development
-(unless (package-installed-p 'rust-mode)
-  (package-install 'rust-mode))
-;; compile installed packages
-(byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
-;; <<< E N D package manager
+;; >>> START writting
+(when (and (package-installed-p 'flyspell)
+           (package-installed-p 'artbollocks-mode)
+           (package-installed-p 'synosaurus))
+  ;; check spelling
+  (custom-set-faces
+   '(flyspell-incorrect ((t (:background "#DC143C")))))
+  (add-hook 'text-mode-hook 'flyspell-mode)
+  (add-hook 'latex-mode-hook 'flyspell-mode)
+  ;; spell check config
+  (setq ispell-dictionary "american"
+        ispell-extra-args '( "-t" ) ;; TeX mode "-t"
+        ispell-silently-savep t)
+  ;; block dangerous words
+  (require 'artbollocks-mode)
+  (add-hook 'text-mode-hook 'artbollocks-mode)
+  (add-hook 'latex-mode-hook 'artbollocks-mode)
+  (setq artbollocks-weasel-words-regex
+        (concat "\\b" (regexp-opt
+                       '("should"
+                         "just"
+                         "sort of"
+                         "a lot"
+                         "probably"
+                         "maybe"
+                         "perhaps"
+                         "I think"
+                         "really"
+                         "nice") t) "\\b"))
+  ;; synosaurus
+  ;; brew install wordnet
+  (require 'synosaurus)
+  (setq synosaurus-choose-method "popup")
 
-;; >>> START themes
-(when (and (package-installed-p 'monokai-theme) (package-installed-p 'subatomic256-theme))
-  ;; theme setting
-  (if (display-graphic-p)
-      (load-theme 'badwolf t)
-      (load-theme 'badwolf t)
-    )
+  ;; synosaurus-lookup C-c s l
+  ;; synosaurus-choose-and-replace C-c s r
+  (setq synosaurus-backend 'synosaurus-backend-wordnet)
+  (setq synosaurus-choose-method 'popup)
+  (global-set-key (kbd "<f2> d l") 'synosaurus-lookup)
+  (global-set-key (kbd "<f2> d r") 'synosaurus-choose-and-replace)
   )
-;;cursor
-(when (display-graphic-p)
-  (setq-default cursor-type 'box) ;(setq-default cursor-type 'hollow)
-  (set-cursor-color "#6AFB92")
-  (blink-cursor-mode 0)
-  )
-;;transparency
-(when (and (display-graphic-p) nil)
-    (set-frame-parameter (selected-frame) 'alpha '(85 50))
-)
-;; <<< E N D themes
+;; <<< E N D writting
 
 ;; >>> START tengwar org-mode
 (when (and nil (package-installed-p 'org))

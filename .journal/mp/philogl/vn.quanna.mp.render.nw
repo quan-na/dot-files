@@ -1,0 +1,77 @@
+% -*- mmm-noweb-code-mode : javascript-mode; tab-width: 2; -*-
+This project create a 3D mind palace rendered in WebGL. There 's a Makefile that will generate javascript sources from this noweb document.
+The first file is the main.js file, which contain the main PhiloGL render loop. This file create a function which is called from `index.html'.
+<<vn.quanna.mp.main.js>>=
+function webGLStart() {
+  <<philogl.call>>
+}
+@ PhiloGL call will render in `mp-view-canvas' div defined in `index.html'. The object parameter will include program, camera, textures, onError, and onLoad.
+<<philogl.call>>=
+PhiloGL('mp-view-canvas', {
+  program: <<program.object>>,
+  camera: <<camera.object>>,
+  textures: <<textures.object>>,
+  onError: <<onerror.function>>,
+  onLoad: <<onload.function>>
+});
+@ Program object will point to glsl files in the same folder.
+<<program.object>>=
+{
+  id: 'basic-texture',
+  from: 'uris',
+  vs: 'vn.quanna.mp.shaders.vs.glsl',
+  fs: 'vn.quanna.mp.shaders.fs.glsl'
+}
+@ Camera object specifies the camera initial position.
+<<camera.object>>=
+{
+  position: { x: 0.0, y:17.0, z:50.0 }
+}
+@ Textures object will list all that is used in models
+<<textures.object>>=
+{
+  src: ['com.textures.marblewhite.64.jpg',
+        'com.textures.gravelcobble.18.jpg',
+        'com.textures.wallpaperforties.8.jpg',
+        'com.textures.woodfine.11.jpg',
+        'com.graphicsfuel.targetgreen512.png']
+}
+@ `onError' function will alert that error and re-throw it.
+<<onerror.function>>=
+function(e) {
+  alert("An error ocurred while loading the application" + e);
+  throw e;
+}
+@ `onLoad' function will contain GL setup, model buffer loader, and main loop `drawScreen' function.
+<<onload.function>>=
+function(app) {
+  <<gl.init.code>>
+  <<buffer.loader.code>>
+  <<drawscreen.function.code>>
+}
+@ GL setup will be based on app object parameter that is passed to PhiloGL call.
+<<gl.init.code>>=
+var gl = app.gl,
+    canvas = app.canvas,
+    program = app.program,
+    camera = app.camera,
+    view = new PhiloGL.Mat4,
+    rCube = 0;
+
+gl.viewport(0, 0, canvas.width, canvas.height);
+gl.clearColor(0, 0, 0, 1);
+gl.clearDepth(1);
+gl.enable(gl.DEPTH_TEST);
+gl.depthFunc(gl.LEQUAL);
+@
+
+
+
+
+
+
+
+
+
+
+
