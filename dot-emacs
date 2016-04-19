@@ -7,13 +7,16 @@
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
 ;; monospace font for better drawing
+;; declare a font variable
+(setq mono-font-face "TEX Gyre Cursor")
+(setq mono-font-size "13")
 (when (display-graphic-p)
   (add-to-list 'default-frame-alist
-               '(font . "Source Code Pro-12"))
+               '(font . (concat mono-font-face "-" mono-font-size)))
   (set-face-attribute 'default nil
-                      :family "Source Code Pro" :height 120)
-  (set-face-attribute 'fixed-pitch nil :font "Source Code Pro-12")
-  (set-face-attribute 'variable-pitch nil :font "Source Code Pro-12")
+                      :family mono-font-face :height (* 10 (string-to-number mono-font-size)))
+  (set-face-attribute 'fixed-pitch nil :font (concat mono-font-face "-" mono-font-size))
+  (set-face-attribute 'variable-pitch nil :font (concat mono-font-face "-" mono-font-size))
   )
 (when (display-graphic-p)
   (custom-set-faces
@@ -69,7 +72,7 @@
 ;; line display
 (line-number-mode t)
 (column-number-mode t)
-(global-hl-line-mode -1)
+(global-hl-line-mode 1)
 (setq-default truncate-lines t)
 ;; disable auto-save
 (setq auto-save-default nil)
@@ -77,7 +80,7 @@
 ;(setq ido-enable-flex-matching t)
 ;(setq ido-everywhere t)
 ;(ido-mode 1)
-;; random quote inspiration
+;; random quote inspiration, got from yitang@github.com
 (defconst yt/quotes
   '(;; Fantasy novels
     "Only in silence the word, Only in dark the light, Only in dying life, Bright the hawk's flight On the empty sky. -- Ursula K. Le Guin"
@@ -85,6 +88,11 @@
     "Sometimes asking questions is more important than finding answers. -- Robert Jordan"
     "I’m bad, and that’s good. I will never be good, and that’s not bad. There’s no one I’d rather be than me. -- Wreck-It Ralph"
     "It's the questions we can't answer that teach us the most. They teach us how to think. If you give a man an answer, all he gains is a little fact. But give him a question and he'll look for his own answers. -- Patrick Rothfuss"
+    "People see madness in my colorful vibrancy and fail to see the madness in their boring normality -- Mad Hater"
+    "Greed can be a very powerful ally - Qui-Gon Jinn"
+    "The ability to speak does not make you intelligent -- Qui-Gon Jinn"
+    "Do or do not... there is no try. -- Yoda"
+    "Your eyes can deceive you; don't trust them. -- Obi-Wan Kenobi"
     ;; Scientists
     "The important thing is not to stop questioning. -- Albert Einstein"
     "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. -- Albert Einstein"
@@ -98,8 +106,23 @@
     "The purpose of our lives is to be happy. -- Dalai Lama"
     "Better than a thousand hollow words, is one word that brings peace. -- Buddha"
     "What we think, we become. -- Buddha"
-    ;; Poetry
+    ;; Poetry - Actors
     "You talk when you cease to be at peace with your thoughts. -- Kahlil Gibran"
+    "No matter what people tell you, words and ideas can change the world. -- Robin Williams"
+    ;; Taoism
+    "Those who know do not speak. Those who speak do not know. -- Lao Tzu"
+    "The truth is not always beautiful, nor beautiful words the truth. -- Lao Tzu"
+    "A man with outward courage dares to die; a man with inner courage dares to live. -- Lao Tzu"
+    "Trying to understand is like straining through muddy water. Have the patience to wait! Be still and allow the mud to settle. -- Lao Tzu"
+    ;; Martial Artist
+    "There is nothing outside of yourself that can ever enable you to get better, stronger, richer, quicker, or smarter. Everything is within. Everything exists. Seek nothing outside of yourself. -- Miyamoto Musashi"
+    "Under the sword lifted high, there is hell making you tremble. But go ahead, and you have the land of bliss. -- Miyamoto Musashi"
+    ;; Greek
+    "Death is nothing to us, since when we are, death has not come, and when death has come, we are not. -- Epicurus"
+    ;; Funny
+    "Not everyone likes me, but not everyone matters -- 9gag"
+    "Listen. The only time you should look in your neighbor 's bowl is to make sure that they have enough. You don't look in your neighbor 's bowl to see if you have ... as much as them. -- 9gag"
+    "If stupid you are, speak you should not. -- 9gag"
     )
   "Good quotes
    they can be useful for creative writers as well.")
@@ -234,15 +257,15 @@
 (when (and (package-installed-p 'monokai-theme) (package-installed-p 'subatomic256-theme))
   ;; theme setting
   (if (display-graphic-p)
-      (load-theme 'badwolf t)
-      (load-theme 'badwolf t)
+      (load-theme 'monokai t)
+      (load-theme 'monokai t)
     )
   )
 ;;cursor
 (when (display-graphic-p)
-  (setq-default cursor-type 'box) ;(setq-default cursor-type 'hollow)
-  (set-cursor-color "#6AFB92")
-  (blink-cursor-mode 0)
+  (setq-default cursor-type '(hbar . 7)) ; 'hollow 'box 'bar 'hbar
+  (set-cursor-color "#4169E1") ; Royal Blue, old:#6AFB92 dragon green
+  (blink-cursor-mode -1)
   )
 ;;transparency
 (when (and (display-graphic-p) nil)
@@ -419,6 +442,7 @@
    '(flyspell-incorrect ((t (:background "#DC143C")))))
   (add-hook 'text-mode-hook 'flyspell-mode)
   (add-hook 'latex-mode-hook 'flyspell-mode)
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   ;; spell check config
   (setq ispell-dictionary "american"
         ispell-extra-args '( "-t" ) ;; TeX mode "-t"
@@ -1108,7 +1132,7 @@
                                          :foreground "white"
                                          :weight bold
                                          :height 1.0
-                                         :family "Source Code Pro")))))
+                                         :family mono-font-face)))))
   ; change helm prefix
   (global-set-key (kbd "<f2> h x") 'helm-command-prefix)
   (global-unset-key (kbd "C-x c"))
