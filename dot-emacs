@@ -8,7 +8,7 @@
 (setq inhibit-startup-message t)
 ;; monospace font for better drawing
 ;; declare a font variable
-(setq mono-font-face "TEX Gyre Cursor")
+(setq mono-font-face "Larabiefont")
 (setq mono-font-size "13")
 (when (display-graphic-p)
   (add-to-list 'default-frame-alist
@@ -102,6 +102,9 @@
     ;; Politics
     "In the end, it's not the years in your life that count. It's the life in your years. -- Abraham Lincoln"
     "Be the change that you wish to see in the world. --  Mahatma Gandhi"
+    ;; Business men
+    "Innovation distinguishes between a leader and a follower. -- Steve Jobs"
+    "Creativity and innovation are something you can't flowchart out. -- Tim Cook"
     ;; Buddhism
     "The purpose of our lives is to be happy. -- Dalai Lama"
     "Better than a thousand hollow words, is one word that brings peace. -- Buddha"
@@ -133,6 +136,20 @@
            (nth (random (length yt/quotes))
                 yt/quotes)))
 (run-with-idle-timer 60 t 'yt/show-random-quotes)
+;; utility function for showing colors
+(defun xah-syntax-color-hex ()
+  "Syntax color text of the form 「#ff1100」 in current buffer.
+URL `http://ergoemacs.org/emacs/emacs_CSS_colors.html'
+Version 2016-03-15"
+  (interactive)
+  (font-lock-add-keywords
+   nil
+   '(("#[ABCDEFabcdef[:digit:]]\\{6\\}"
+      (0 (put-text-property
+          (match-beginning 0)
+          (match-end 0)
+          'face (list :background (match-string-no-properties 0)))))))
+  (font-lock-fontify-buffer))
 ;; view large files instead of editing it 
 (defun my-find-file-check-make-large-file-read-only-hook ()
   "If a file is over a given size, make the buffer read only."
@@ -173,6 +190,12 @@
   (package-install 'subatomic256-theme))
 (unless (package-installed-p 'badwolf-theme)
   (package-install 'badwolf-theme))
+(unless (package-installed-p 'tao-theme)
+  (package-install 'tao-theme))
+(unless (package-installed-p 'gotham-theme)
+  (package-install 'gotham-theme))
+(unless (package-installed-p 'borland-blue-theme)
+  (package-install 'borland-blue-theme))
 ;; generic eye candies
 (unless (package-installed-p 'rainbow-delimiters)
   (package-install 'rainbow-delimiters))
@@ -196,7 +219,7 @@
   (package-install 'web-mode))
 (unless (package-installed-p 'web-beautify)
   (package-install 'web-beautify))
-;; Org
+;; Organization
 (unless (package-installed-p 'org)
   (package-install 'org))
 (unless (package-installed-p 'babel)
@@ -242,7 +265,7 @@
 ;; RUST development
 (unless (package-installed-p 'rust-mode)
   (package-install 'rust-mode))
-;; Writting
+;; Writing
 (unless (package-installed-p 'flyspell)
   (package-install 'flyspell))
 (unless (package-installed-p 'artbollocks-mode)
@@ -258,7 +281,7 @@
   ;; theme setting
   (if (display-graphic-p)
       (load-theme 'monokai t)
-      (load-theme 'monokai t)
+      (load-theme 'borland-blue t)
     )
   )
 ;;cursor
@@ -472,10 +495,20 @@
   ;; synosaurus-choose-and-replace C-c s r
   (setq synosaurus-backend 'synosaurus-backend-wordnet)
   (setq synosaurus-choose-method 'popup)
-  (global-set-key (kbd "<f2> d l") 'synosaurus-lookup)
-  (global-set-key (kbd "<f2> d r") 'synosaurus-choose-and-replace)
   )
 ;; <<< E N D writting
+
+;; >>> START web mode
+(when (package-installed-p 'web-mode)
+  (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
+  (setq web-mode-engines-alist
+        '(("php"    . "\\.phtml\\'")
+          ("blade"  . "\\.blade\\."))
+        )
+  (setq web-mode-code-indent-offset 4)
+  (setq web-mode-indent-style 4)
+  )
+;; <<< E N D web mode
 
 ;; >>> START tengwar org-mode
 (when (and nil (package-installed-p 'org))
@@ -564,7 +597,7 @@
   (set-face-attribute 'rainbow-delimiters-depth-2-face nil
                       :foreground "#FF8C00")
   (set-face-attribute 'rainbow-delimiters-depth-3-face nil
-                      :foreground "##FFD700")
+                      :foreground "#FFD700")
   (set-face-attribute 'rainbow-delimiters-depth-4-face nil
                       :foreground "#90EE90")
   (set-face-attribute 'rainbow-delimiters-depth-5-face nil
@@ -941,6 +974,16 @@
 )
 ;; <<< E N D relative line number
 
+;; >>> START speedbar
+(when (package-installed-p 'sr-speedbar)
+  (require 'sr-speedbar)
+  (setq sr-speedbar-auto-refresh nil)
+  (setq speedbar-show-unknown-files t) ; show all files
+  (setq speedbar-use-images nil) ; use text for buttons
+  (setq sr-speedbar-right-side t) ; put on left side
+  )
+;; <<< E N D speedbar
+
 ;; >>> START evil
 (when (package-installed-p 'evil)
   ;; evil mode by default
@@ -1118,6 +1161,11 @@
             (local-set-key (kbd "<f2> p t t") 'ggtags-find-tag-dwim)
             ))
     )
+  ;; dictionary
+  (when (package-installed-p 'synosaurus)
+    (global-set-key (kbd "<f2> d l") 'synosaurus-lookup)
+    (global-set-key (kbd "<f2> d r") 'synosaurus-choose-and-replace)
+    )
   )
 
 ;; <<< E N D keys define 
@@ -1138,6 +1186,7 @@
   (global-unset-key (kbd "C-x c"))
   ; change some config
   (setq helm-split-window-in-side-p            t
+        helm-split-window-default-side         'other
         helm-move-to-line-cycle-in-source      t
         helm-ff-search-library-in-sexp         t
         helm-scroll-amount                     8
