@@ -1036,26 +1036,31 @@ Version 2016-03-15"
 ;; >>> START keys define
 (when (package-installed-p 'hydra)
   (require 'hydra)
+  (global-set-key (kbd ";") nil) ;; disable default key
+  (global-set-key (kbd "; ;") (lambda () (interactive) (insert ";") (message ";;=; ;RET=;\\n"))) ;; a slow way to insert
+  (global-set-key (kbd "; RET") (lambda () (interactive) (insert ";\n"))) ;;
+  (global-set-key (kbd "; ?") (lambda () (interactive) (message "bb=switch buffer rr=recent files ")))
   ;; File open/close
-  (global-set-key (kbd "<f2> f f") 'find-file) ;; file find
-  (global-set-key (kbd "<f2> f q") 'save-buffers-kill-terminal) ;; file quit
-  (global-set-key (kbd "<f2> f s") 'save-buffer) ;; file save
-  (global-set-key (kbd "<f2> f k") 'kill-buffer) ;; file quit
-  (global-unset-key (kbd "<f2> b")) ;; unbind associate buffer
-  (global-set-key (kbd "<f2> b b") 'switch-to-buffer) ;; file buffer _tka
+  (global-set-key (kbd "; f ?") (lambda () (interactive) (message "ff=find file fq=file quit fs=file save fk=file kill fl=explore open fh=explore close")))
+  (global-set-key (kbd "; f f") 'find-file) ;; file find
+  (global-set-key (kbd "; f q") 'save-buffers-kill-terminal) ;; file quit
+  (global-set-key (kbd "; f s") 'save-buffer) ;; file save
+  (global-set-key (kbd "; f k") 'kill-buffer) ;; file quit
+  ;(global-unset-key (kbd "<f2> b")) ;; unbind associate buffer
+  (global-set-key (kbd "; b b") 'switch-to-buffer) ;; file buffer _tka
   (when (package-installed-p 'recentf)
-    (global-set-key (kbd "<f2> r r") 'recentf-open-files) ;; file recent _tka
+    (global-set-key (kbd "; r r") 'recentf-open-files) ;; file recent _tka
     )
   (when (package-installed-p 'sr-speedbar)
-    (global-set-key (kbd "<f2> f l") 'sr-speedbar-open) ;; file buffer
-    (global-set-key (kbd "<f2> f h") 'sr-speedbar-close) ;; file buffer
+    (global-set-key (kbd "; f l") 'sr-speedbar-open) ;; file buffer
+    (global-set-key (kbd "; f h") 'sr-speedbar-close) ;; file buffer
     )
   ;; getting help
-  (global-set-key (kbd "<f2> h k") 'describe-key)
-  (global-set-key (kbd "<f2> h f") 'describe-function)
+  (global-set-key (kbd "; h k") 'describe-key)
+  (global-set-key (kbd "; h f") 'describe-function)
   ;; moving point
-  (global-set-key (kbd "<f2> l l") 'move-end-of-line)
-  (global-set-key (kbd "<f2> h h") 'move-beginning-of-line)
+  (global-set-key (kbd "; l l") 'move-end-of-line)
+  (global-set-key (kbd "; h h") 'move-beginning-of-line)
   (when (package-installed-p 'smartparens)
     (add-hook 'prog-mode-hook (lambda () (interactive)
                                 (local-set-key (kbd "<f2> j j") 'sp-end-of-sexp)
@@ -1081,90 +1086,90 @@ Version 2016-03-15"
     ("o" other-window "to other"))
   (global-set-key (kbd "<f5> w") 'hydra-resize-window/body)
   ;; editing
-  (global-set-key (kbd "<f2> m m") 'set-mark-command) ;; _tka
-  (global-set-key (kbd "<f2> x x") 'kill-region) ;; _tka
-  (global-set-key (kbd "<f2> c c") 'kill-ring-save) ;; _tka
-  (global-set-key (kbd "<f2> p p") 'yank) ;; _tka
+  (global-set-key (kbd "; m m") 'set-mark-command) ;; _tka
+  (global-set-key (kbd "; x x") 'kill-region) ;; _tka
+  (global-set-key (kbd "; c c") 'kill-ring-save) ;; _tka
+  (global-set-key (kbd "; p p") 'yank) ;; _tka
   (when (package-installed-p 'undo-tree)
     (global-undo-tree-mode)
-    (global-set-key (kbd "<f2> u v") 'undo-tree-visualize))
-  (global-set-key (kbd "<f2> u u") 'undo) ;; _tka
-  (global-set-key (kbd "<f2> y y") 'kill-whole-line) ;; _tka
-  (global-set-key (kbd "<f2> t") 'tempo-complete-tag)
+    (global-set-key (kbd "; u v") 'undo-tree-visualize))
+  (global-set-key (kbd "; u u") 'undo) ;; _tka
+  (global-set-key (kbd "; d d") 'kill-whole-line) ;; _tka
+  (global-set-key (kbd "; t") 'tempo-complete-tag)
   ;; rectangle
-  (global-set-key (kbd "<f2> r c") 'copy-rectangle-as-kill) ;; rec copy _tka
-  (global-set-key (kbd "<f2> r x") 'kill-rectangle) ;; rec cut _tka
-  (global-set-key (kbd "<f2> r p") 'yank-rectangle) ;; rec paste
-  (global-set-key (kbd "<f2> r d") 'delete-rectangle) ;; rec delete
+  (global-set-key (kbd "; r c") 'copy-rectangle-as-kill) ;; rec copy _tka
+  (global-set-key (kbd "; r x") 'kill-rectangle) ;; rec cut _tka
+  (global-set-key (kbd "; r p") 'yank-rectangle) ;; rec paste
+  (global-set-key (kbd "; r d") 'delete-rectangle) ;; rec delete
   (add-hook
    'picture-mode-hook
    (lambda ()
-     (define-key picture-mode-map (kbd "<f2> r o") 'picture-clear-rectangle) ;; rec out
-     (define-key picture-mode-map (kbd "<f2> r i") 'picture-yank-rectangle) ;; rec insert
+     (define-key picture-mode-map (kbd "; r o") 'picture-clear-rectangle) ;; rec out
+     (define-key picture-mode-map (kbd "; r i") 'picture-yank-rectangle) ;; rec insert
      ))
   ;; window
-  (global-set-key (kbd "<f2> w h") 'delete-window) ;; window close _tka
-  (global-set-key (kbd "<f2> w l") 'split-window-right) ;; window ->
-  (global-set-key (kbd "<f2> w j") 'split-window-below) ;; window _|_
-  (global-set-key (kbd "<f2> w o") 'other-window) ;; window other
+  (global-set-key (kbd "; w h") 'delete-window) ;; window close _tka
+  (global-set-key (kbd "; w l") 'split-window-right) ;; window ->
+  (global-set-key (kbd "; w j") 'split-window-below) ;; window _|_
+  (global-set-key (kbd "; w o") 'other-window) ;; window other
   ;; search
-  (global-unset-key (kbd "<f2> s"))
-  (global-set-key (kbd "<f2> s j") 'isearch-forward) ;; search _|_
-  (global-set-key (kbd "<f2> s k") 'isearch-backward) ;; search ^
-  (global-set-key (kbd "<f2> /") 'isearch-forward) ;; search _|_
-  (global-set-key (kbd "<f2> \\") 'isearch-backward) ;; search ^
-  (add-hook 'isearch-mode-hook
-            (lambda ()
-              (define-key isearch-mode-map (kbd "<f2> j") 'isearch-repeat-forward)
-              (define-key isearch-mode-map (kbd "<f2> k") 'isearch-repeat-backward)
-              ))
-  (global-set-key (kbd "<f2> s r") 're-builder) ;; search regex
+  ;(global-unset-key (kbd "<f2> s"))
+  ;(global-set-key (kbd "; s j") 'isearch-forward) ;; search _|_
+  ;(global-set-key (kbd "; s k") 'isearch-backward) ;; search ^
+  (global-set-key (kbd "; /") 'isearch-forward) ;; search _|_
+  (global-set-key (kbd "; \\") 'isearch-backward) ;; search ^
+  ;(add-hook 'isearch-mode-hook
+  ;          (lambda ()
+  ;            (define-key isearch-mode-map (kbd "; j") 'isearch-repeat-forward)
+  ;            (define-key isearch-mode-map (kbd "; k") 'isearch-repeat-backward)
+  ;            ))
+  (global-set-key (kbd "; s r") 're-builder) ;; search regex
   ;; execute commands
   ; use build-in ESC-x to execute commands
-  (global-set-key (kbd "<f2> z z") 'execute-extended-command)
-  (global-set-key (kbd "<f2> x c") 'compile)
-  (global-set-key (kbd "<f2> x e") 'eval-last-sexp)
-  (global-set-key (kbd "<f2> g") 'keyboard-escape-quit)
+  (global-set-key (kbd "; z z") 'execute-extended-command)
+  (global-set-key (kbd "; x c") 'compile)
+  (global-set-key (kbd "; x e") 'eval-last-sexp)
+  (global-set-key (kbd "; g") 'keyboard-escape-quit)
   ;; my use of note
   (when (fboundp 'mode-line-note-set)
-    (global-set-key (kbd "<f2> n s") 'mode-line-note-set)
-    (global-set-key (kbd "<f2> n x") 'mode-line-note-off)
+    (global-set-key (kbd "; n s") 'mode-line-note-set)
+    (global-set-key (kbd "; n x") 'mode-line-note-off)
     )
   ;; org mode
   (when (package-installed-p 'org)
     (require 'org)
-    (define-key org-mode-map (kbd "<f2> o c") 'org-ctrl-c-ctrl-c) ;; org check
-    (define-key org-mode-map (kbd "<f2> o t") 'org-todo) ;; org todo
-    (define-key org-mode-map (kbd "<f2> o r") 'org-meta-return) ;; org return
-    (define-key org-mode-map (kbd "<f2> o a") 'org-agenda) ;; org agenda
+    (define-key org-mode-map (kbd "; o c") 'org-ctrl-c-ctrl-c) ;; org check
+    (define-key org-mode-map (kbd "; o t") 'org-todo) ;; org todo
+    (define-key org-mode-map (kbd "; o r") 'org-meta-return) ;; org return
+    (define-key org-mode-map (kbd "; o a") 'org-agenda) ;; org agenda
     )
   (when (package-installed-p 'imenu)
-    (define-key org-mode-map (kbd "<f2> i g") 'ido-goto-symbol) ;; org goto
+    (define-key org-mode-map (kbd "; i g") 'ido-goto-symbol) ;; org goto
     )
   (when (package-installed-p 'deft)
-    (global-set-key (kbd "<f2> n v") 'deft) ;; notational velocity
+    (global-set-key (kbd "; n v") 'deft) ;; notational velocity
     )
   ;; projectile
   (when (package-installed-p 'projectile)
-    (define-key projectile-mode-map (kbd "<f2> p f") 'projectile-find-file) ;; project file
-    (define-key projectile-mode-map (kbd "<f2> p g") 'projectile-find-file-dwim)
-    (define-key projectile-mode-map (kbd "<f2> p b") 'projectile-switch-to-buffer)
-    (define-key projectile-mode-map (kbd "<f2> p r") 'projectile-recentf) ;; project recent
+    (define-key projectile-mode-map (kbd "; p f") 'projectile-find-file) ;; project file
+    (define-key projectile-mode-map (kbd "; p g") 'projectile-find-file-dwim)
+    (define-key projectile-mode-map (kbd "; p b") 'projectile-switch-to-buffer)
+    (define-key projectile-mode-map (kbd "; p r") 'projectile-recentf) ;; project recent
     )
   ;; ggtags
   (when (package-installed-p 'ggtags)
     (add-hook 'ggtags-mode-hook
           (lambda ()
-            (local-set-key (kbd "<f2> p t f") 'ggtags-find-file)
-            (local-set-key (kbd "<f2> p t r") 'ggtags-find-reference)
-            (local-set-key (kbd "<f2> p t d") 'ggtags-find-definition)
-            (local-set-key (kbd "<f2> p t t") 'ggtags-find-tag-dwim)
+            (local-set-key (kbd "; p t f") 'ggtags-find-file)
+            (local-set-key (kbd "; p t r") 'ggtags-find-reference)
+            (local-set-key (kbd "; p t d") 'ggtags-find-definition)
+            (local-set-key (kbd "; p t t") 'ggtags-find-tag-dwim)
             ))
     )
   ;; dictionary
   (when (package-installed-p 'synosaurus)
-    (global-set-key (kbd "<f2> d l") 'synosaurus-lookup)
-    (global-set-key (kbd "<f2> d r") 'synosaurus-choose-and-replace)
+    (global-set-key (kbd "; d l") 'synosaurus-lookup)
+    (global-set-key (kbd "; d r") 'synosaurus-choose-and-replace)
     )
   )
 
@@ -1182,7 +1187,7 @@ Version 2016-03-15"
                                          :height 1.0
                                          :family mono-font-face)))))
   ; change helm prefix
-  (global-set-key (kbd "<f2> h x") 'helm-command-prefix)
+  (global-set-key (kbd "; h x") 'helm-command-prefix)
   (global-unset-key (kbd "C-x c"))
   ; change some config
   (setq helm-split-window-in-side-p            t
@@ -1198,18 +1203,18 @@ Version 2016-03-15"
   (helm-mode 1)
   (helm-autoresize-mode t)
   ; bind keys
-  (global-set-key (kbd "<f2> z z") 'helm-M-x)
-  (global-set-key (kbd "<f2> k r") 'helm-show-kill-ring)
-  (global-set-key (kbd "<f2> f f") 'helm-find-files)
-  (global-set-key (kbd "<f2> r r") 'helm-mini)
+  (global-set-key (kbd "; z z") 'helm-M-x)
+  (global-set-key (kbd "; k r") 'helm-show-kill-ring)
+  (global-set-key (kbd "; f f") 'helm-find-files)
+  (global-set-key (kbd "; r r") 'helm-mini)
   (when (package-installed-p 'helm-swoop)
-    (global-set-key (kbd "<f2> h s") 'helm-swoop)
+    (global-set-key (kbd "; /") 'helm-swoop)
     )
   (when (package-installed-p 'helm-projectile)
-    (define-key projectile-mode-map (kbd "<f2> p f") 'helm-projectile) ;; project file
-    (define-key projectile-mode-map (kbd "<f2> p g") 'helm-projectile-grep)
-    (define-key projectile-mode-map (kbd "<f2> p b") 'helm-projectile-switch-to-buffer)
-    (define-key projectile-mode-map (kbd "<f2> p r") 'helm-projectile-recentf) ;; project recent
+    (define-key projectile-mode-map (kbd "; p f") 'helm-projectile) ;; project file
+    (define-key projectile-mode-map (kbd "; p g") 'helm-projectile-grep)
+    (define-key projectile-mode-map (kbd "; p b") 'helm-projectile-switch-to-buffer)
+    (define-key projectile-mode-map (kbd "; p r") 'helm-projectile-recentf) ;; project recent
     )
   )
 ;; <<< E N D helm
