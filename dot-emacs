@@ -8,15 +8,16 @@
 (setq inhibit-startup-message t)
 ;; monospace font for better drawing
 ;; declare a font variable
-(setq mono-font-face "Source Code Pro")
-(setq mono-font-size "13")
+(setq-default mono-font-face "Source Code Pro")
+(setq-default mono-font-size "13")
+(setq-default mono-font-weight 'light)
 (when (display-graphic-p)
-  (add-to-list 'default-frame-alist
-               '(font . (concat mono-font-face "-" mono-font-size)))
+  ;(add-to-list 'default-frame-alist
+  ;             '(font . (concat mono-font-face "-" mono-font-size ":weight=" (symbol-name mono-font-weight))))
   (set-face-attribute 'default nil
-                      :family mono-font-face :height (* 10 (string-to-number mono-font-size)))
-  (set-face-attribute 'fixed-pitch nil :font (concat mono-font-face "-" mono-font-size))
-  (set-face-attribute 'variable-pitch nil :font (concat mono-font-face "-" mono-font-size))
+                      :family mono-font-face :height (* 10 (string-to-number mono-font-size)) :weight mono-font-weight)
+  (set-face-attribute 'fixed-pitch nil :font (concat mono-font-face "-" mono-font-size) :weight mono-font-weight)
+  (set-face-attribute 'variable-pitch nil :font (concat mono-font-face "-" mono-font-size) :weight mono-font-weight)
   )
 (when (display-graphic-p)
   (custom-set-faces
@@ -103,12 +104,15 @@
     "The most beautiful experience we can have is the mysterious. It is the fundamental emotion that stands at the cradle of true art and true science. -- Albert Einstein"
     ;; Confucius
     "Life is really simple, but we insist on making it complicated. -- Confucius"
+    "The best time to plant a tree is 20 years ago, the second best time is now. -- Chinese proverb"
     ;; Politics
     "In the end, it's not the years in your life that count. It's the life in your years. -- Abraham Lincoln"
     "Be the change that you wish to see in the world. --  Mahatma Gandhi"
+    "There is no such thing as 'American English'. There is English. And there are mistakes. -- Elizabeth Windsor"
     ;; Business men
     "Innovation distinguishes between a leader and a follower. -- Steve Jobs"
     "Creativity and innovation are something you can't flowchart out. -- Tim Cook"
+    "People will forget what you said, people will forget what you did, but people will never forget how you made them feel -- Maya Angelou"
     ;; Buddhism
     "The purpose of our lives is to be happy. -- Dalai Lama"
     "Better than a thousand hollow words, is one word that brings peace. -- Buddha"
