@@ -8,9 +8,9 @@
 (setq inhibit-startup-message t)
 ;; monospace font for better drawing
 ;; declare a font variable
-(setq-default mono-font-face "Source Code Pro")
-(setq-default mono-font-size "13")
-(setq-default mono-font-weight 'light)
+(setq mono-font-face "Source Code Pro")
+(setq mono-font-size "13")
+(setq mono-font-weight 'light)
 (when (display-graphic-p)
   ;(add-to-list 'default-frame-alist
   ;             '(font . (concat mono-font-face "-" mono-font-size ":weight=" (symbol-name mono-font-weight))))
@@ -86,22 +86,29 @@
 ;; random quote inspiration, got from yitang@github.com
 (defconst yt/quotes
   '(;; Fantasy novels
-    "Only in silence the word, Only in dark the light, Only in dying life, Bright the hawk's flight On the empty sky. -- Ursula K. Le Guin"
+    "Only in silence the word, Only in dark the light, Only in dying life, \
+Bright the hawk's flight On the empty sky. -- Ursula K. Le Guin"
     "When you light a candle, you also cast a shadow. -- Ursula K. Le Guin"
     "Sometimes asking questions is more important than finding answers. -- Robert Jordan"
     "I’m bad, and that’s good. I will never be good, and that’s not bad. There’s no one I’d rather be than me. -- Wreck-It Ralph"
-    "It's the questions we can't answer that teach us the most. They teach us how to think. If you give a man an answer, all he gains is a little fact. But give him a question and he'll look for his own answers. -- Patrick Rothfuss"
+    "It's the questions we can't answer that teach us the most. They teach us how to think. \
+If you give a man an answer, all he gains is a little fact. But give him a question and he'll look for his own answers. -- Patrick Rothfuss"
     "People see madness in my colorful vibrancy and fail to see the madness in their boring normality -- Mad Hater"
     "Greed can be a very powerful ally - Qui-Gon Jinn"
     "The ability to speak does not make you intelligent -- Qui-Gon Jinn"
     "Do or do not... there is no try. -- Yoda"
     "Your eyes can deceive you; don't trust them. -- Obi-Wan Kenobi"
+    "What is evil? - The web we man weave. -- Ged"
     ;; computer scientists
     "It is better to have 100 functions operate on one data structure than 10 functions on 10 data structures. -- Alan Perlis"
     ;; Scientists
     "The important thing is not to stop questioning. -- Albert Einstein"
     "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. -- Albert Einstein"
-    "The most beautiful experience we can have is the mysterious. It is the fundamental emotion that stands at the cradle of true art and true science. -- Albert Einstein"
+    "The most beautiful experience we can have is the mysterious. It is the fundamental emotion that stands at the cradle of true art \
+and true science. -- Albert Einstein"
+    "Whatever I have up till now accepted as most true and assured I have gotten either from the senses or through the senses. \
+But from time to time I have found that the senses deceive, and it is prudent never to trust completely those who have deceived us \
+even once. -- Rene Descartes"
     ;; Confucius
     "Life is really simple, but we insist on making it complicated. -- Confucius"
     "The best time to plant a tree is 20 years ago, the second best time is now. -- Chinese proverb"
@@ -240,6 +247,7 @@ Version 2016-03-15"
 (-map '-install '(helm
                   helm-swoop
                   helm-projectile
+                  helm-ag
                   company
                   ))
 ; remove ac-helm
@@ -261,7 +269,7 @@ Version 2016-03-15"
 ;; theme setting
 (if (not (display-graphic-p))
     (load-theme 'badwolf t)
-  (load-theme 'base16-mocha-dark t)
+  (load-theme 'base16-solarized-dark t)
   )
 ;;cursor
 (when (display-graphic-p)
@@ -1194,6 +1202,9 @@ Version 2016-03-15"
     (define-key projectile-mode-map (kbd "; p g") 'helm-projectile-grep)
     (define-key projectile-mode-map (kbd "; p b") 'helm-projectile-switch-to-buffer)
     (define-key projectile-mode-map (kbd "; p r") 'helm-projectile-recentf) ;; project recent
+    (when (package-installed-p 'helm-ag)
+      (define-key projectile-mode-map (kbd "; p g") 'helm-do-ag-project-root)
+      )
     )
   )
 ;; <<< E N D helm
