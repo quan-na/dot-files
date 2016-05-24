@@ -99,8 +99,6 @@ If you give a man an answer, all he gains is a little fact. But give him a quest
     "Do or do not... there is no try. -- Yoda"
     "Your eyes can deceive you; don't trust them. -- Obi-Wan Kenobi"
     "What is evil? - The web we man weave. -- Ged"
-    ;; computer scientists
-    "It is better to have 100 functions operate on one data structure than 10 functions on 10 data structures. -- Alan Perlis"
     ;; Scientists
     "The important thing is not to stop questioning. -- Albert Einstein"
     "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. -- Albert Einstein"
@@ -109,6 +107,9 @@ and true science. -- Albert Einstein"
     "Whatever I have up till now accepted as most true and assured I have gotten either from the senses or through the senses. \
 But from time to time I have found that the senses deceive, and it is prudent never to trust completely those who have deceived us \
 even once. -- Rene Descartes"
+    "Creativity is intelligence having fun. -- Albert Einstein"
+    "Science is what we understand well enough to explain to a computer. Art is everything else -- Donald Ervin Knuth"
+    "It is better to have 100 functions operate on one data structure than 10 functions on 10 data structures. -- Alan Perlis"
     ;; Confucius
     "Life is really simple, but we insist on making it complicated. -- Confucius"
     "The best time to plant a tree is 20 years ago, the second best time is now. -- Chinese proverb"
@@ -120,13 +121,20 @@ even once. -- Rene Descartes"
     "Innovation distinguishes between a leader and a follower. -- Steve Jobs"
     "Creativity and innovation are something you can't flowchart out. -- Tim Cook"
     "People will forget what you said, people will forget what you did, but people will never forget how you made them feel -- Maya Angelou"
+    "Everything you want is on the other side of fear. -- Jack Canfield"
+    "Ideas are easy. Implementation is hard. -- Guy Kawasaki"
     ;; Buddhism
     "The purpose of our lives is to be happy. -- Dalai Lama"
     "Better than a thousand hollow words, is one word that brings peace. -- Buddha"
     "What we think, we become. -- Buddha"
-    ;; Poetry - Actors
+    ;; Poetry - Actors - Artist
     "You talk when you cease to be at peace with your thoughts. -- Kahlil Gibran"
     "No matter what people tell you, words and ideas can change the world. -- Robin Williams"
+    "The unfed mind devours itself. -- Gore Vidal"
+    "A creative mess is better than idle tidiness. -- Michael J. Fox"
+    "I can't understand why people are frightened of new ideas. I'm frightened of the old ones. -- John Cage"
+    "Someday is not a day of the week. -- Janet Dailey"
+    "It is the greatest of all mistakes to do nothing because you can do only a little. Do what you can. -- Sydney Smith"
     ;; Taoism
     "Those who know do not speak. Those who speak do not know. -- Lao Tzu"
     "The truth is not always beautiful, nor beautiful words the truth. -- Lao Tzu"
@@ -212,6 +220,7 @@ Version 2016-03-15"
 ;; generic eye candies
 (-map '-install '(rainbow-delimiters
                   relative-line-numbers
+                  golden-ratio
                   ))
 ; removed : auto-complete
 ; removed : evil, rainbow blocks
@@ -269,7 +278,7 @@ Version 2016-03-15"
 ;; theme setting
 (if (not (display-graphic-p))
     (load-theme 'badwolf t)
-  (load-theme 'base16-solarized-dark t)
+  (load-theme 'monokai t)
   )
 ;;cursor
 (when (display-graphic-p)
@@ -484,6 +493,13 @@ Version 2016-03-15"
   (setq synosaurus-choose-method 'popup)
   )
 ;; <<< E N D writting
+
+;; >>> START golden ratio
+(when (package-installed-p 'golden-ratio)
+  (require 'golden-ratio)
+  (golden-ratio-mode 1)
+  )
+;; <<< E N D golden ratio
 
 ;; >>> START web mode
 (when (package-installed-p 'web-mode)

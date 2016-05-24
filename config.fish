@@ -1,5 +1,5 @@
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/mysql/bin:/Users/sstvn/.composer/vendor/bin:/Users/sstvn/Library/PackageManager/bin:/usr/local/texlive/2015/bin/x86_64-darwin:/Volumes/DATA/clojure"
+set -x JAVA_HOME /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home
+set -x PATH /usr/local/sbin /usr/local/bin /usr/bin /bin /usr/sbin /sbin /opt/X11/bin /usr/local/mysql/bin /Users/sstvn/.composer/vendor/bin /Users/sstvn/Library/PackageManager/bin /usr/local/texlive/2015/bin/x86_64-darwin /Volumes/DATA/clojure
 #:/Users/sstvn/sms-usage-analysis"
 # export MANPATH="/usr/local/man:$MANPATH"
 #export DYLD_LIBRARY_PATH=/usr/local/mysql-5.5.42-osx10.8-x86_64/lib/:$PATH
@@ -53,6 +53,7 @@ set __fish_git_prompt_char_upstream_behind '-'
 
 set curr_char 0
 
+# may need some function from latest fish repository
 function fish_prompt
   set last_status $status
 
@@ -85,5 +86,31 @@ function fish_prompt
 end
 
 function j7
-  export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home
+  set -x JAVA_HOME /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home
+end
+
+function and19
+  set -x NDK /Volumes/DATA/android-ndk-r11c
+  set -x SYSROOT $NDK/platforms/android-19/arch-arm
+  set -x CC $NDK/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi -v --sysroot=$SYSROOT -target armv7-none-linux-androideabi -gcc-toolchain $NDK/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64
+end
+
+# copied from oh-my-fish/plugin-fasd
+# Detect fasd
+if type -q fasd
+  # Hook into fish preexec event
+  function __fasd_run -e fish_preexec
+    #command fasd -A (command fasd --sanitize $argv) > "/dev/null" 2>&1 &
+    set arglist (echo $argv | tr ' ' '\n')
+    for item in $arglist
+      #echo $item
+      command fasd -A "$item" > "/dev/null" 2>&1 &
+    end
+  end
+  function j; cd (d $argv); end
+  function e; emacs -nw (f $argv); end
+  function o; open (f $argv); end
+  function v; vim (f $argv); end
+else
+  echo " *** Please install 'fasd' first!"
 end
