@@ -60,7 +60,7 @@
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
 (setq-default indent-line-function 'insert-tab)
-(electric-indent-mode +1)
+(electric-indent-mode -1)
 ;;(setq-default tab-stop-list (number-sequence 2 200 2))
 ;; enable navigate with arrows
 (defun disable-guru-mode ()
@@ -99,6 +99,7 @@ If you give a man an answer, all he gains is a little fact. But give him a quest
     "Do or do not... there is no try. -- Yoda"
     "Your eyes can deceive you; don't trust them. -- Obi-Wan Kenobi"
     "What is evil? - The web we man weave. -- Ged"
+    "My wisdom is from experience; My passion come from pain; My confidence hides insecurity; My weakness make me stronger; My past does not define me; My strength is an illusion; My calm hid a storm; My innocence is not ignorance; My cabbages - My cabbages!! -- Avatar"
     ;; Scientists
     "The important thing is not to stop questioning. -- Albert Einstein"
     "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. -- Albert Einstein"
@@ -135,6 +136,7 @@ even once. -- Rene Descartes"
     "I can't understand why people are frightened of new ideas. I'm frightened of the old ones. -- John Cage"
     "Someday is not a day of the week. -- Janet Dailey"
     "It is the greatest of all mistakes to do nothing because you can do only a little. Do what you can. -- Sydney Smith"
+    "The role of art is not to reproduce visible objects, but to make invisibles visible. -- Paul Klee"
     ;; Taoism
     "Those who know do not speak. Those who speak do not know. -- Lao Tzu"
     "The truth is not always beautiful, nor beautiful words the truth. -- Lao Tzu"
@@ -173,6 +175,19 @@ Version 2016-03-15"
           (match-end 0)
           'face (list :background (match-string-no-properties 0)))))))
   (font-lock-fontify-buffer))
+;; Highlight TODO, FIXME, and BUG in programming modes
+(defun xah-syntax-todo ()
+  "Syntax color TODO items"
+  ;(interactive)
+  (font-lock-add-keywords
+   nil
+   '(("\\s-\\(FIXME\\|TODO\\|BUG\\)\\(\\s-\\|:\\)"
+      (0 (put-text-property
+          (match-beginning 0)
+          (match-end 0)
+          'face (list :foreground "#DC143C" :weight 'bold))))))
+  (font-lock-fontify-buffer))
+(add-hook 'prog-mode-hook 'xah-syntax-todo)
 ;; view large files instead of editing it 
 (defun my-find-file-check-make-large-file-read-only-hook ()
   "If a file is over a given size, make the buffer read only."
@@ -236,6 +251,7 @@ Version 2016-03-15"
                   fish-mode
                   mmm-mode
                   rust-mode
+                  llvm-mode
                   ))
 ;; Organization
 (-map '-install '(org
@@ -258,6 +274,7 @@ Version 2016-03-15"
                   helm-projectile
                   helm-ag
                   company
+                  fasd
                   ))
 ; remove ac-helm
 ;; Writing
@@ -278,7 +295,7 @@ Version 2016-03-15"
 ;; theme setting
 (if (not (display-graphic-p))
     (load-theme 'badwolf t)
-  (load-theme 'monokai t)
+  (load-theme 'base16-mirosof-royal-dark t)
   )
 ;;cursor
 (when (display-graphic-p)
@@ -320,7 +337,9 @@ Version 2016-03-15"
             ((buffer-modified-p)
              (propertize "**" 'face 'mode-line-modified-face))
             (t "  ")))
-     " "
+     (:propertize (:eval (make-string-pos 10))
+                  face mode-line-cursor-face)
+     ;" "
      ; directory and buffer/file name
      ;(:propertize (:eval (shorten-directory default-directory 30))
      ;             face mode-line-folder-face)
@@ -384,6 +403,14 @@ Version 2016-03-15"
                          (if (equal x "") x (substring x 0 1)))
                        (split-string (abbreviate-file-name dir) "/")) "/")
     )
+  ;; cursor position
+  (defun make-string-pos(len)
+    "Show current position with characters"
+    (let ((pos-len (/ (* len (point)) (point-max)))
+          )
+      (concat "<" (make-string pos-len ?-) "+" (make-string (- len pos-len) ?-) ">")
+      )
+    )
   ;; Extra mode line faces
   (make-face 'mode-line-read-only-face)
   (make-face 'mode-line-modified-face)
@@ -396,6 +423,7 @@ Version 2016-03-15"
   (make-face 'mode-line-80col-face)
   (make-face 'mode-line-clock-face)
   (make-face 'mode-line-note-face)
+  (make-face 'mode-line-cursor-face)
 
   (set-face-attribute 'mode-line-clock-face nil
                       :inherit 'mode-line-face
@@ -447,7 +475,10 @@ Version 2016-03-15"
   (set-face-attribute 'mode-line-note-face nil
                       :inherit 'mode-line-face
                       :foreground "#DC143C" ; Crimson
-                                        ;:box '(:line-width 2 :color "#4271ae")
+                      )
+  (set-face-attribute 'mode-line-cursor-face nil
+                      :inherit 'mode-line-face
+                      :foreground "#4169E1"
                       )
   )
 ;; <<< E N D fancy mode line
@@ -500,6 +531,12 @@ Version 2016-03-15"
   (golden-ratio-mode 1)
   )
 ;; <<< E N D golden ratio
+
+;; >>> START fasd
+(when (package-installed-p 'fasd)
+  (global-fasd-mode 1)
+  )
+;; <<< E N D fasd
 
 ;; >>> START web mode
 (when (package-installed-p 'web-mode)
@@ -935,6 +972,12 @@ Version 2016-03-15"
   ;; TODO: function template
   )
 ;; <<< E N D cc-mode
+
+;; >>> START llvm
+(when (package-installed-p 'llvm-mode)
+  (add-to-list 'auto-mode-alist '("\\.ll" . llvm-mode))
+  )
+;; <<< E N D llvm
 
 ;; >>> START scala development
 (when (package-installed-p 'ensime)
