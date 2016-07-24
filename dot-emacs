@@ -295,7 +295,7 @@ Version 2016-03-15"
 ;; theme setting
 (if (not (display-graphic-p))
     (load-theme 'badwolf t)
-  (load-theme 'base16-mirosof-royal-dark t)
+  (load-theme 'base16-tomorrow-dark t)
   )
 ;;cursor
 (when (display-graphic-p)
