@@ -1,5 +1,5 @@
-set -x JAVA_HOME /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home
-set -x PATH /usr/local/sbin /usr/local/bin /usr/bin /bin /usr/sbin /sbin /opt/X11/bin /usr/local/mysql/bin /Users/sstvn/.composer/vendor/bin /Users/sstvn/Library/PackageManager/bin /usr/local/texlive/2015/bin/x86_64-darwin /Volumes/DATA/clojure
+#set -x JAVA_HOME /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home
+#set -x PATH /usr/local/sbin /usr/local/bin /usr/bin /bin /usr/sbin /sbin /opt/X11/bin /usr/local/mysql/bin /Users/sstvn/.composer/vendor/bin /Users/sstvn/Library/PackageManager/bin /usr/local/texlive/2015/bin/x86_64-darwin /Volumes/DATA/clojure
 #:/Users/sstvn/sms-usage-analysis"
 # export MANPATH="/usr/local/man:$MANPATH"
 #export DYLD_LIBRARY_PATH=/usr/local/mysql-5.5.42-osx10.8-x86_64/lib/:$PATH
@@ -13,15 +13,15 @@ set -x PATH /usr/local/sbin /usr/local/bin /usr/bin /bin /usr/sbin /sbin /opt/X1
 #source $ZSH/oh-my-zsh.sh
 
 # Quick launch of programs
-alias em="/usr/local/Cellar/emacs-mac/emacs-24.4.91-mac-5.5/bin/emacs -nw"
-function e
-    emacs $argv &
-end
-alias mysqlc="mysql -u root -proot -h 127.0.0.1 "
-alias mysqls="sudo /usr/local/mysql/support-files/mysql.server "
-alias kbfast="defaults write -g InitialKeyRepeat -int 10; and defaults write -g KeyRepeat -int 1 "
-alias noatime="sudo mount -vuwo noatime / "
-alias docker-start="sudo bash /Applications/Docker/Docker\\ Quickstart\\ Terminal.app/Contents/Resources/Scripts/start.sh"
+#alias em="/usr/local/Cellar/emacs-mac/emacs-24.4.91-mac-5.5/bin/emacs -nw"
+#function e
+#    emacs $argv &
+#end
+#alias mysqlc="mysql -u root -proot -h 127.0.0.1 "
+#alias mysqls="sudo /usr/local/mysql/support-files/mysql.server "
+#alias kbfast="defaults write -g InitialKeyRepeat -int 10; and defaults write -g KeyRepeat -int 1 "
+#alias noatime="sudo mount -vuwo noatime / "
+#alias docker-start="sudo bash /Applications/Docker/Docker\\ Quickstart\\ Terminal.app/Contents/Resources/Scripts/start.sh"
 #alias ftpload="sudo -s launchctl load -w /System/Library/LaunchDaemons/ftp.plist"
 #alias ftpunload="sudo -s launchctl unload -w /System/Library/LaunchDaemons/ftp.plist"
 #alias moai="~/moaidist/osx/moai"
@@ -63,7 +63,7 @@ function fish_prompt
   set_color normal
 
   printf '%s' (__fish_git_prompt)
-  printf '%s' (__fish_svn_prompt)
+  #printf '%s' (__fish_svn_prompt)
 
   set_color blue
   #printf " \U1F401 " # mouse
@@ -86,19 +86,23 @@ function fish_prompt
   set_color normal
 end
 
-function j7
-  set -x JAVA_HOME /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home
-end
+#function j7
+#  set -x JAVA_HOME /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home
+#end
 
-function and19
-  set -x NDK /Volumes/DATA/android-ndk-r11c
-  set -x SYSROOT $NDK/platforms/android-19/arch-arm
-  set -x CC $NDK/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi -v --sysroot=$SYSROOT -target armv7-none-linux-androideabi -gcc-toolchain $NDK/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64
-end
+#function and19
+#  set -x NDK /Volumes/DATA/android-ndk-r11c
+#  set -x SYSROOT $NDK/platforms/android-19/arch-arm
+#  set -x CC $NDK/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi -v --sysroot=$SYSROOT -target armv7-none-linux-androideabi -gcc-toolchain $NDK/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64
+#end
 
 # copied from oh-my-fish/plugin-fasd
 # Detect fasd
 if type -q fasd
+  alias f=fasd
+  alias a=fasd
+  alias s=fasd
+  alias d=fasd
   # Hook into fish preexec event
   function __fasd_run -e fish_preexec
     #command fasd -A (command fasd --sanitize $argv) > "/dev/null" 2>&1 &

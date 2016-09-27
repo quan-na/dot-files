@@ -9,8 +9,8 @@
 ;; monospace font for better drawing
 ;; declare a font variable
 (setq mono-font-face "Source Code Pro")
-(setq mono-font-size "13")
-(setq mono-font-weight 'light)
+(setq mono-font-size "10")
+(setq mono-font-weight 'normal)
 (when (display-graphic-p)
   ;(add-to-list 'default-frame-alist
   ;             '(font . (concat mono-font-face "-" mono-font-size ":weight=" (symbol-name mono-font-weight))))
@@ -209,7 +209,7 @@ Version 2016-03-15"
                          ("org" . "http://orgmode.org/elpa/")
                          ("sunrisec" . "http://joseito.republika.pl/sunrise-commander/")))
 ;; uncomment after cleaning up
-(package-refresh-contents)
+;(package-refresh-contents)
 (package-initialize)
 ;; install dash for emacs lisp syntax candy
 (unless (package-installed-p 'dash)
@@ -252,6 +252,7 @@ Version 2016-03-15"
                   mmm-mode
                   rust-mode
                   llvm-mode
+                  pov-mode
                   ))
 ;; Organization
 (-map '-install '(org
@@ -265,6 +266,7 @@ Version 2016-03-15"
 (-map '-install '(sr-speedbar
                   hydra
                   undo-tree
+                  spray
                   ))
 ; removed 'imenu
 ; removed : smartparens, eclim, company, polymode
@@ -295,7 +297,7 @@ Version 2016-03-15"
 ;; theme setting
 (if (not (display-graphic-p))
     (load-theme 'badwolf t)
-  (load-theme 'base16-tomorrow-dark t)
+  (load-theme 'zenburn t)
   )
 ;;cursor
 (when (display-graphic-p)
