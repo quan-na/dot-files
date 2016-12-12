@@ -79,6 +79,21 @@
 ;; disable auto-save
 (setq auto-save-default nil)
 (setq create-lockfiles nil)
+;; show matching parentheses
+(show-paren-mode 1)
+(defadvice show-paren-function
+    (after show-matching-paren-offscreen activate)
+        "If the matching paren is offscreen, show the matching line in the
+        echo area. Has no effect if the character before point is not of
+        the syntax class ')'."
+  (interactive)
+  (let* ((cb (char-before (point)))
+         (matching-text (and cb
+                             (or (char-equal (char-syntax cb) ?\) )
+                                 (char-equal (char-syntax cb) ?\} )
+                                 (char-equal (char-syntax cb) ?\] ))
+                             (blink-matching-open))))
+    (when matching-text (message matching-text))))
 ;; IDO every where
 ;(setq ido-enable-flex-matching t)
 ;(setq ido-everywhere t)
@@ -231,6 +246,7 @@ Version 2016-03-15"
                   gotham-theme
                   ;borland-blue-theme
                   base16-theme
+                  doom-themes
                   ))
 ;; generic eye candies
 (-map '-install '(rainbow-delimiters
@@ -281,7 +297,7 @@ Version 2016-03-15"
 ; remove ac-helm
 ;; Writing
 (-map '-install '(flyspell
-                  artbollocks-mode
+                  ;artbollocks-mode
                   synosaurus
                   ))
 ;; Clojure development
@@ -297,7 +313,7 @@ Version 2016-03-15"
 ;; theme setting
 (if (not (display-graphic-p))
     (load-theme 'badwolf t)
-  (load-theme 'zenburn t)
+  (load-theme 'gotham t)
   )
 ;;cursor
 (when (display-graphic-p)
@@ -339,8 +355,8 @@ Version 2016-03-15"
             ((buffer-modified-p)
              (propertize "**" 'face 'mode-line-modified-face))
             (t "  ")))
-     (:propertize (:eval (make-string-pos 10))
-                  face mode-line-cursor-face)
+     ;(:propertize (:eval (make-string-pos 10))
+     ;             face mode-line-cursor-face)
      ;" "
      ; directory and buffer/file name
      ;(:propertize (:eval (shorten-directory default-directory 30))
@@ -353,18 +369,21 @@ Version 2016-03-15"
      " %n "
      ; mode indicators: vc, recursive edit, major mode, minor modes, process, global
      (vc-mode vc-mode)
-     "  %["
+     " %["
      (:propertize mode-name
                   face mode-line-mode-face)
      "%] "
-     (:eval (propertize (format-mode-line minor-mode-alist)
-                        'face 'mode-line-minor-mode-face))
+     ;(:eval (propertize (format-mode-line minor-mode-alist)
+     ;                   'face 'mode-line-minor-mode-face))
      (:propertize mode-line-process
                   face mode-line-process-face)
      (global-mode-string global-mode-string)
      " "
      (:propertize mode-line-note
                   face mode-line-note-face)
+     " "
+     (:eval (propertize (format-mode-line minor-mode-alist)
+                        'face 'mode-line-minor-mode-face))
      mode-line-end-spaces
      ; nyan-mode uses nyan cat as an alternative to %p
      ;(:eval (when nyan-mode (list (nyan-create))))
@@ -486,9 +505,7 @@ Version 2016-03-15"
 ;; <<< E N D fancy mode line
 
 ;; >>> START writting
-(when (and (package-installed-p 'flyspell)
-           (package-installed-p 'artbollocks-mode)
-           (package-installed-p 'synosaurus))
+(when (package-installed-p 'flyspell)
   ;; check spelling
   (custom-set-faces
    '(flyspell-incorrect ((t (:background "#DC143C")))))
@@ -499,6 +516,8 @@ Version 2016-03-15"
   (setq ispell-dictionary "american"
         ispell-extra-args '( "-t" ) ;; TeX mode "-t"
         ispell-silently-savep t)
+  )
+(when (package-installed-p 'artbollocks-mode)
   ;; block dangerous words
   (require 'artbollocks-mode)
   (add-hook 'text-mode-hook 'artbollocks-mode)
@@ -515,6 +534,8 @@ Version 2016-03-15"
                          "I think"
                          "really"
                          "nice") t) "\\b"))
+  )
+(when (package-installed-p 'synosaurus)
   ;; synosaurus
   ;; brew install wordnet
   (require 'synosaurus)
@@ -759,7 +780,6 @@ Version 2016-03-15"
   (add-hook 'clojure-mode-hook 'paredit-mode)
   (add-hook 'cider-repl-mode-hook 'paredit-mode)
 )
-(show-paren-mode 1)
 (when (package-installed-p 'ac-cider)
   ;; cider auto-complete
   (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
@@ -1379,7 +1399,7 @@ If COMMAND is nil, the key-chord is removed."
           ("VERIFYREADY" . "blue")
           ("PASSED" . "gray")
           ("DEFFER" . "gray")))
-  (setq org-agenda-files (quote ("~/org")))
+  (setq org-agenda-files (quote ("~/Applications/org")))
   )
 ;; enable babel languages
 (when (package-installed-p 'babel)
@@ -1392,7 +1412,7 @@ If COMMAND is nil, the key-chord is removed."
 (when (package-installed-p 'deft)
                                         ;(setq deft-extension nil)
   (setq deft-extensions '("org" "md"))
-  (setq deft-directory "~/org/deft/")
+  (setq deft-directory "~/Applications/org/deft/")
   (setq deft-text-mode 'org-mode)
                                         ;(setq deft-use-filename-as-title t)
                                         ;(global-set-key (kbd "<f9>") 'deft))

@@ -27,6 +27,10 @@
 #alias moai="~/moaidist/osx/moai"
 #alias gcc="/usr/local/bin/gcc-4.9"
 
+if begin; test -z (command pgrep ssh-agent); and not test -S $SSH_AUTH_SOCK; end
+    eval (command ssh-agent -c | sed -E 's/^setenv (.+);$/set \1; set -Ux \1;/')
+end
+
 # git prompt
 set normal (set_color normal)
 set magenta (set_color magenta)
@@ -68,6 +72,7 @@ function fish_prompt
   set_color blue
   #printf " \U1F401 " # mouse
   #printf " \U1F407 " # rabbit
+  if set -q curr_char; true; else; set curr_char 0; end
   switch $curr_char
     case 0; printf " \U1F415 " # dog
     case 1; printf " \U1F416 " # pig
@@ -96,13 +101,17 @@ end
 #  set -x CC $NDK/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi -v --sysroot=$SYSROOT -target armv7-none-linux-androideabi -gcc-toolchain $NDK/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64
 #end
 
+if type -q spd-say
+  alias say="spd-say -t female2 -w"
+end
+
 # copied from oh-my-fish/plugin-fasd
 # Detect fasd
 if type -q fasd
-  alias f=fasd
-  alias a=fasd
-  alias s=fasd
-  alias d=fasd
+  alias f="fasd -f"
+  alias a="fasd -a"
+  alias s="fasd -s"
+  alias d="fasd -d"
   # Hook into fish preexec event
   function __fasd_run -e fish_preexec
     #command fasd -A (command fasd --sanitize $argv) > "/dev/null" 2>&1 &
