@@ -1,0 +1,4 @@
+( bind-keys global-keymap
+  "F1"      '( system "guake &" )
+
+( system "exec guake" )

@@ -242,11 +242,12 @@ Version 2016-03-15"
                   ;ample-theme
                   ;subatomic256-theme
                   badwolf-theme
-                  tao-theme
+                  ;tao-theme
                   gotham-theme
                   ;borland-blue-theme
-                  base16-theme
+                  ;base16-theme
                   doom-themes
+                  gruvbox-theme
                   ))
 ;; generic eye candies
 (-map '-install '(rainbow-delimiters
@@ -313,7 +314,7 @@ Version 2016-03-15"
 ;; theme setting
 (if (not (display-graphic-p))
     (load-theme 'badwolf t)
-  (load-theme 'gotham t)
+  (load-theme 'gruvbox t)
   )
 ;;cursor
 (when (display-graphic-p)
@@ -1514,8 +1515,24 @@ If COMMAND is nil, the key-chord is removed."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("d320493111089afba1563bc3962d8ea1117dd2b3abb189aeebdc8c51b5517ddb" default)))
  '(safe-local-variable-values
    (quote
     ((mmm-noweb-code-mode . haskell-mode)
      (mmm-noweb-code-mode . c-mode)))))
 
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(flyspell-incorrect ((t (:background "#DC143C"))))
+ '(helm-source-header ((t (:background "#22083397778B" :foreground "white" :weight bold :height 1.0 :family mono-font-face))))
+ '(org-document-title ((((class color) (min-colors 89)) (:inherit variable-pitch :foreground "#DC143C" :height 1.0))))
+ '(org-level-1 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
+ '(org-level-2 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
+ '(org-level-3 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
+ '(org-level-4 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0))))
+ '(org-level-5 ((((class color) (min-colors 89)) (:inherit variable-pitch :height 1.0)))))
