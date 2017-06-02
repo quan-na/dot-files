@@ -313,7 +313,65 @@ you should place your code here."
 
    ;; all the icons in neotree
    (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+
    ;;--> try to figure out how to modify spaceline mode-line
+   (require 'spaceline-config)
+   ;;---> custom segments
+   (spaceline-define-segment my/buffer-status
+     "Buffer status (read-only, modified), with color"
+     (cond (buffer-read-only (propertize "RO" 'face 'my/spaceline-read-only))
+           ((buffer-modified-p) (propertize "**" 'face 'my/spaceline-modified))
+           (t "  ")))
+   ;;<--- custom segments
+
+   ;;---> custom fonts
+   (defun hsl (H S L) ; convenience fn
+     (apply 'color-rgb-to-hex (color-hsl-to-rgb (/ H 360.0) S L)))
+   (defun face (face &rest spec) ; convenience function
+     (face-spec-set face (list (cons t spec))))
+   (face 'my/spaceline-read-only :background (hsl 300 0.15 0.5) :foreground "gray80" :box `(:line-width -2 :color ,(hsl 300 0.4 0.5)))
+   (face 'my/spaceline-modified :background "GoldenRod2" :foreground "black")
+   ;;<--- custom fonts
+
+   (setq spaceline--mode-lines '((info
+                                  (info-topic
+                                   (info-nodes :separator " > ")))
+                                 (helm-done
+                                  (((helm-buffer-id helm-done)
+                                    :face highlight-face)
+                                   helm-number helm-follow helm-prefix-argument)
+                                  helm-help)
+                                 (helm
+                                  ((helm-buffer-id :face highlight-face)
+                                   helm-number helm-follow helm-prefix-argument)
+                                  helm-help)
+                                 (main
+                                  (((persp-name workspace-number window-number)
+                                    :fallback evil-state :separator "|" :face highlight-face)
+                                   anzu auto-compile
+                                   ;(buffer-modified buffer-size buffer-id remote-host)
+                                   (my/buffer-status buffer-size buffer-id remote-host)
+                                   major-mode
+                                   (process :when active)
+                                   ((flycheck-error flycheck-warning flycheck-info)
+                                    :when active)
+                                   (minor-modes :when active)
+                                   (mu4e-alert-segment :when active)
+                                   (erc-track :when active)
+                                   (version-control :when active)
+                                   (org-pomodoro :when active)
+                                   (org-clock :when active)
+                                   nyan-cat)
+                                  which-function
+                                  (python-pyvenv :fallback python-pyenv)
+                                  purpose
+                                  (battery :when active)
+                                  selection-info input-method
+                                  ((buffer-encoding-abbrev point-position line-column)
+                                   :separator " | ")
+                                  (global :when active)
+                                  (new-version :when active)
+                                  buffer-position hud)))
    ;;<-- try to figure out how to modify spaceline mode-line
   )
 
