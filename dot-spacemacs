@@ -319,18 +319,16 @@ you should place your code here."
    ;;---> custom segments
    (spaceline-define-segment my/buffer-status
      "Buffer status (read-only, modified), with color"
-     (cond (buffer-read-only (propertize "RO" 'face 'my/spaceline-read-only))
-           ((buffer-modified-p) (propertize "**" 'face 'my/spaceline-modified))
-           (t "  ")))
+     (cond (buffer-read-only (propertize "✘✘" 'face 'my/spaceline-read-only))
+           ((buffer-modified-p) (propertize "✎✎" 'face 'my/spaceline-modified))
+           (t "✔✔")))
    ;;<--- custom segments
 
    ;;---> custom fonts
-   (defun hsl (H S L) ; convenience fn
-     (apply 'color-rgb-to-hex (color-hsl-to-rgb (/ H 360.0) S L)))
    (defun face (face &rest spec) ; convenience function
      (face-spec-set face (list (cons t spec))))
-   (face 'my/spaceline-read-only :background (hsl 300 0.15 0.5) :foreground "gray80" :box `(:line-width -2 :color ,(hsl 300 0.4 0.5)))
-   (face 'my/spaceline-modified :background "GoldenRod2" :foreground "black")
+   (face 'my/spaceline-read-only :background "GoldenRod2" :foreground "red")
+   (face 'my/spaceline-modified :background "red" :foreground "black")
    ;;<--- custom fonts
 
    (setq spaceline--mode-lines '((info
