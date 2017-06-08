@@ -136,7 +136,7 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(gotham deeper-blue
+   dotspacemacs-themes '(deeper-blue gotham inkpot
                          spacemacs-dark
                          spacemacs-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
@@ -322,6 +322,25 @@ you should place your code here."
      (cond (buffer-read-only (propertize "✘✘" 'face 'my/spaceline-read-only))
            ((buffer-modified-p) (propertize "✎✎" 'face 'my/spaceline-modified))
            (t "✔✔")))
+   (spaceline-define-segment my/version-control
+     "Version control information with Unicode icons."
+     (when vc-mode
+       (powerline-raw
+        (s-trim (concat vc-mode
+                        (when (buffer-file-name)
+                          (pcase (vc-state (buffer-file-name))
+                            (`up-to-date " ☑")
+                            (`edited " ≠")
+                            (`added " ↶")
+                            (`unregistered " ☁")
+                            (`removed " ↷")
+                            (`needs-merge " ✖")
+                            (`needs-update " ↯")
+                            (`ignored " ❄")
+                            (_ " ¿"))))))))
+   (spaceline-define-segment my/week-number
+     "Year and week number, which I use for marking my projects"
+     (format-time-string "W%y%V"))
    ;;<--- custom segments
 
    ;;---> custom fonts
@@ -356,9 +375,10 @@ you should place your code here."
                                    (minor-modes :when active)
                                    (mu4e-alert-segment :when active)
                                    (erc-track :when active)
-                                   (version-control :when active)
+                                   (my/version-control :when active)
                                    (org-pomodoro :when active)
                                    (org-clock :when active)
+                                   my/week-number ; week number
                                    nyan-cat)
                                   which-function
                                   (python-pyvenv :fallback python-pyenv)
