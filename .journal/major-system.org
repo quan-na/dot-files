@@ -1,0 +1,66 @@
+* bunny major system
+  bunny is the main character, there 're 2 types of bunny for number and alphabet.
+  character is presented as object associated with bunny, each object is [1..2] character, the order must be deduced by user.
+  color is useless because it can easily affected by lighting condition. pattern can be used.
+
+* the system
+** A
+
+ace: card with 1 suit symbol, ?can be confused with other symbol, ?can be confused with card, !use 4 cards
+acupuncture: needle with special shape, ?can be confused with needle
+
+aeroplane: ?can be confused with airplane, !use both for ae ai
+
+airplane: ?aircraft ?plane
+
+alarm: an alarm clock
+album: book with pictures, within which pictures are aligned and have borders, ?can be confused with comic
+almond: a seed with its container haft removed, ?can be confused with other seeds
+alphabet: a set of 3 letters
+
+anchor: an anchor
+angel: an small angel puppet
+
+apple: an apple, ?can be confused with other fruits
+
+arch: a stone arch miniature
+archive: a zip icon ?
+armchair: an armchair ?can be confused with chair !chair will be without arm rests
+armour: an armour ?can be confused with parts of armour
+arrow: an arrow
+
+atom: a atom model
+
+autograph: a sheet of paper with autograph, ?can be confused with paper, board
+
+axe: an axe
+
+** B
+
+baby: a baby puppet, ?can be confused with ...
+backpack: a backpack, ?can be confused with ...
+
+** C
+** D
+** E
+** F
+** G
+** H
+** I
+** J
+** K
+** L
+** M
+** N
+** O
+** P
+** Q
+** R
+** S
+** T
+** U
+** V
+** W
+** X
+** Y
+** Z
