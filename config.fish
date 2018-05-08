@@ -1,34 +1,20 @@
-#set -x JAVA_HOME /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home
-#set -x PATH /usr/local/sbin /usr/local/bin /usr/bin /bin /usr/sbin /sbin /opt/X11/bin /usr/local/mysql/bin /Users/sstvn/.composer/vendor/bin /Users/sstvn/Library/PackageManager/bin /usr/local/texlive/2015/bin/x86_64-darwin /Volumes/DATA/clojure
-#:/Users/sstvn/sms-usage-analysis"
-# export MANPATH="/usr/local/man:$MANPATH"
-#export DYLD_LIBRARY_PATH=/usr/local/mysql-5.5.42-osx10.8-x86_64/lib/:$PATH
 
-# Add GHC 7.10.2 to the PATH, via https://ghcformacosx.github.io/
-#export GHC_DOT_APP="/Volumes/DATA/ghc-7.10.2.app"
-#if [ -d "$GHC_DOT_APP" ]; then
-#  export PATH="${HOME}/.local/bin:${HOME}/.cabal/bin:${GHC_DOT_APP}/Contents/bin:${PATH}"
-#fi
-
-#source $ZSH/oh-my-zsh.sh
-
-# Quick launch of programs
-#alias em="/usr/local/Cellar/emacs-mac/emacs-24.4.91-mac-5.5/bin/emacs -nw"
-#function e
-#    emacs $argv &
-#end
-#alias mysqlc="mysql -u root -proot -h 127.0.0.1 "
-#alias mysqls="sudo /usr/local/mysql/support-files/mysql.server "
-#alias kbfast="defaults write -g InitialKeyRepeat -int 10; and defaults write -g KeyRepeat -int 1 "
-#alias noatime="sudo mount -vuwo noatime / "
-#alias docker-start="sudo bash /Applications/Docker/Docker\\ Quickstart\\ Terminal.app/Contents/Resources/Scripts/start.sh"
-#alias ftpload="sudo -s launchctl load -w /System/Library/LaunchDaemons/ftp.plist"
-#alias ftpunload="sudo -s launchctl unload -w /System/Library/LaunchDaemons/ftp.plist"
-#alias moai="~/moaidist/osx/moai"
-#alias gcc="/usr/local/bin/gcc-4.9"
-
-if begin; test -z (command pgrep ssh-agent); and not test -S $SSH_AUTH_SOCK; end
-    eval (command ssh-agent -c | sed -E 's/^setenv (.+);$/set \1; set -Ux \1;/')
+function fish_greeting
+    echo '                 '(set_color F00)'___
+  ___======____='(set_color FF7F00)'-'(set_color FF0)'-'(set_color FF7F00)'-='(set_color F00)')
+/T            \_'(set_color FF0)'--='(set_color FF7F00)'=='(set_color F00)')
+[ \ '(set_color FF7F00)'('(set_color FF0)'0'(set_color FF7F00)')   '(set_color F00)'\~    \_'(set_color FF0)'-='(set_color FF7F00)'='(set_color F00)')
+ \      / )J'(set_color FF7F00)'~~    \\'(set_color FF0)'-='(set_color F00)')
+  \\\\___/  )JJ'(set_color FF7F00)'~'(set_color FF0)'~~   '(set_color F00)'\)
+   \_____/JJJ'(set_color FF7F00)'~~'(set_color FF0)'~~    '(set_color F00)'\\
+   '(set_color FF7F00)'/ '(set_color FF0)'\  '(set_color FF0)', \\'(set_color F00)'J'(set_color FF7F00)'~~~'(set_color FF0)'~~     '(set_color FF7F00)'\\
+  (-'(set_color FF0)'\)'(set_color F00)'\='(set_color FF7F00)'|'(set_color FF0)'\\\\\\'(set_color FF7F00)'~~'(set_color FF0)'~~       '(set_color FF7F00)'L_'(set_color FF0)'_
+  '(set_color FF7F00)'('(set_color F00)'\\'(set_color FF7F00)'\\)  ('(set_color FF0)'\\'(set_color FF7F00)'\\\)'(set_color F00)'_           '(set_color FF0)'\=='(set_color FF7F00)'__
+   '(set_color F00)'\V    '(set_color FF7F00)'\\\\'(set_color F00)'\) =='(set_color FF7F00)'=_____   '(set_color FF0)'\\\\\\\\'(set_color FF7F00)'\\\\
+          '(set_color F00)'\V)     \_) '(set_color FF7F00)'\\\\'(set_color FF0)'\\\\JJ\\'(set_color FF7F00)'J\)
+                      '(set_color F00)'/'(set_color FF7F00)'J'(set_color FF0)'\\'(set_color FF7F00)'J'(set_color F00)'T\\'(set_color FF7F00)'JJJ'(set_color F00)'J)
+                      (J'(set_color FF7F00)'JJ'(set_color F00)'| \UUU)
+                       (UU)'(set_color normal)
 end
 
 # git prompt
@@ -49,60 +35,61 @@ set __fish_git_prompt_color_upstream_ahead green
 set __fish_git_prompt_color_upstream_behind red
 
 # Status Chars
-set __fish_git_prompt_char_dirtystate '⚡'
-set __fish_git_prompt_char_stagedstate '→'
-set __fish_git_prompt_char_untrackedfiles '☡'
-set __fish_git_prompt_char_stashstate '↩'
-set __fish_git_prompt_char_upstream_ahead '+'
-set __fish_git_prompt_char_upstream_behind '-'
+set __fish_git_prompt_char_dirtystate '(×)'
+set __fish_git_prompt_char_stagedstate '(→)'
+set __fish_git_prompt_char_untrackedfiles '(*)'
+set __fish_git_prompt_char_stashstate '(↩)'
+set __fish_git_prompt_char_upstream_ahead '[↑]'
+set __fish_git_prompt_char_upstream_behind '[↓]'
+set __fish_git_prompt_char_upstream_equal '[√]'
+set __fish_git_prompt_char_upstream_diverged '[?]'
 
 set curr_char 0
 
 # may need some function from latest fish repository
+if set -q curr_char; true; else; set curr_char 0; end
 function fish_prompt
   set last_status $status
 
-  set_color $fish_color_cwd
+  set_color 4169E1
   printf '%s' (prompt_pwd)
   set_color normal
 
   printf '%s' (__fish_git_prompt)
   #printf '%s' (__fish_svn_prompt)
 
-  set_color blue
-  #printf " \U1F401 " # mouse
-  #printf " \U1F407 " # rabbit
-  if set -q curr_char; true; else; set curr_char 0; end
+  set_color yellow
   switch $curr_char
-    case 0; printf " \U1F415 " # dog
-    case 1; printf " \U1F416 " # pig
-    case 2; printf " \U1F420 " # fish
-    case 3; printf " \U1F422 " # turtle
-    case 4; printf " \U1F427 " # penguin
-    case 5; printf " \U1F42D " # mouse face
-    case 6; printf " \U1F428 " # koala
-    case 7; printf " \U1F430 " # rabbit face
-    case 8; printf " \U1F436 " # dog face
-    case 9; printf " \U1F43E " # paw
+      case 0; printf " ٩ʕ•͡×•ʔ۶ "
+      case 1; printf " ʕっ•ᴥ•ʔっ "
+      case 2; printf " ᕦʕ ⊙ ◡ ⊙ ʔᕤ "
+      case 3; printf " ʕ´• ᴥ •`ʔ "
+      case 4; printf " ʕ•̫͡•ʕ•̫͡•ʔ•̫͡•ʔ "
+      case 5; printf " ˁ˙˟˙ˀ "
+      case 6; printf " (∪￣ ㋓ ￣∪) "
+      case 7; printf " ヾ(;￫㉨￩)ﾉ "
+      case 8; printf " ⊂(ο･㉨･ο）⊃ "
+      case 9; printf " ( ◍•㉦•◍ ) "
+      case 10; printf " (^・ω・^ ) "
+      case 11; printf " ヽ(^‥^=ゞ) "
+      case 12; printf " (^._.^)ﾉ "
+      case 13; printf " ฅ^•ﻌ•^ฅ "
+      case 14; printf " (´pゝω･) "
+      case 15; printf " (＾*･.･*＾) "
+      case 16; printf " [^._.^]ﾉ彡 "
+      case 17; printf " ₍˄·͈༝·͈˄₎◞ ̑̑ෆ "
+      case 18; printf " ₍˄·͈༝·͈˄*₎◞ ̑̑ "
+      case 19; printf " |˄·͈༝·͈˄₎.｡oO "
   end
-  set curr_char (math "(($curr_char + 1) % 10)")
-  set_color green
-  printf "\U2318 "
+  set curr_char (math "(($curr_char + 1) % 20)")
+  if test $last_status -eq 0
+      set_color cyan
+      printf "⚛ "
+  else
+      set_color red
+      printf "$last_status⚡ "
+  end
   set_color normal
-end
-
-#function j7
-#  set -x JAVA_HOME /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home
-#end
-
-#function and19
-#  set -x NDK /Volumes/DATA/android-ndk-r11c
-#  set -x SYSROOT $NDK/platforms/android-19/arch-arm
-#  set -x CC $NDK/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi -v --sysroot=$SYSROOT -target armv7-none-linux-androideabi -gcc-toolchain $NDK/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64
-#end
-
-if type -q spd-say
-  alias say="spd-say -t female2 -w"
 end
 
 # copied from oh-my-fish/plugin-fasd
@@ -122,9 +109,22 @@ if type -q fasd
     end
   end
   function j; cd (d $argv); end
-  function e; emacs -nw (f $argv); end
-  function o; open (f $argv); end
-  function v; vim (f $argv); end
 else
   echo " *** Please install 'fasd' first!"
 end
+
+alias g.se="git submodule foreach "
+alias xx="sleep 1; exit"
+
+# split panes using | and -
+alias t.wsh="tmux split-window -h"
+alias t.wsv="tmux split-window -v"
+# reload config file (change file location to your the tmux.conf you want to use)
+alias t.r="tmux source-file ~/.tmux.conf"
+# switch panes using Alt-arrow without prefix
+alias t.wl="tmux select-pane -L"
+alias t.wr="tmux select-pane -R"
+alias t.wu="tmux select-pane -U"
+alias t.wd="tmux select-pane -D"
+# clear buffer
+alias t.c="clear; tmux clear-history; fish_greeting"

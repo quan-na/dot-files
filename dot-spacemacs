@@ -32,12 +32,15 @@ values."
    dotspacemacs-configuration-layers
    '(
      haskell
-     php
+     clojure
+     ;scala
+     java
+     ;php
      javascript
      html
-     python
+     ;python
      shell-scripts
-     graphviz
+     ;graphviz
      lua
      gtags
      deft
@@ -64,7 +67,16 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(zencoding-mode all-the-icons)
+   dotspacemacs-additional-packages '(
+                                      zencoding-mode
+                                      all-the-icons
+                                      ;elpy
+                                      evil-lion
+                                      ;smart-mode-line
+                                      spaceline-all-the-icons
+                                      beacon
+                                      ;(smart-mode-line :location (recipe :fetcher github :repo "Malabarba/smart-mode-line"))
+                                      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -143,10 +155,11 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Iosevka"
+   dotspacemacs-default-font '("IBM Plex Mono"
                                :size 14
                                :weight normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 0.9
+                               )
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
@@ -290,7 +303,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup 'trailing
+   dotspacemacs-whitespace-cleanup 'changed
    ))
 
 (defun dotspacemacs/user-init ()
@@ -309,88 +322,42 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-   (setq powerline-default-separator 'arrow)
-
+   (setq powerline-default-separator 'arrow-fade)
+   (setq spaceline-all-the-icons-separator-type 'arrow)
+   (setq spaceline-all-the-icons--height 12)
    ;; all the icons in neotree
    (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 
-   ;;--> try to figure out how to modify spaceline mode-line
-   (require 'spaceline-config)
-   ;;---> custom segments
-   (spaceline-define-segment my/buffer-status
-     "Buffer status (read-only, modified), with color"
-     (cond (buffer-read-only (propertize "✘✘" 'face 'my/spaceline-read-only))
-           ((buffer-modified-p) (propertize "✎✎" 'face 'my/spaceline-modified))
-           (t "✔✔")))
-   (spaceline-define-segment my/version-control
-     "Version control information with Unicode icons."
-     (when vc-mode
-       (powerline-raw
-        (s-trim (concat vc-mode
-                        (when (buffer-file-name)
-                          (pcase (vc-state (buffer-file-name))
-                            (`up-to-date " ☑")
-                            (`edited " ≠")
-                            (`added " ↶")
-                            (`unregistered " ☁")
-                            (`removed " ↷")
-                            (`needs-merge " ✖")
-                            (`needs-update " ↯")
-                            (`ignored " ❄")
-                            (_ " ¿"))))))))
-   (spaceline-define-segment my/week-number
-     "Year and week number, which I use for marking my projects"
-     (format-time-string "W%y%V"))
-   ;;<--- custom segments
+   (setq org-todo-keywords
+         '((sequence "TODO" "DOING" "FEEDBACK" "VERIFY" "|" "DONE" "DELEGATED")))
+   (setq org-todo-keyword-faces
+         '(("TODO" . org-warning)
+           ("DOING" . "blue")
+           ("FEEDBACK" . "yellow")
+           ("VERIFY" . "yellow")
+           ("DONE" . "green")
+           ("DELEGATED" . (:foreground "green" :weight bold))))
+   ;(elpy-enable)
+   (beacon-mode 1)
+   ;(set-face-attribute 'linum nil :height 10)
+   ;; smart mode line
+   ;;(require 'smart-mode-line)
+   ;;(setq sml/theme 'dark)
+   ;;(setq sml/no-confirm-load-theme t)
+   ;;(add-to-list 'sml/replacer-regexp-list '("^~/.deft/" ":AN:") t)
+   ;;(sml/setup)
+   ;;; execute block evaluation without confirmation
+   (setq org-confirm-babel-evaluate nil)
+   (setq org-src-tab-acts-natively t)
 
-   ;;---> custom fonts
-   (defun face (face &rest spec) ; convenience function
-     (face-spec-set face (list (cons t spec))))
-   (face 'my/spaceline-read-only :background "GoldenRod2" :foreground "red")
-   (face 'my/spaceline-modified :background "red" :foreground "black")
-   ;;<--- custom fonts
-
-   (setq spaceline--mode-lines '((info
-                                  (info-topic
-                                   (info-nodes :separator " > ")))
-                                 (helm-done
-                                  (((helm-buffer-id helm-done)
-                                    :face highlight-face)
-                                   helm-number helm-follow helm-prefix-argument)
-                                  helm-help)
-                                 (helm
-                                  ((helm-buffer-id :face highlight-face)
-                                   helm-number helm-follow helm-prefix-argument)
-                                  helm-help)
-                                 (main
-                                  (((persp-name workspace-number window-number)
-                                    :fallback evil-state :separator "|" :face highlight-face)
-                                   anzu auto-compile
-                                   ;(buffer-modified buffer-size buffer-id remote-host)
-                                   (my/buffer-status buffer-size buffer-id remote-host)
-                                   major-mode
-                                   (process :when active)
-                                   ((flycheck-error flycheck-warning flycheck-info)
-                                    :when active)
-                                   (minor-modes :when active)
-                                   (mu4e-alert-segment :when active)
-                                   (erc-track :when active)
-                                   (my/version-control :when active)
-                                   (org-pomodoro :when active)
-                                   (org-clock :when active)
-                                   my/week-number ; week number
-                                   nyan-cat)
-                                  which-function
-                                  (python-pyvenv :fallback python-pyenv)
-                                  purpose
-                                  (battery :when active)
-                                  selection-info input-method
-                                  ((buffer-encoding-abbrev point-position line-column)
-                                   :separator " | ")
-                                  (global :when active)
-                                  (new-version :when active)
-                                  buffer-position hud)))
-   ;;<-- try to figure out how to modify spaceline mode-line
+   ;; all the icons mode line
+   (use-package spaceline-all-the-icons
+     :after spaceline
+     :config (spaceline-all-the-icons-theme))
+   (spaceline-all-the-icons--setup-neotree)
+   ;;; display/update images in the buffer after evaluation
+   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+   (server-start)
   )
 
 ;; Delete every after this line for sanity
